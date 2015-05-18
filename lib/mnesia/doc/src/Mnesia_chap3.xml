@@ -21,7 +21,7 @@
     
     </legalnotice>
 
-    <title>Building A Mnesia Database</title>
+    <title>Build a Mnesia Database</title>
     <prepared></prepared>
     <responsible></responsible>
     <docno></docno>
@@ -31,109 +31,103 @@
     <rev></rev>
     <file>Mnesia_chap3.xml</file>
   </header>
-  <p>This chapter details the basic steps involved when designing
-    a Mnesia database and the programming constructs which make different
-    solutions available to the programmer. The chapter includes the following
-    sections:
-    </p>
+  <p>This section describes the basic steps when designing a
+    <c>Mnesia</c> database and the programming constructs that make different
+    solutions available to the programmer. The following topics are
+    included:</p>
   <list type="bulleted">
-    <item>defining a schema</item>
-    <item>the datamodel</item>
-    <item>starting Mnesia</item>
-    <item>creating new tables.</item>
+    <item>Define a schema</item>
+    <item>Data model</item>
+    <item>Start <c>Mnesia</c></item>
+    <item>Create tables</item>
   </list>
 
   <section>
     <marker id="def_schema"></marker>
-    <title>Defining a Schema</title>
-    <p>The configuration of a Mnesia system is described in the
-      schema. The schema is a special table which contains information
-      such as the table names and each table's
-      storage type, (i.e. whether a table should be stored in RAM,
-      on disc or possibly on both, as well as its location).
-      </p>
-    <p>Unlike data tables, information contained in schema tables can only be
-      accessed and modified by using the schema related functions
-      described in this section. 
-      </p>
-    <p>Mnesia has various functions for defining the
-      database schema. It is possible to move tables, delete tables,
-      or reconfigure the layout of tables.
-      </p>
-    <p>An important aspect of these functions is that the system can access a
-      table while it is being reconfigured. For example, it is possible to move a
+    <title>Define a Schema</title>
+    <p>The configuration of a <c>Mnesia</c> system is described in a
+      schema. The schema is a special table that includes information
+      such as the table names and the storage type of each table
+      (that is, whether a table is to be stored in RAM,
+      on disc, or on both, as well as its location).</p>
+    <p>Unlike data tables, information in schema tables can only be
+      accessed and modified by using the schema-related functions
+      described in this section.</p>
+    <p><c>Mnesia</c> has various functions for defining the
+      database schema. Tables can be moved or deleted, and the
+      table layout can be reconfigured.</p>
+    <p>An important aspect of these functions is that the system can access
+      a table while it is being reconfigured. For example, it is possible
+      to move a
       table and simultaneously perform write operations to the same
-      table. This feature is  essential for applications that require
-      continuous service.
-      </p>
-    <p>The following section describes the functions available for schema management,
-      all of which return a tuple:
-      </p>
+      table. This feature is essential for applications that require
+      continuous service.</p>
+    <p>This section describes the functions available for schema management,
+      all which return either of the following tuples:</p>
     <list type="bulleted">
-      <item><c>{atomic, ok}</c>; or,
-      </item>
-      <item><c>{aborted, Reason}</c> if unsuccessful.</item>
+      <item><c>{atomic, ok}</c> if successful</item>
+      <item><c>{aborted, Reason}</c> if unsuccessful</item>
     </list>
 
     <section>
       <title>Schema Functions</title>
+    <p>The schema functions are as follows:</p>
       <list type="bulleted">
-        <item><c>mnesia:create_schema(NodeList)</c>.  This function is
-         used to initialize a new, empty schema. This is a mandatory
-         requirement before Mnesia can be started. Mnesia is a truly
+        <item><seealso marker="mnesia:create_schema">mnesia:create_schema(NodeList)</seealso>
+         initializes a new, empty schema. This is a mandatory requirement
+         before <c>Mnesia</c> can be started. <c>Mnesia</c> is a truly
          distributed DBMS and the schema is a system table that is
-         replicated on all nodes in a Mnesia system.
-         The function will  fail if a schema is already present on any of
-         the nodes in <c>NodeList</c>. This function requires Mnesia
+         replicated on all nodes in a <c>Mnesia</c> system.
+         This function fails if a schema is already present on any of
+         the nodes in <c>NodeList</c>. The function requires <c>Mnesia</c>
          to be stopped on the all
-        <c>db_nodes</c> contained in the parameter <c>NodeList</c>.
-         Applications call this function only once,
-         since it is usually a one-time activity to initialize a new
-         database.
+         <c>db_nodes</c> contained in parameter <c>NodeList</c>.
+         Applications call this function only once, as
+         it is usually a one-time activity to initialize a new database.
         </item>
-        <item><c>mnesia:delete_schema(DiscNodeList)</c>. This function
+        <item><seealso marker="mnesia:delete_schema">mnesia:delete_schema(DiscNodeList)</seealso>
          erases any old schemas on the nodes in
-        <c>DiscNodeList</c>. It also removes all old tables together
-         with all data. This function requires Mnesia to be stopped
+         <c>DiscNodeList</c>. It also removes all old tables together
+         with all data. This function requires <c>Mnesia</c> to be stopped
          on all <c>db_nodes</c>.
         </item>
-        <item><c>mnesia:delete_table(Tab)</c>. This function
+        <item><seealso marker="mnesia:delete_table">mnesia:delete_table(Tab)</seealso>
          permanently deletes all replicas of table <c>Tab</c>.
         </item>
-        <item><c>mnesia:clear_table(Tab)</c>. This function
+        <item><seealso marker="mnesia:clear_table">mnesia:clear_table(Tab)</seealso>
          permanently deletes all entries in table <c>Tab</c>.
         </item>
-        <item><c>mnesia:move_table_copy(Tab, From, To)</c>. This
-         function moves the copy of table <c>Tab</c> from node
-        <c>From</c> to node <c>To</c>. The table storage type,
-        <c>{type}</c> is preserved, so if a RAM table is moved from
-         one node to another node, it remains a RAM table on the new
-         node. It is still possible for other transactions to perform
-         read and write operation to the table while it is being
-         moved.
+        <item><seealso marker="mnesia:move_table_copy">mnesia:move_table_copy(Tab, From, To)</seealso>
+         moves the copy of table <c>Tab</c> from node
+         <c>From</c> to node <c>To</c>. The table storage type
+         <c>{type}</c> is preserved, so if a RAM table is moved from
+         one node to another, it remains a RAM table on the new
+         node. Other transactions can still perform read
+         and write operation to the table while it is being moved.
         </item>
-        <item><c>mnesia:add_table_copy(Tab, Node, Type)</c>. This
-         function creates a replica of the table <c>Tab</c> at node
-        <c>Node</c>. The <c>Type</c> argument must be either of the
+        <item><seealso marker="mnesia:add_table_copy">mnesia:add_table_copy(Tab, Node, Type)</seealso>
+         creates a replica of table <c>Tab</c> at node
+         <c>Node</c>. Argument <c>Type</c> must be either of the
          atoms <c>ram_copies</c>, <c>disc_copies</c>, or
-        <c>disc_only_copies</c>. If we add a copy of the system
-         table <c>schema</c> to a node, this means that we want the
-         Mnesia schema to reside there as well. This action then
+         <c>disc_only_copies</c>. If you add a copy of the system
+         table <c>schema</c> to a node, you want the <c>Mnesia</c>
+         schema to reside there as well. This action
          extends the set of nodes that comprise this particular
-         Mnesia system.
+         <c>Mnesia</c> system.
         </item>
-        <item><c>mnesia:del_table_copy(Tab, Node)</c>. This function
+        <item><seealso marker="mnesia:del_table_copy">mnesia:del_table_copy(Tab, Node)</seealso>
          deletes the replica of table <c>Tab</c> at node <c>Node</c>.
-         When the last replica of a  table is removed, the table is
+         When the last replica of a table is removed, the table is
          deleted.
         </item>
         <item>
-          <p><c>mnesia:transform_table(Tab, Fun, NewAttributeList, NewRecordName)</c>. This
-            function changes the format on all records in table
-            <c>Tab</c>. It applies the argument <c>Fun</c> to all
-            records in the table. <c>Fun</c> shall be a function which
-            takes a record of the old type, and returns the record of the new
-            type. The table key may not be changed.</p>
+          <p><seealso marker="mnesia:transform_table_4">mnesia:transform_table(Tab, Fun, NewAttributeList, NewRecordName)</seealso>
+            changes the format on all records in table
+            <c>Tab</c>. It applies argument <c>Fun</c> to all
+            records in the table. <c>Fun</c> must be a function that
+            takes a record of the old type, and returns the record of the
+            new type. The table key must not be changed.</p>
+          <p><em>Example:</em></p>
           <code type="none">
 -record(old, {key, val}).
 -record(new, {key, val, extra}). 
@@ -146,219 +140,202 @@ Transformer =
    end,
 {atomic, ok} = mnesia:transform_table(foo, Transformer, 
                                       record_info(fields, new), 
-                                      new),
-          </code>
-          <p>The <c>Fun</c> argument can also be the atom
-            <c>ignore</c>, it indicates that only the meta data about the table will
-            be updated. Usage of <c>ignore</c> is not recommended (since it creates
-            inconsistencies between the meta data and the actual data) but included
-            as a possibility for the user do to his own (off-line) transform.</p>
+                                      new),</code>
+          <p>Argument <c>Fun</c> can also be the atom
+            <c>ignore</c>, which indicates that only the metadata about
+            the table is updated. Use of <c>ignore</c> is not recommended
+            (as it creates inconsistencies between the metadata and the
+            actual data) but it is included as a possibility for the user
+            do to an own (offline) transform.</p>
         </item>
-        <item><c>change_table_copy_type(Tab, Node, ToType)</c>. This
-         function changes the storage type of a table. For example, a
-         RAM table is changed to a disc_table at the node specified
+        <item><c>change_table_copy_type(Tab, Node, ToType)</c>
+         changes the storage type of a table. For example, a
+         RAM table is changed to a <c>disc_table</c> at the node specified
          as <c>Node</c>.</item>
       </list>
     </section>
   </section>
 
   <section>
-    <title>The Data Model</title>
-    <p>The data model employed by Mnesia is an extended 
-      relational data model. Data is organized as a set of 
+    <title>Data Model</title>
+    <p>The data model employed by <c>Mnesia</c> is an extended
+      relational data model. Data is organized as a set of
       tables and relations between different data records can
-      be modeled as additional tables describing the actual 
-      relationships.
-      Each table contains instances of Erlang records
-      and records are represented as Erlang tuples.
-      </p>
-    <p>Object identifiers, also known as oid, are made up of a table name and a key.
-      For example, if we have an employee record represented by the tuple
-      <c>{employee, 104732, klacke, 7, male, 98108, {221, 015}}</c>.
-      This record has an object id, (Oid) which is the tuple
-      <c>{employee, 104732}</c>. 
-      </p>
+      be modeled as more tables describing the relationships.
+      Each table contains instances of Erlang records.
+      The records are represented as Erlang tuples.</p>
+    <p>Each Object Identifier (OID) is made up of a table name and a key.
+      For example, if an employee record is represented by the tuple
+      <c>{employee, 104732, klacke, 7, male, 98108, {221, 015}}</c>,
+      this record has an OID, which is the tuple
+      <c>{employee, 104732}</c>.</p>
     <p>Thus, each table is made up of records, where the first element
-      is a record name and the second element of the table is a key
+      is a record name and the second element of the table is a key,
       which identifies the particular record in that table. The
-      combination of the table name and a key,  is an arity two tuple
-      <c>{Tab, Key}</c> called  the Oid. See  Chapter 4:<seealso marker="Mnesia_chap4#recordnames_tablenames">Record Names Versus Table Names</seealso>, for more information
-      regarding the relationship between the record name and the table
-      name.
-      </p>
-    <p>What makes the Mnesia data model an extended relational model
+      combination of the table name and a key is an arity two tuple
+      <c>{Tab, Key}</c> called the OID. For more information about
+      the relationship beween the record name and the table name, see
+      <seealso marker="Mnesia_chap4#recordnames_tablenames">Section 1.5.4,
+      Record Names against Table Names</seealso>.</p>
+    <p>What makes the <c>Mnesia</c> data model an extended relational model
       is the ability to store arbitrary Erlang terms in the attribute
-      fields. One attribute value could for example be a whole tree of
-      oids leading to other terms in other tables.  This 
-      type of record is hard to model in traditional relational 
-      DBMSs.</p>
+      fields. One attribute value can, for example, be a whole tree of
+      OIDs leading to other terms in other tables. This type
+      of record is difficult to model in traditional relational DBMSs.</p>
   </section>
 
   <section>
     <marker id="start_mnesia"></marker>
-    <title>Starting Mnesia</title>
-    <p>Before we can start Mnesia, we must initialize an empty schema
-      on all the participating nodes.
+    <title>Start Mnesia</title>
+    <p>Before starting <c>Mnesia</c>, the following must be done:
       </p>
     <list type="bulleted">
-      <item>The Erlang system must be started.
-      </item>
+      <item>An empty schema must be initialized on all the
+       participating nodes.</item>
+      <item>The Erlang system must be started.</item>
       <item>Nodes with disc database schema must be defined and
-       implemented with the function <c>create_schema(NodeList).</c></item>
+       implemented with the function
+       <seealso marker="create_schema">create_schema(NodeList)</seealso>.</item>
     </list>
-    <p>When running a distributed system, with two or more
-      participating nodes, then the <c>mnesia:start( ).</c> function
-      must be executed on each participating node. Typically this would
+    <p>When running a distributed system with two or more
+      participating nodes, the function 
+      <seealso marker="mnesia:start">mnesia:start( )</seealso>
+      must be executed on each participating node. This would typically
       be part of the boot script in an embedded environment.
       In a test environment or an interactive environment,
       <c>mnesia:start()</c> can also be used either from the
-      Erlang shell, or another program. 
+      Erlang shell or another program. 
       </p>
 
     <section>
-      <title>Initializing a Schema and Starting Mnesia</title>
-      <p>To use a known example, we illustrate how to run the
-        Company database described in Chapter 2 on two separate nodes,
-        which we call <c>a@gin</c> and <c>b@skeppet</c>. Each of these
-        nodes must have have a Mnesia directory as well as an
-        initialized schema before Mnesia can be started. There are two
-        ways to specify the Mnesia directory to be used: 
-        </p>
+      <title>Initialize a Schema and Start Mnesia</title>
+      <p>Let us use the example database <c>Company</c>, described in
+        <seealso marker="Mnesia_chap2#getting_stated">Section 1.3,
+        Getting Started</seealso> to
+        illustrate how to run a database on two separate nodes,
+        called <c>a@gin</c> and <c>b@skeppet</c>. Each of these
+        nodes must have a <c>Mnesia</c> directory and an
+        initialized schema before <c>Mnesia</c> can be started. There are
+        two ways to specify the <c>Mnesia</c> directory to be used:</p>
       <list type="bulleted">
         <item>
-          <p>Specify the Mnesia directory by providing an application
+          <p>Specify the <c>Mnesia</c> directory by providing an application
             parameter either when starting the Erlang shell or in the
-            application script. Previously the following example was used
-            to create the directory for our Company database:</p>
+            application script. Previously, the following example was used
+            to create the directory for the <c>Company</c> database:</p>
           <pre>
 %<input>erl -mnesia dir '"/ldisc/scratch/Mnesia.Company"'</input>
           </pre>
         </item>
-        <item>If no command line flag is entered, then the Mnesia
-         directory will be the current working directory on the node
+        <item>If no command-line flag is entered, the <c>Mnesia</c>
+         directory becomes the current working directory on the node
          where the Erlang shell is started.</item>
       </list>
-      <p>To start our Company database and get it running on the two
-        specified nodes, we enter the following commands:
-        </p>
+      <p>To start the <c>Company</c> database and get it running on the two
+        specified nodes, enter the following commands:</p>
       <list type="ordered">
         <item>
-          <p>On the node called gin:</p>
+          <p>On the node <c>a@gin</c>:</p>
           <pre>
- gin %<input>erl -sname a  -mnesia dir '"/ldisc/scratch/Mnesia.company"'</input>
-          </pre>
+ gin %<input>erl -sname a  -mnesia dir '"/ldisc/scratch/Mnesia.company"'</input></pre>
         </item>
-        <item>
-          <p>On the node called skeppet:</p>
+        <item><p>On the node <c>b@skeppet</c>:</p>
           <pre>
-skeppet %<input>erl -sname b -mnesia dir '"/ldisc/scratch/Mnesia.company"'</input>
-          </pre>
+skeppet %<input>erl -sname b -mnesia dir '"/ldisc/scratch/Mnesia.company"'</input></pre>
         </item>
         <item>
           <p>On one of the two nodes:</p>
           <pre>
-(a@gin1)><input>mnesia:create_schema([a@gin, b@skeppet]).</input>
-          </pre>
+(a@gin1)><input>mnesia:create_schema([a@gin, b@skeppet]).</input></pre>
         </item>
-        <item>The function <c>mnesia:start()</c>  is called on both
-         nodes.
+        <item>The function
+          <seealso marker="mnesia:start">mnesia:start()</seealso>
+          is called on both nodes.
         </item>
-        <item>
-          <p>To initialize the database, execute the following
-            code on one of the two nodes.</p>
+        <item><p>To initialize the database, execute the following
+          code on one of the two nodes:</p>
           <codeinclude file="company.erl" tag="%12" type="erl"></codeinclude>
         </item>
       </list>
-      <p>As illustrated above, the two directories reside on different nodes, because the
-        <c>/ldisc/scratch</c> (the "local" disc) exists on the two different
-        nodes.
-        </p>
-      <p>By executing these commands we have configured two Erlang
-        nodes to run the Company database, and therefore, initialize the
-        database. This  is required only once when setting up, the next time the
-        system is started <c>mnesia:start()</c> is called
-        on both nodes, to initialize the system from disc.
-        </p>
-      <p>In a system of Mnesia nodes, every node is aware of the
+      <p>As illustrated, the two directories reside on different nodes,
+        because the <c>/ldisc/scratch</c> (the "local" disc) exists on
+        the two different nodes.</p>
+      <p>By executing these commands, two Erlang nodes are configured to
+        run the <c>Company</c> database, and therefore, initialized the
+        database. This is required only once when setting up. The next time
+        the system is started,
+        <seealso marker="mnesia:start">mnesia:start()</seealso>
+        is called
+        on both nodes, to initialize the system from disc.</p>
+      <p>In a system of <c>Mnesia</c> nodes, every node is aware of the
         current location of all tables. In this example, data is
-        replicated on both nodes and functions which manipulate the
-        data in our tables can be executed on either of the two nodes.
-        Code which manipulate Mnesia data behaves identically
-        regardless of where the data resides.
-        </p>
-      <p>The function <c>mnesia:stop()</c> stops Mnesia on the node
-        where the function is executed. Both the <c>start/0</c> and
-        the <c>stop/0</c> functions work on the "local" Mnesia system,
-        and there are no functions which start or stop a set of nodes.
-        </p>
+        replicated on both nodes and functions that manipulate the
+        data in the tables can be executed on either of the two nodes.
+        Code that manipulatea <c>Mnesia</c> data behaves identically
+        regardless of where the data resides.</p>
+      <p>The function <seealso marker="mnesia:stop">mnesia:stop()</seealso>
+        stops <c>Mnesia</c> on the node
+        where the function is executed. The functions <c>mnesia:start/0</c>
+        and <c>mnesia:stop/0</c> work on the "local" <c>Mnesia</c> system.
+        No functions start or stop a set of nodes.</p>
     </section>
 
     <section>
-      <title>The Start-Up Procedure</title>
-      <p>Mnesia is started by calling the following function:
-        </p>
+      <title>Startup Procedure</title>
+      <p>Start <c>Mnesia</c> by calling the following function:</p>
       <code type="none">
-          mnesia:start().
-      </code>
-      <p>This function initiates the DBMS locally.  </p>
-      <p>The choice of configuration will alter the location and load
-        order of the tables. The alternatives are listed below:        <br></br>
-</p>
+          mnesia:start().</code>
+      <p>This function initiates the DBMS locally.</p>
+      <p>The choice of configuration alters the location and load
+        order of the tables. The alternatives are as follows:</p>
       <list type="ordered">
-        <item>Tables that are stored locally only, are initialized
-         from the local Mnesia directory. 
+        <item>Tables that are only stored locally are initialized
+         from the local <c>Mnesia</c> directory. 
         </item>
-        <item>Replicated tables that  reside locally
-         as  well as somewhere else are either initiated from disc or
-         by copying the entire table from the other node depending on
-         which of the different replicas is the most recent. Mnesia
-         determines  which of the tables is the most recent.
+        <item>Replicated tables that reside locally
+         as well as somewhere else are either initiated from disc or
+         by copying the entire table from the other node, depending on
+         which of the different replicas are the most recent. <c>Mnesia</c>
+         determines which of the tables are the most recent.
         </item>
-        <item>Tables that reside on remote nodes are available to other nodes as soon
-         as they are loaded.</item>
+        <item>Tables that reside on remote nodes are available to other
+         nodes as soon as they are loaded.</item>
       </list>
-      <p>Table initialization is asynchronous, the function
-        call <c>mnesia:start()</c> returns the atom <c>ok</c> and
+      <p>Table initialization is asynchronous. The function
+        call <seealso marker="mnesia:start">mnesia:start()</seealso>
+        returns the atom <c>ok</c> and
         then starts to initialize the different tables. Depending on
-        the size of the database, this may take some time, and the
+        the size of the database, this can take some time, and the
         application programmer must wait for the tables that the
-        application needs before they can be used. This achieved by using
-        the function:</p>
-      <list type="bulleted">
-        <item><c>mnesia:wait_for_tables(TabList, Timeout)</c></item>
-      </list>
-      <p>This function suspends the caller until all tables
-        specified in <c>TabList</c> are properly initiated. 
-        </p>
-      <p>A problem can arise if  a replicated table on one node is
-        initiated, but Mnesia deduces that another (remote)
-        replica is more recent than the replica existing on
-        the local node, the initialization procedure  will not proceed.
-        In this situation, a call to to
-        <c>mnesia:wait_for_tables/2</c> suspends the caller until the
-        remote node has initiated the table from its local disc  and
-        the node has copied the table over the network to the local node. 
-        </p>
-      <p>This procedure can be time consuming however, the shortcut function 
-        shown below will load all the tables from disc at a faster rate:
-        </p>
-      <list type="bulleted">
-        <item><c>mnesia:force_load_table(Tab)</c>. This function forces
-         tables to be loaded from disc regardless of the network
-         situation.</item>
-      </list>
-      <p>Thus, we can assume that if an application
-        wishes to use tables <c>a</c> and <c>b</c>, then the
-        application must perform some action similar to the below code before it can utilize the tables.
-        </p>
+        application needs before they can be used. This is achieved by
+        using the function
+        <seealso marker="mnesia:wait_for_tables">mnesia:wait_for_tables(TabList, Timeout)</seealso>,
+        which suspends the caller until all tables
+        specified in <c>TabList</c> are properly initiated.</p>
+      <p>A problem can arise if a replicated table on one node is
+        initiated, but <c>Mnesia</c> deduces that another (remote)
+        replica is more recent than the replica existing on the
+        local node, and the initialization procedure does not proceed.
+        In this situation, a call to
+        <seealso marker="mnesia:wait_for_tables">mnesia:wait_for_tables/2</seealso>,
+        suspends the caller until the
+        remote node has initiated the table from its local disc and
+        the node has copied the table over the network to the local node.</p>
+      <p>However, this procedure can be time-consuming, the shortcut function
+        <seealso marker="mnesia:force_load_table">mnesia:force_load_table(Tab)</seealso>
+        loads all the tables from disc at a faster rate. The function forces
+        tables to be loaded from disc regardless of the network
+        situation.</p>
+      <p>Thus, it can be assumed that if an application wants to use
+        tables <c>a</c> and <c>b</c>, the application must perform
+        some action similar to following before it can use the tables:</p>
       <pre>
           case mnesia:wait_for_tables([a, b], 20000) of
             {timeout,   RemainingTabs} ->
               panic(RemainingTabs);
             ok ->
               synced
-          end.
-      </pre>
+          end.</pre>
       <warning>
         <p>When tables are forcefully loaded from the local disc,
           all operations that were performed on the replicated table
@@ -366,191 +343,176 @@ skeppet %<input>erl -sname b -mnesia dir '"/ldisc/scratch/Mnesia.company"'</inpu
           alive, are lost. This can cause the database to become
           inconsistent.</p>
       </warning>
-      <p>If the start-up procedure fails, the
-        <c>mnesia:start()</c> function returns the cryptic tuple 
+      <p>If the startup procedure fails, the function
+        <seealso marker="mnesia:start">mnesia:start()</seealso>
+        returns the cryptic tuple
         <c>{error,{shutdown, {mnesia_sup,start,[normal,[]]}}}</c>.
-        Use command line arguments  -boot start_sasl as argument to
-        the erl script in order to get  more information
-        about the start failure. 
-        </p>
+        To get more information about the start failure, use
+        command-line arguments <c>-boot start_sasl</c> as argument to
+        the <c>erl</c> script.</p>
     </section>
   </section>
 
   <section>
     <marker id="create_tables"></marker>
-    <title>Creating New Tables</title>
-    <p>Mnesia provides one function to create new tables. This
-      function is: <c>mnesia:create_table(Name, ArgList).</c></p>
-    <p>When executing this function, it returns one of the following
-      responses:
-      </p>
+    <title>Create Tables</title>
+    <p>The function
+      <seealso marker="mnesia:create_table">mnesia:create_table(Name, ArgList)</seealso>
+      creates tables. When executing this function, it returns one of
+      the following responses:</p>
     <list type="bulleted">
-      <item><c>{atomic, ok}</c> if the function executes
-       successfully
+      <item><c>{atomic, ok}</c> if the function executes successfully
       </item>
-      <item><c>{aborted, Reason}</c> if the function fails.
+      <item><c>{aborted, Reason}</c> if the function fails
       </item>
     </list>
-    <p>The function arguments are:
-      </p>
+    <p>The function arguments are as follows:</p>
     <list type="bulleted">
       <item><c>Name</c> is the atomic name of the table. It is
-       usually  the same name as the name of the records that
-       constitute the table. (See <c>record_name</c> for more
-       details.)
+       usually the same name as the name of the records that
+       constitute the table. For details, see <c>record_name</c>.
       </item>
       <item>
         <p><c>ArgList</c> is a list of <c>{Key,Value}</c> tuples.
-          The following arguments are valid:
-          </p>
+          The following arguments are valid:</p>
         <list type="bulleted">
           <item>
-            <p><c>{type, Type}</c> where <c>Type</c> must be either of the
-              atoms <c>set</c>, <c>ordered_set</c> or <c>bag</c>. 
-              The default value is
-              <c>set</c>. Note: currently 'ordered_set' 
-              is not supported for 'disc_only_copies' tables.
-              A table of type <c>set</c> or <c>ordered_set</c> has either zero or
-              one record per key.  Whereas a table of type <c>bag</c> can
+            <p><c>{type, Type}</c>, where <c>Type</c> must be either of
+              the atoms <c>set</c>, <c>ordered_set</c>, or <c>bag</c>.
+              Default is <c>set</c>.</p>
+            <p>Notice that currently <c>ordered_set</c> is not 
+              supported for <c>disc_only_copies</c> tables.</p>
+            <p>A table of type
+              <c>set</c> or <c>ordered_set</c> has either zero or
+              one record per key. Whereas a table of type <c>bag</c> can
               have an arbitrary number of records per key. The key for
               each record is always the first attribute of the record.</p>
             <p>The following example illustrates the difference between
-              type <c>set</c> and <c>bag</c>: </p>
+              type <c>set</c> and <c>bag</c>:</p>
             <pre>
  f() -> F =  fun() ->
      mnesia:write({foo, 1, 2}), mnesia:write({foo, 1, 3}),
-     mnesia:read({foo, 1}) end, mnesia:transaction(F).             </pre>
-            <p>This transaction will return the list <c>[{foo,1,3}]</c> if
-              the <c>foo</c> table is of type <c>set</c>.  However, list
-              <c>[{foo,1,2}, {foo,1,3}]</c> will return if the table is
-              of  type <c>bag</c>. Note the use of <c>bag</c> and
-              <c>set</c> table types. </p>
-            <p>Mnesia tables can never contain
-              duplicates of the same record in the same table.  Duplicate
-              records have attributes with the same contents and key. 
-              </p>
+     mnesia:read({foo, 1}) end, mnesia:transaction(F).</pre>
+            <p>This transaction returns the list <c>[{foo,1,3}]</c> if
+              table <c>foo</c> is of type <c>set</c>. However, the list
+              <c>[{foo,1,2}, {foo,1,3}]</c> returns if the table is
+              of type <c>bag</c>. Notice the use of <c>bag</c> and
+              <c>set</c> table types.</p>
+            <p><c>Mnesia</c> tables can never contain
+              duplicates of the same record in the same table. Duplicate
+              records have attributes with the same contents and key.</p>
           </item>
           <item>
             <p><c>{disc_copies, NodeList}</c>, where <c>NodeList</c> is a
-              list of the nodes where this table will reside on disc.</p>
+              list of the nodes where this table is to reside on disc.</p>
             <p>Write operations to a table replica of type
-              <c>disc_copies</c> will write data to the disc copy as well
-              as to the RAM copy of the table. </p>
+              <c>disc_copies</c> write data to the disc copy and
+              to the RAM copy of the table.</p>
             <p>It is possible to have a
               replicated table of type <c>disc_copies</c> on one node, and
               the same table stored as a different type on another node.
-              The default value is <c>[]</c>. This arrangement is
-              desirable if we want the following operational
+              Default is <c>[]</c>. This arrangement is
+              desirable if the following operational
               characteristics are required:</p>
             <list type="ordered">
-              <item>read operations must be very fast and performed in RAM
-              </item>
-              <item>all write operations must be written to persistent
+              <item>Read operations must be fast and performed in RAM.</item>
+              <item>All write operations must be written to persistent
                storage.</item>
             </list>
             <p>A write operation on a <c>disc_copies</c> table
-              replica will be performed in two steps. First the write
+              replica is performed in two steps. First the write
               operation is appended to a log file, then the actual
-              operation is performed in RAM.
-              </p>
+              operation is performed in RAM.</p>
           </item>
           <item>
             <p><c>{ram_copies, NodeList}</c>, where <c>NodeList</c> is a
-              list of the nodes where this table is stored in RAM. The
-              default value for <c>NodeList</c>  is <c>[node()]</c>. If the
-              default value is used to create a new table, it will be
-              located on the local node only. </p>
+              list of the nodes where this table is stored in RAM.
+              Default is <c>[node()]</c>. If the default value is used
+              to create a table, it is located on the local node only.</p>
             <p>Table replicas of type
               <c>ram_copies</c> can be dumped to disc with the function
-              <c>mnesia:dump_tables(TabList)</c>.
-              </p>
+              <seealso marker="mnesia:dump_tables">mnesia:dump_tables(TabList)</seealso>.</p>
           </item>
           <item><c>{disc_only_copies, NodeList}</c>. These table
            replicas are stored on disc only and are therefore slower to
-           access. However, a disc only replica consumes less memory than
+           access. However, a disc-only replica consumes less memory than
            a table replica of the other two storage types. 
           </item>
-          <item><c>{index, AttributeNameList}</c>, where
-          <c>AttributeNameList</c> is a list of atoms specifying the
-           names of the attributes Mnesia shall build and maintain. An
-           index  table will exist for every element in the list.  The
-           first field of a Mnesia record is the key and thus need no
-           extra index. 
-                    <br></br>
-The first field of a record is the second element of the
-           tuple, which is the representation of the record.  
+          <item><p><c>{index, AttributeNameList}</c>, where
+           <c>AttributeNameList</c> is a list of atoms specifying the
+           names of the attributes <c>Mnesia</c> is to build and maintain.
+           An index table exists for every element in the list. The first
+           field of a <c>Mnesia</c> record is the key and thus need no
+           extra index.</p>
+           <p>The first field of a record is the second element of the
+           tuple, which is the representation of the record.</p>  
           </item>
-          <item><c>{snmp, SnmpStruct}</c>. <c>SnmpStruct</c> is
-           described in the SNMP User Guide. Basically, if this attribute
-           is present in  <c>ArgList</c> of <c>mnesia:create_table/2</c>,
-           the table is immediately accessible by means of the Simple
-           Network Management Protocol (SNMP). 
-                    <br></br>
-It is easy to design applications which use SNMP to
-           manipulate and control the system. Mnesia provides a direct
-           mapping between the logical tables that make up an SNMP
-           control application and the physical data which make up a
-           Mnesia table. <c>[]</c>
-           is default.
+          <item><p><c>{snmp, SnmpStruct}</c>. <c>SnmpStruct</c> is
+           described in the
+           <seealso marker="snmp">SNMP</seealso> User's Guide.
+           Basically, if this attribute is present in <c>ArgList</c> of
+           <seealso marker="mnesia:create_table">mnesia:create_table/2</seealso>,
+           the table is immediately accessible the SNMP.</p>
+           <p>It is easy to design applications that use SNMP to
+           manipulate and control the system. <c>Mnesia</c> provides a
+           direct mapping between the logical tables that make up an SNMP
+           control application and the physical data that makes up a
+           <c>Mnesia</c> table. The default value is <c>[]</c>.</p>
           </item>
-          <item><c>{local_content, true}</c> When an application needs  a
-           table  whose contents  should  be  locally unique on each
-           node,
-          <c>local_content</c>  tables may be used. The name of the
-           table  is  known  to all  Mnesia  nodes,  but its contents is
-           unique for each node. Access to this type of table must  be
-           done locally. </item>
+          <item><c>{local_content, true}</c>. When an application needs a
+           table whose contents is to be locally unique on each node,
+           <c>local_content</c> tables can be used. The name of the
+           table is known to all <c>Mnesia</c> nodes, but its contents is
+           unique for each node. Access to this type of table must be
+           done locally.</item>
           <item>
             <p><c>{attributes, AtomList}</c> is a list of the attribute
               names for the records that are supposed to populate the
-              table. The default value is the list <c>[key, val]</c>. The
+              table. Default is the list <c>[key, val]</c>. The
               table must at least have one extra attribute besides the
               key. When accessing single attributes in a record, it is not
               recommended to hard code the attribute names as atoms. Use
               the construct <c>record_info(fields,record_name)</c>
-              instead. The expression
+              instead.</p>
+            <p>The expression
               <c>record_info(fields,record_name)</c> is processed by the
-              Erlang macro pre-processor and returns a list of the
-              record's field names. With the record definition
-              <c>-record(foo, {x,y,z}).</c> the expression
+              Erlang macro preprocessor and returns a list of the
+              record field names. With the record definition
+              <c>-record(foo, {x,y,z}).</c>, the expression
               <c>record_info(fields,foo)</c> is expanded to the list
-              <c>[x,y,z]</c>. Accordingly, it is possible to provide the
-              attribute names yourself, or to use the <c>record_info/2</c>
-              notation.  </p>
-            <p>It is recommended that
-              the <c>record_info/2</c> notation be used  as it is easier to
-              maintain the program and it will be more robust with regards
-              to future record changes.
-              </p>
+              <c>[x,y,z]</c>. It is therefore possible for you to provide
+              the attribute names or to use the <c>record_info/2</c>
+              notation.</p>
+            <p>It is recommended to use the <c>record_info/2</c> notation,
+              as it becomes easier to maintain the program and the program
+              becomes more robust with regards to future record changes.</p>
           </item>
           <item>
             <p><c>{record_name, Atom}</c> specifies the common name of
-              all records stored in the table. All records, stored in
-              the table, must have this name as their first element.
-              The <c>record_name</c> defaults to the name of the
-              table. For more information see  Chapter 4:<seealso marker="Mnesia_chap4#recordnames_tablenames">Record Names Versus Table Names</seealso>.</p>
+              all records stored in the table. All records stored in
+              the table must have this name as their first element.
+              <c>record_name</c> defaults to the name of the table.
+              For more information, see
+              <seealso marker="Mnesia_chap4#recordnames_tablenames">Section 1.5.4,
+              Record Names versus Table Names</seealso>.</p>
           </item>
         </list>
       </item>
     </list>
-    <p>As an example, assume we have the record definition:</p>
+    <p>As an example, consider the following record definition:</p>
     <pre>
-      -record(funky, {x, y}).
-    </pre>
-    <p>The below call would create a table which is replicated on two
-      nodes, has an additional index on the <c>y</c> attribute, and is
-      of type
+      -record(funky, {x, y}).</pre>
+    <p>The following call would create a table that is replicated on two
+      nodes, has an extra index on attribute <c>y</c>, and is of type
       <c>bag</c>.</p>
     <pre>
       mnesia:create_table(funky, [{disc_copies, [N1, N2]}, {index,
-      [y]}, {type, bag}, {attributes, record_info(fields, funky)}]).
-    </pre>
-    <p>Whereas a call to the below default code values: </p>
+      [y]}, {type, bag}, {attributes, record_info(fields, funky)}]).</pre>
+    <p>Whereas a call to the following default code values would return
+      a table with a RAM copy on the local node, no extra indexes, and the
+      attributes defaulted to the list <c>[key,val]</c>.</p>
     <pre>
-mnesia:create_table(stuff, [])    </pre>
-    <p>would return a table with a RAM copy on the
-      local node, no additional indexes and the attributes defaulted to
-      the list <c>[key,val]</c>.</p>
+mnesia:create_table(stuff, [])</pre>
   </section>
 </chapter>
 

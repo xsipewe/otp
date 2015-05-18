@@ -21,7 +21,7 @@
     
     </legalnotice>
 
-    <title>Appendix C: The Activity Access Call Back Interface</title>
+    <title>Appendix C: Activity Access Callback Interface</title>
     <prepared>H&aring;kan Mattsson</prepared>
     <responsible></responsible>
     <docno></docno>
@@ -33,7 +33,7 @@
   </header>
 
   <section>
-    <title>mnesia_access callback behavior</title>
+    <title>mnesia_access Callback Behavior</title>
     <p></p>
     <codeinclude file="../../src/mnesia_frag.erl" tag="%header_doc_include" type="erl"></codeinclude>
     <p></p>

@@ -21,7 +21,7 @@
     
     </legalnotice>
 
-    <title>Appendix D: The Fragmented Table Hashing Call Back Interface</title>
+    <title>Appendix D: Fragmented Table Hashing Callback Interface</title>
     <prepared>H&aring;kan Mattsson</prepared>
     <responsible></responsible>
     <docno></docno>
@@ -33,7 +33,7 @@
   </header>
 
   <section>
-    <title>mnesia_frag_hash callback behavior</title>
+    <title>mnesia_frag_hash Callback Behavior</title>
     <p></p>
     <codeinclude file="../../src/mnesia_frag_hash.erl" tag="%header_doc_include" type="erl"></codeinclude>
     <p></p>

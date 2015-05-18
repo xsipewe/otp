@@ -21,7 +21,7 @@
     
     </legalnotice>
 
-    <title>Appendix B: The Backup Call Back Interface</title>
+    <title>Appendix B: Backup Callback Interface</title>
     <prepared>Claes Wikstr&ouml;m, Hans Nilsson and H&aring;kan Mattsson</prepared>
     <responsible>Bjarne D&auml;cker</responsible>
     <docno></docno>
@@ -33,7 +33,7 @@
   </header>
 
   <section>
-    <title>mnesia_backup callback behavior</title>
+    <title>mnesia_backup Callback Behavior</title>
     <p></p>
     <codeinclude file="../../src/mnesia_backup.erl" tag="%0" type="erl"></codeinclude>
   </section>
