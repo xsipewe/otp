@@ -743,8 +743,9 @@ mnesia:all_keys/1</seealso>.
        be sure that the update is performed on the remote nodes before
        a remote process is spawned or a message is sent to a remote
        process.</item>
-      <item>When a combining transaction writes with
-       <c>dirty_reads</c>.</item>
+      <item>When a combining transaction writes with "dirty_reads", that
+        is, the functions <c>dirty_match_object</c>, <c>dirty_read</c>,
+        <c>dirty_index_read</c>, <c>dirty_select</c>, and so on.</item>
       <item>When an application performs frequent or voluminous updates
        that can overload <c>Mnesia</c> on other nodes.</item>
     </list>
@@ -809,7 +810,7 @@ mnesia:all_keys/1</seealso>.
     <p>The callback module does not have
       to access real <c>Mnesia</c> tables, it is free to do whatever
       it wants as long as the callback interface is fulfilled.</p>
-    <p><seealso marker="Mnesia_AppC">Appendix C,
+    <p><seealso marker="Mnesia_AppC">Appendix B,
       Activity Access Callback Interface</seealso> provides the
       source code, <c>mnesia_frag.erl</c>, for one alternative
       implementation. The context-sensitive function

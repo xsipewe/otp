@@ -83,16 +83,13 @@
         <item>Section 1.8, Combine Mnesia with SNMP, is a short
          section that outlines <c>Mnesia</c> integrated with SNMP.
         </item>
-        <item>Appendix A, Mnesia Error Messages, lists the <c>Mnesia</c>
-         error messages and their meanings.
-        </item>
-        <item>Appendix B, Backup Callback Interface, is a
+        <item>Appendix A, Backup Callback Interface, is a
          program listing of the default implementation of this facility.
         </item>
-        <item>Appendix C, Activity Access Callback Interface, is a
+        <item>Appendix B, Activity Access Callback Interface, is a
          program outlining of one possible implementation of this facility.
         </item>
-        <item>Appendix D, Fragmented Table Hashing Callback Interface,
+        <item>Appendix C, Fragmented Table Hashing Callback Interface,
          is a program outlining of one possible implementation of this
          facility.
         </item>

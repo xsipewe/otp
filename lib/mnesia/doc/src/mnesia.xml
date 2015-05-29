@@ -1241,6 +1241,19 @@ mnesia:create_table(person,
           <c>{error, Reason}</c>, or <c>{aborted, Reason}</c>.
           <c>Reason</c> can be an atom or a tuple with <c>Reason</c>
           as an atom in the first field.</p>
+        <p>The following examples illustrate a function that returns an error,
+          and the method to retrieve more detailed error information:</p>
+          <list type="bulleted">
+            <item>The function
+             <seealso marker="mnesia:create_table">>mnesia:create_table(bar, [{attributes, 3.14}])</seealso>
+             returns the tuple <c>{aborted,Reason}</c>, where <c>Reason</c> is
+             the tuple <c>{bad_type,bar,3.14000}</c>.</item>
+            <item>The function
+             <seealso marker="mnesia:error_description">mnesia:error_description(Reason)</seealso>
+             returns the term <c>{"Bad type on some provided
+             arguments",bar,3.14000}</c>, which is an error description
+             suitable for display.</item>
+      </list>
       </desc>
     </func>
     <func>
@@ -3003,7 +3016,6 @@ raise(Name, Amount) ->
       <seealso marker="kernel:disk_log">disk_log(3)</seealso>,
       <seealso marker="stdlib:ets">ets(3)</seealso>,
       <seealso marker="mnesia:mnesia_registry">mnesia_registry(3)</seealso>,
-      <c>mnesia_session(3)</c>,
       <seealso marker="stdlib:qlc">qlc(3)</seealso></p>
   </section>
   

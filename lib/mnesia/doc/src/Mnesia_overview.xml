@@ -130,13 +130,12 @@
     </section>
 
     <section>
-      <title>Add-On Applications</title>
-      <p>Query List Comprehension (QLC) and <c>Mnesia</c> Session can be
-        used with <c>Mnesia</c> to produce specialized functions that
-        enhance the  operational ability of <c>Mnesia</c>. Both 
-        <c>Mnesia</c> Session and QLC have their own documentation as part
-        of the OTP documentation set. The main features of <c>Mnesia</c>
-        Session and QLC when used with <c>Mnesia</c> are as follows:</p>
+      <title>Add-On Application</title>
+      <p>Query List Comprehension (QLC) can be used with <c>Mnesia</c>
+        to produce specialized functions that enhance the operational
+        ability of <c>Mnesia</c>. QLC has its own documentation as part
+        of the OTP documentation set. The main features of QLC
+        when used with <c>Mnesia</c> are as follows:</p>
       <list type="bulleted">
         <item>QLC can optimize the query compiler for the <c>Mnesia</c>
           DBMS, essentially making the DBMS more efficient.
@@ -146,11 +145,6 @@
           comprehensions" and can be used to make complex database
           queries over a set of tables.
         </item>
-        <item><c>Mnesia</c> Session is an interface for the <c>Mnesia</c>
-          DBMS.
-        </item>
-        <item><c>Mnesia</c> Session enables access to the <c>Mnesia</c>
-          DBMS from other programming languages than Erlang.</item>
       </list>
       <p>For information about QLC, see the
         <seealso marker="stdlib:qlc">qlc</seealso> manual page
