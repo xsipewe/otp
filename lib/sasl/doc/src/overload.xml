@@ -85,7 +85,7 @@
           <c>MaxIntensity</c>.</p>
       </item>
     </taglist>
-    <p>A new overload alarm is not set until the current accept
+    <p>A new request will not be accepted until the current accept
       intensity has fallen below <c>MaxIntensity</c>. To prevent the
       overload process from generating many set/reset alarms, the
       alarm is not reset until the current accept intensity has fallen
@@ -101,7 +101,7 @@
         <p>Returns <c>accept</c> or <c>reject</c> depending on the
           current value of the accept intensity.</p>
         <p>The application
-          calling this function is to be processed with the job in
+          calling this function is to proceed with the job in
           question if the return value is <c>accept</c>; otherwise it
           is not to continue with that job.</p>
       </desc>

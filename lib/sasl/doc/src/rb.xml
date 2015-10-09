@@ -52,25 +52,21 @@
           {Key, RegExp, re, no}</v>
         <v>Key = term()</v>
         <v>Value = term()</v>
-        <v>RegExp = string() | {string, Options} | mp(), {mp(), Options}</v>
+        <v>RegExp = string() | {string(), Options} | <seealso marker="stdlib:re#type/mp">re:mp()</seealso> | {<seealso marker="stdlib:re#type/mp">re:mp()</seealso>, Options}</v>
         <v>Dates = {DateFrom, DateTo} | {DateFrom, from} | {DateTo, to}</v>
-        <v>DateFrom = DateTo = {date(), time()}</v>
+        <v>DateFrom = DateTo = <seealso marker="stdlib:calendar#type/datetime">calendar:datetime()</seealso></v>
       </type>
       <desc>
-        <p><c>date()</c> and <c>time()</c> are the same types as in the
-          <seealso marker="stdlib:calendar"><c>calendar</c></seealso>
-          module in <c>STDLIB</c>.</p>
-        <p>The <c>filter</c> function displays the reports that match the
-          provided filters.</p>
+        <p>Displays the reports that match the provided filters.</p>
         <p>When a filter includes the <c>no</c> atom, it excludes the
           reports that match that filter.</p>
         <p>The reports are matched using the
           <seealso marker="stdlib:proplists"><c>proplists</c></seealso>
           module in <c>STDLIB</c>. The report must be a proplist
-          to be matched against any of the <c>filters()</c>.</p>
+          to be matched against any of the filters.</p>
         <p>If the filter has the form <c>{Key, RegExp, re}</c>, the
-          report must contain an element with <c>key = Key</c> and
-          <c>Value</c> must match the regular expression <c>RegExp</c>.</p>
+          report must contain an element with key equal to <c>Key</c> and
+          the value must match the regular expression <c>RegExp</c>.</p>
         <p>If parameter <c>Dates</c> is specified, the reports are filtered
           according to the date when they occurred. If <c>Dates</c> has
           the form <c>{DateFrom, from}</c>, reports that occurred after
@@ -89,10 +85,10 @@
       <name>grep(RegExp)</name>
       <fsummary>Searches the reports for a regular expression.</fsummary>
       <type>
-        <v>RegExp = string() | {string, Options} | mp(), {mp(), Options}</v>
+        <v>RegExp = string() | {string(), Options} | <seealso marker="stdlib:re#type/mp">re:mp()</seealso> | {<seealso marker="stdlib:re#type/mp">re:mp()</seealso>, Options}</v>
       </type>
       <desc>
-        <p>All reports containing the regular expression <c>RegExp</c>
+        <p>All reports that match the regular expression <c>RegExp</c>
           are displayed. <c>RegExp</c> can be any of the following:</p>
         <list type="bulleted">
           <item>A string containing the regular expression</item>
@@ -176,14 +172,14 @@
         <p>If argument <c>type</c> is specified, all loaded reports of this
           type are displayed. If an integer argument is specified, the
           report with this reference number is displayed. If no argument
-          is specified, all reports are shown.</p>
+          is specified, all reports are displayed.</p>
       </desc>
     </func>
 
     <func>
       <name>start()</name>
       <name>start(Options)</name>
-      <fsummary>Starts the RB server.</fsummary>
+      <fsummary>Starts the <c>rb_server</c>.</fsummary>
       <type>
         <v>Options = [opt()]</v>
         <v>opt() = {start_log, FileName} | {max, MaxNoOfReports} |
@@ -193,7 +189,7 @@
         <v>MaxNoOfReports = int() | all</v>
         <v>DirString = string()</v>
         <v>ReportType = type() | [type()] | all</v>
-        <v>Bool = true | false</v>
+        <v>Bool = boolean()</v>
       </type>
       <desc>
         <p>Function <c>start/1</c> starts <c>rb_server</c> with the
@@ -203,23 +199,26 @@
           started, the files in the specified directory are
           scanned. The other functions assume that the server has
 	  started.</p>
+	<p>The valid options are:</p>
         <taglist>
 	<tag><c>{start_log, FileName}</c></tag>
           <item><p>Starts logging to file,
 	  registered name, or <c>io_device</c>. All reports are printed
-	  to the named file. Default is <c>standard_io</c>.
+	  to the specified destination. Default is <c>standard_io</c>.
 	  Option <c>{start_log, standard_error}</c> is not allowed and
           will be replaced by default <c>standard_io</c>.</p></item>
         <tag><c>{max, MaxNoOfReports}</c></tag>
           <item><p>Controls how many reports
           <c>rb_server</c> is to read at startup. This option is
-          useful, as the directory can contain 20,000 reports. If this
+          useful, as the directory can contain a large amount of reports. If this
           option is specified, the <c>MaxNoOfReports</c> latest reports
           are read. Default is <c>all</c>.</p></item>
         <tag><c>{report_dir, DirString}</c></tag>
           <item><p>Defines the directory where
           the error log files are located. Default is
-          <c>{sasl, error_logger_mf_dir}</c>.</p></item>
+          the directory specified by the application environment
+          variable <c>error_logger_mf_dir</c>,
+          see <seealso marker="sasl_app">sasl(6)</seealso>.</p></item>
         <tag><c>{type, ReportType}</c></tag>
           <item><p>Controls what kind of reports
           <c>rb_server</c> is to read at startup. <c>ReportType</c>

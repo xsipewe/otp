@@ -123,7 +123,7 @@
   PrePurge = PostPurge = soft_purge | brutal_purge
   DepMods = [Mod]</pre>
     <p>Synchronized code replacement of processes using module
-      <c>Mod</c>.</p>p>
+      <c>Mod</c>.</p>
     <p>All those processes are suspended using <c>sys:suspend</c>,
       the new module version is loaded, and
       then the processes are resumed using <c>sys:resume</c>.</p>
@@ -132,7 +132,7 @@
       <item><p>Defaults to <c>soft</c> and defines the type of
       code change. If it is set to <c>{advanced,Extra}</c>, implemented
       processes using <c>gen_server</c>, <c>gen_fsm</c>, or
-      <c>gen_event</c> transforms
+      <c>gen_event</c> transform
       their internal state by calling the callback function
       <c>code_change</c>. Special processes call the callback
       function <c>system_code_change/4</c>. In both cases, the term
@@ -156,7 +156,7 @@
     <tag><c>DepMods</c></tag>
       <item><p>Defaults to <c>[]</c> and defines other modules that
       <c>Mod</c> is dependent on. In <c>relup</c>, instructions for
-      suspending processes using <c>Mod</c> comes before
+      suspending processes using <c>Mod</c> come before
       instructions for suspending processes using modules in
       <c>DepMods</c> when upgrading, and conversely when downgrading.
       In case of circular dependencies, the order of the instructions in
@@ -191,7 +191,7 @@
       see <c>update</c> above.</p>
     <p><c>DepMods</c> defaults to <c>[]</c> and defines which other modules
       <c>Mod</c> is dependent on. In <c>relup</c>, instructions for
-      loading these modules comes before the instruction for loading
+      loading these modules come before the instruction for loading
       <c>Mod</c> when upgrading, and conversely when downgrading.</p>
     <pre>
 {add_module, Mod}
@@ -201,7 +201,7 @@
     <p>Loads a new module <c>Mod</c>.</p>
     <p><c>DepMods</c> defaults to <c>[]</c> and defines which other modules
       <c>Mod</c> is dependent on. In <c>relup</c>, instructions
-      related to these modules comes before the instruction for
+      related to these modules come before the instruction for
       loading <c>Mod</c> when upgrading, and conversely when
       downgrading.</p>
     <pre>
@@ -212,7 +212,7 @@
       <c>remove</c> and <c>purge</c>.</p>
     <p><c>DepMods</c> defaults to <c>[]</c> and defines which other modules
       <c>Mod</c> is dependent on. In <c>relup</c>, instructions
-      related to these modules comes before the instruction for
+      related to these modules come before the instruction for
       removing <c>Mod</c> when upgrading, and conversely when
       downgrading.</p>
     <pre>
