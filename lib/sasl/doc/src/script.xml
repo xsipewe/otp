@@ -72,9 +72,10 @@
       <tag><c>Vsn = string()</c></tag>
         <item><p>Defines the system version.</p></item>
       <tag><c>{progress, Term}</c></tag>
-        <item><p>Sets the "progress" of the
-       initialization program. The <c>init:get_status()</c> function
-       returns the current value of the progress, which is
+        <item><p>Sets the "progress" of the initialization
+	  program. The
+          <seealso marker="erts:init#get_status/0">init:get_status/0</seealso>
+	  function returns the current value of the progress, which is
       <c>{InternalStatus,Term}</c>.</p></item>
       <tag><c>{path, [Dir]}</c></tag>
         <item><p><c>Dir</c> is a string. This
@@ -112,8 +113,9 @@
       <tag><c>{primLoad, [Mod]}</c></tag>
         <item><p>Loads the modules <c>[Mod]</c>
         from the directories specified in <c>Path</c>. The script
-        interpreter fetches the appropriate module by calling the
-        <c>erl_prim_loader:get_file(Mod)</c> function. A fatal error
+        interpreter fetches the appropriate module by calling
+        <seealso marker="erts:erl_prim_loader#get_file/1">
+	  erl_prim_loader:get_file(Mod)</seealso>. A fatal error
         that terminates the system occurs if the module cannot be
         located.</p></item>
       <tag><c>{kernel_load_completed}</c></tag>
@@ -125,14 +127,14 @@
         In embedded mode, <c>kernel_load_completed</c> is ignored, and
         all modules are loaded during system start.</p></item>
       <tag><c>{kernelProcess, Name, {Mod, Func, Args}}</c></tag>
-        <item><p>Starts a
-        "kernel process". The <c>Kernel</c> process <c>Name</c> is started
-        by evaluating <c>apply(Mod, Func, Args)</c>, which is expected
+        <item><p>Starts the
+        "kernel process" <c>Name</c>
+        by evaluating <c>apply(Mod, Func, Args)</c>. The start function is
         to return <c>{ok, Pid}</c> or <c>ignore</c>. The <c>init</c>
         process monitors the behavior of <c>Pid</c> and terminates
-        the system if <c>Pid</c> dies. <c>Kernel</c> processes are key
+        the system if <c>Pid</c> dies. Kernel processes are key
         components of the runtime system. Users do not normally add
-        new <c>Kernel</c> processes.</p></item>
+        new kernel processes.</p></item>
       <tag><c>{apply, {Mod, Func, Args}}</c>.</tag>
         <item><p>The init process
         evaluates <c>apply(Mod, Func, Args)</c>. The system
@@ -140,12 +142,14 @@
         hangs if this function never returns.</p></item>
     </taglist>
     <note>
-      <p>In the interactive system, the code loader provides
-        demand-driven code loading, but in the embedded system
+      <p>In an interactive system, the code loader provides
+        demand-driven code loading, but in an embedded system
         the code loader loads all code immediately. The same
-        version of <c>code</c> is used in both cases. The code server
-        calls <c>init:get_argument(mode)</c> to determine if it is to
-        run in demand mode or non-demand driven mode.</p>
+        version of <seealso marker="kernel:code">code</seealso>
+	is used in both cases. The code server calls
+	<seealso marker="erts:init#get_argument/1">init:get_argument(mode)</seealso>
+	to determine if it is to run in demand mode or non-demand
+        driven mode.</p>
     </note>
   </section>
 
