@@ -62,8 +62,8 @@
       <item>A release upgrade file, <c>relup</c></item>
       <item>A system configuration file, <c>sys.config</c></item>
     </list>
-    <p>The <c>relup</c> file contains scripts for how to upgrade to, or
-      downgrade from, this version of the release.</p>
+    <p>The <c>relup</c> file contains instructions for how to upgrade
+      to, or downgrade from, this version of the release.</p>
     <p>The release package can be <em>unpacked</em>, which extracts
       the files. An unpacked release can be <em>installed</em>.
       The currently used version of the release is then upgraded or
@@ -160,7 +160,7 @@
       system. However, in this case the user must somehow ensure that
       correct boot scripts and configuration files are used if
       the system must be restarted.</p>
-    <p>There are more functions for using another file structure
+    <p>There are functions for using another file structure
       than the structure defined in OTP. These functions can be used
       to test a release upgrade locally.</p>
   </description>
@@ -257,7 +257,7 @@
         <v>Opt = {error_action, Action} | {code_change_timeout, Timeout}</v>
         <v>&nbsp;&nbsp;&nbsp;| {suspend_timeout, Timeout} | {update_paths, Bool}</v>
         <v>&nbsp;Action = restart | reboot</v>
-        <v>&nbsp;Timeout = default | infinity | int()>0</v>
+        <v>&nbsp;Timeout = default | infinity | pos_integer()</v>
         <v>&nbsp;Bool = boolean()</v>
         <v>Descr = term()</v>
         <v>Reason = {illegal_option, Opt} | {already_installed, Vsn} | {change_appl_data, term()} | {missing_base_app, OtherVsn, App} | {could_not_create_hybrid_boot, term()} | term()</v>
@@ -322,21 +322,21 @@
             effect for other application directories than the default
             <c>$ROOT/lib/App-Vsn</c>, that is, application directories
             specified in argument <c>AppDirs</c> in a call to
-            <c>create_RELEASES/4</c> or <c>set_unpacked/2</c>.</p></item>
-        </taglist>
-        <p><em>Example:</em></p>
-        <p>In the current version <c>CurVsn</c> of a release,
-          the application directory of <c>myapp</c> is
-          <c>$ROOT/lib/myapp-1.0</c>. A new version <c>NewVsn</c> is
-          unpacked outside the release handler and the release handler
-          is informed about this with a call as follows:</p>
-        <code type="none">
+            <c>create_RELEASES/4</c> or <c>set_unpacked/2</c>.</p>
+            <p><em>Example:</em></p>
+            <p>In the current version <c>CurVsn</c> of a release, the
+              application directory of <c>myapp</c> is
+              <c>$ROOT/lib/myapp-1.0</c>. A new version <c>NewVsn</c> is
+              unpacked outside the release handler and the release
+              handler is informed about this with a call as follows:</p>
+            <code type="none">
 release_handler:set_unpacked(RelFile, [{myapp,"1.0","/home/user"},...]).
 => {ok,NewVsn}</code>
-        <p>If <c>NewVsn</c> is installed with option
-          <c>{update_paths,true}</c>, afterwards
-          <c>code:lib_dir(myapp)</c> returns
-          <c>/home/user/myapp-1.0</c>.</p>
+            <p>If <c>NewVsn</c> is installed with option
+              <c>{update_paths,true}</c>, then
+              <c>code:lib_dir(myapp)</c> returns
+              <c>/home/user/myapp-1.0</c>.</p></item>
+        </taglist>
 	<note>
 	  <p>Installing a new release can be time consuming if
 	  there are many processes in the system. The reason is that
@@ -347,7 +347,7 @@ release_handler:set_unpacked(RelFile, [{myapp,"1.0","/home/user"},...]).
 	  <c>install_release</c>, first call <seealso
 	  marker="#check_install_release/1">check_install_release</seealso>,
 	  using option <c>purge</c>. This does the same
-	  check for old code. Then purge all modules that can be
+	  check for old code. Then purges all modules that can be
 	  soft-purged. The purged modules do then no longer have any
 	  old code, and <c>install_release</c> does not need to do the
 	  checks.</p>
@@ -624,7 +624,8 @@ release_handler:set_unpacked(RelFile, [{myapp,"1.0","/home/user"},...]).
         <v>App = atom()</v>
         <v>Dir = string()</v>
         <v>NewVsn = string()</v>
-        <v>Script = Instructions, see appup(4)</v>
+        <v>Script = Instructions, see
+	  <seealso marker="appup">appup(4)</seealso></v>
       </type>
       <desc>
         <p>Tries to find an application upgrade script for <c>App</c>
@@ -659,7 +660,8 @@ release_handler:set_unpacked(RelFile, [{myapp,"1.0","/home/user"},...]).
       <type>
         <v>App = atom()</v>
         <v>OldVsn = Dir = string()</v>
-        <v>Script = Instructions, see appup(4)</v>
+        <v>Script = Instructions, see
+	  <seealso marker="appup">appup(4)</seealso></v>
       </type>
       <desc>
         <p>Tries to find an application downgrade script for <c>App</c>

@@ -55,7 +55,7 @@
     <taglist>
       <tag><c>RelName = string()</c></tag>
         <item><p>Release name.</p></item>
-      <tag>><c>Vsn = string()</c></tag>
+      <tag><c>Vsn = string()</c></tag>
         <item><p>Release version.</p></item>
       <tag><c>EVsn = string()</c></tag>
         <item><p><c>ERTS</c> version the release is intended for.</p></item>

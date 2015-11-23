@@ -57,8 +57,8 @@
       </type>
       <desc>
         <p>Generates a release upgrade file <c>relup</c> containing
-          instructions that describes how to upgrade the system from some
-          of the previous releases, and how to downgrade to some of
+          instructions that describes how to upgrade from or downgrade
+	  to one or more previous releases, and how to downgrade to some of
           the previous releases. The instructions are used by
           <c>release_handler</c> when installing a new version of a
           release in runtime.</p>
@@ -111,7 +111,7 @@
           <c>lib/*/ebin</c>.</p>
         <p>If option <c>restart_emulator</c> is specified, a
           low-level instruction to restart the emulator is appended to
-          the <c>relup</c> files. This ensures that a complete reboot of
+          the <c>relup</c> file. This ensures that a complete reboot of
           the system is done when the system is upgraded or downgraded.</p>
         <p>If an upgrade includes a change from an emulator earlier
           than OTP R15 to OTP R15 or later, the warning
@@ -162,7 +162,7 @@
           which applications are included in the release. Then
           the relevant application resource files <c>App.app</c> are read
           to determine which modules to be loaded, and if and
-          how the application is to be started. (Keys <c>modules</c>
+          how the applications are to be started. (Keys <c>modules</c>
           and <c>mod</c>, see
           <seealso marker="kernel:app"><c>app(4)</c></seealso>.</p>
         <p>By default, the boot script and boot file are located in

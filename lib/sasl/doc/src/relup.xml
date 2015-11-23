@@ -44,7 +44,7 @@
   <section>
     <title>File Syntax</title>
     <p>In a target system, the release upgrade file is to be located in
-      directory <c>OTP_ROOT/erts-EVsn/Vsn</c>.</p>
+      directory <c>$ROOT/releases/Vsn</c>.</p>
     <p>The <c>relup</c> file contains one single Erlang term, which
       defines the instructions used to upgrade the release. The file has
       the following syntax:</p>
@@ -72,10 +72,6 @@
       <tag><c>DownToVsn = string()</c></tag>
         <item><p>Earlier version of the release to downgrade to.</p></item>
     </taglist>
-    <p>When upgrading from <c>UpFromVsn</c> with
-      <c>release_handler:install_release/1,2</c>, an exact match of
-      versions is not needed, but <c>UpFromVsn</c> can be a substring
-      of the current release version.</p>
   </section>
 
   <section>
