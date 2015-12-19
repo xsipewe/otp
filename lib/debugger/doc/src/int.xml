@@ -75,7 +75,7 @@
       <item>A status, which is <em>active</em> or <em>inactive</em>. An
         inactive breakpoint is ignored.</item>
       <item>A trigger action. When a breakpoint is reached, the trigger
-        action specifies if the breakpoint is to continue to be active
+        action specifies if the breakpoint is to continue as active
         (<em>enable</em>), or to become inactive (<em>disable</em>), or
         to be removed (<em>delete</em>).</item>
       <item>Optionally an associated condition. A condition is a tuple
@@ -110,7 +110,7 @@
 	  the module only at the current node. <c>ni/1</c> interprets
 	  the module at all known nodes.</p>
 
-	<p>A module can be specifed by its module name (atom) or
+	<p>A module can be specified by its module name (atom) or
 	  filename.</p>
 
 	<p>If specified by its module name, the object code
@@ -119,7 +119,7 @@
 	  the same directory as the object code, then in an <c>src</c>
 	  directory next to it.</p>
 
-	<p>If specifed by its filename, the filename can include a path
+	<p>If specified by its filename, the filename can include a path
 	  and the <c>.erl</c> extension can  be omitted. The object code
 	  <c>Module.beam</c> is searched for first in the same directory
 	  as the source code, then in an <c>ebin</c> directory next to
@@ -137,9 +137,9 @@
 
 	<p>The argument can also be a list of modules or filenames, in
 	  which case the function tries to interpret each module as
-	  specified above. The function then always returns <c>ok</c>,
+	  specified earlier. The function then always returns <c>ok</c>,
 	  but prints some information to <c>stdout</c> if a module
-	  could not be interpreted.</p>
+	  cannot be interpreted.</p>
       </desc>
     </func>
 	
@@ -157,7 +157,7 @@
 	  interpreting the module only at the current node. <c>nn/1</c>
 	  stops interpreting the module at all known nodes.</p>
 
-	<p>As for <c>i/1</c> and <c>ni/1</c>, a module can be specifed by
+	<p>As for <c>i/1</c> and <c>ni/1</c>, a module can be specified by
 	  its module name or filename.</p>
       </desc>
     </func>
@@ -200,7 +200,7 @@
       <desc>
 	<p>Checks if a module can be interpreted. The module can be
 	  specified by its module name <c>Module</c> or its source
-	  filename <c>File</c>. If specifed by a module name, the module
+	  filename <c>File</c>. If specified by a module name, the module
 	  is searched for in the code path.</p>
 
 	<p>The function returns <c>true</c> if all of the following
@@ -217,27 +217,35 @@
 
 	<p>The function returns <c>{error,Reason}</c> if the module cannot
 	  be interpreted. <c>Reason</c> can have the following values:</p>
-        <list type="bulleted">
-          <item><c>no_src</c> - No source code is found.
-            It is assumed that the source code and object code are located
-            either in the same directory, or in <c>src</c> and <c>ebin</c>
-            directories next to each other.</item>
-          <item><c>no_beam</c> - No object code is found.
-            It is assumed that the source code and object code are located
-            either in the same directory, or in <c>src</c> and <c>ebin</c>
-            directories next to each other.</item>
-          <item><c>no_debug_info</c> - The module has not been compiled
-            with option <c>debug_info</c> set.</item>
-          <item><c>badarg</c> - <c>AbsModule</c> is not found.
-	    This could be because the specified file does not
-	    exist, or because <c>code:which/1</c> does not return a
-	    BEAM filename, which is the case not only for non-existing
-	    modules but also for modules that are preloaded or
-	    cover-compiled.</item>
-          <item><c>{app,App}</c>, where <c>App</c> is <c>kernel</c>,
-	    <c>stdlib</c>, <c>gs</c>, or <c>debugger</c> if
-	    <c>AbsModule</c> belongs to one of these applications.</item>
-	</list>
+	<taglist>
+	  <tag><c>no_src</c></tag>
+	  <item><p>No source code is found.
+	    It is assumed that the source code and object code are located
+	    either in the same directory, or in <c>src</c> and <c>ebin</c>
+	    directories next to each other.</p></item>
+
+	  <tag><c>no_beam</c></tag>
+	  <item><p>No object code is found.
+	    It is assumed that the source code and object code are located
+	    either in the same directory, or in <c>src</c> and <c>ebin</c>
+	    directories next to each other.</p></item>
+
+	  <tag><c>no_debug_info</c></tag>
+	  <item><p>The module has not been compiled with option
+	    <c>debug_info</c> set.</p></item>
+
+	  <tag><c>badarg</c></tag>
+	  <item><p><c>AbsModule</c> is not found. This could be because
+	    the specified file does not exist, or because
+	    <c>code:which/1</c> does not return a <c>.beam</c> filename,
+	    which is the case not only for non-existing modules but also
+	    for modules that are preloaded or cover-compiled.</p></item>
+
+	  <tag><c>{app,App}</c></tag>
+	  <item><p><c>App</c> is <c>kernel</c>, <c>stdlib</c>, <c>gs</c>,
+	  or <c>debugger</c> if <c>AbsModule</c> belongs to one of these
+	  applications.</p></item>
+	</taglist>
 
 	<p>Notice that the function can return <c>true</c> for a module
 	  that in fact is not interpretable in the case where
@@ -261,7 +269,7 @@
       <desc>
 	<p>Gets and sets when and how to attach automatically to a
 	  process executing code in interpreted modules. <c>false</c>
-	  means never automatically attach, this is the default.
+	  means never attach automatically, this is the default.
 	  Otherwise automatic attach is defined by a list of flags and
 	  a function. The following flags can be specified:</p>
 	<list type="bulleted">
@@ -295,18 +303,22 @@
 	  process, and is also used to emulate the stack trace if an
 	  error (an exception of class error) occurs. The following
 	  flags can be specified:</p>
-	<list type="bulleted">
-	  <item><c>all</c> - Save information about all current calls,
-	    that is, function calls that have not yet returned a value.
-	    </item>
-	  <item><c>no_tail</c> - Save information about current calls,
+	<taglist>
+	  <tag><c>all</c></tag>
+	  <item><p>Save information about all current calls,
+	    that is, function calls that have not yet returned a value.</p>
+	  </item>
+
+	  <tag><c>no_tail</c></tag>
+	  <item><p>Save information about current calls,
 	    but discard previous information when a tail recursive call
 	    is made. This option consumes less memory and can be
 	    necessary to use for processes with long lifetimes and many
-	    tail recursive calls. This is the default.</item>
-	  <item><c>false</c> - Save no information about current
-	    calls.</item>
-	</list>
+	    tail recursive calls. This is the default.</p></item>
+
+	  <tag><c>false</c></tag>
+	  <item><p>Save no information about currentcalls.</p></item>
+	</taglist>
       </desc>
     </func>
 
@@ -497,9 +509,9 @@
 	  </item>
 	  <item><c>waiting</c> - The process is waiting at a
 	    <c>receive</c>. <c>Info={}</c>.</item>
-	  <item><c>break</c> - Process execution has been stopped,
+	  <item><c>break</c> - Process execution is stopped,
 	    normally at a breakpoint. <c>Info={Module,Line}</c>.</item>
-	  <item><c>exit</c> - The process has terminated.
+	  <item><c>exit</c> - The process is terminated.
 	    <c>Info=ExitReason</c>.</item>
 	  <item><c>no_conn</c> - The connection is down to the node
 	    where the process is running. <c>Info={}</c>.</item>

@@ -28,10 +28,7 @@
     <date></date>
     <rev></rev>
   </header>
-  <description>
-    <p>Debugger is a graphical tool that can be used for
-      debugging and testing of Erlang programs.</p>
-  </description>
+  <description></description>
   <xi:include href="debugger.xml"/>
   <xi:include href="i.xml"/>
   <xi:include href="int.xml"/>

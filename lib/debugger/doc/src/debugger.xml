@@ -54,8 +54,8 @@
 
 	<p>If <c>local</c> is specified as argument, Debugger interprets
 	  code only at the current node. If <c>global</c> is specified as
-	  argument, Debugger interprets code at all known nodes,
-	  this is the default.</p>
+	  argument, Debugger interprets code at all known nodes, this
+	  is the default.</p>
       </desc>
     </func>
 

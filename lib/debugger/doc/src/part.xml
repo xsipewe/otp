@@ -29,10 +29,7 @@
     <rev>B</rev>
     <file>part.sgml</file>
   </header>
-  <description>
-    <p>Debugger is a graphical tool that can be used for
-      debugging and testing of Erlang programs.</p>
-  </description>
+  <description></description>
   <xi:include href="introduction.xml"/>
   <xi:include href="debugger_chapter.xml"/>
 </part>

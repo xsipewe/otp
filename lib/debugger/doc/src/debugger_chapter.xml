@@ -35,7 +35,7 @@
 
     <p>To use Debugger, the basic steps are as follows:</p>
 
-    <p><em>Step 1:</em> Start Debugger by calling
+    <p><em>Step 1.</em> Start Debugger by calling
       <c>debugger:start()</c>.</p>
 
     <p>The <seealso marker="#monitor">Monitor window</seealso> is
@@ -45,56 +45,56 @@
       modules that are to be <em>debugged</em> (also called
       <em>interpreted</em>). Proceed as follows:</p>
 
-    <p><em>Step 2:</em> Select <em>Module > Interpret...</em> in the
+    <p><em>Step 2.</em> Select <em>Module > Interpret...</em> in the
       Monitor window.</p>
 
-    <p>The <seealso marker="#interpret">Interpret Dialog window</seealso>
+    <p>The <seealso marker="#interpret">Interpret Modules window</seealso>
       is displayed.</p>
 
-    <p><em>Step 3:</em> Select the appropriate modules from the Interpret
+    <p><em>Step 3.</em> Select the appropriate modules from the Interpret
       Dialog window.</p>
 
     <note>
       <p>Only modules compiled with option <c>debug_info</c> set can be
         interpreted. Non-interpretable modules are displayed within
-        parenthesis in the Interpret Dialog window.</p>
+        parenthesis in the Interpret Modules window.</p>
     </note>
 
-    <p><em>Step 4:</em> Select the module to be interpreted from the
-       <em>Module > module > View</em> submenu.</p>
+    <p><em>Step 4.</em> In the Monitor window, select
+      <em>Module > the module to be interpreted > View</em>.</p>
 
     <p>The contents of the source file is displayed in the
       <seealso marker="#view">View Module window</seealso>.</p>
 
-    <p><em>Step 5:</em> Set the
+    <p><em>Step 5.</em> Set the
       <seealso marker="#breakpoints">breakpoints</seealso>, if any.</p>
 
-    <p><em>Step 6:</em> Start the program to be debugged. This is done
+    <p><em>Step 6.</em> Start the program to be debugged. This is done
       the normal way from the Erlang shell.</p>
 
     <p>All processes executing code in interpreted modules are displayed
       in the Monitor window.</p>
 
-    <p><em>Step 7:</em> To <em>attach</em> to one of these processes,
+    <p><em>Step 7.</em> To <em>attach</em> to one of these processes,
       double-click it, or select the process and then choose
       <em>Process > Attach</em>. Attaching to a process opens an
       <seealso marker="#attach">Attach Process window</seealso> for this
       process.</p>
 
-    <p><em>Step 8:</em> From the Attach Process window, you can control
+    <p><em>Step 8.</em> From the Attach Process window, you can control
       the process execution, inspect variable values, set breakpoints,
       and so on.</p>
   </section>
 
   <section>
     <marker id="breakpoints"/>
-    <title>Breakpoints and Break Dialogue Windows</title>
+    <title>Breakpoints and Break Dialog Windows</title>
     
     <p>Once the appropriate modules are interpreted, breakpoints can
       be set at relevant locations in the source code. Breakpoints are
       specified on a line basis. When a process reaches a breakpoint,
-      it stops and waits for commands (step, skip, continue ...) from
-      the user.</p>
+      it stops and waits for commands (<em>Step</em>, <em>Skip</em>,
+      <em>Continue</em> ...) from the user.</p>
 
     <note>
       <p>When a process reaches a breakpoint, only that process is
@@ -102,7 +102,7 @@
     </note>
 
     <p>Breakpoints are created and deleted using the <em>Break</em> menu of
-      either the Monitor window, View Module window, and Attach Process
+      either the Monitor window, View Module window, or Attach Process
       window.</p>
 
     <section>
@@ -272,9 +272,9 @@
       a value (option <em>Stack On, No Tail</em>).</p>
 
     <p>Sometimes, however, it can be useful to save all calls, even
-      tail-recursive calls. This is done with opion
+      tail-recursive calls. This is done with option
       <em>Stack On, Tail</em>. Notice that this option consumes more
-      memory and slow down execution of interpreted functions when there
+      memory and slows down execution of interpreted functions when there
       are many tail-recursive calls.</p>
 
     <p>To turn off the Debugger stack trace facility, select option
@@ -311,8 +311,8 @@
       <icaption>Monitor Window</icaption>
     </image>
 
-    <p>The <em>Auto Attach</em> buttons, <em>Stack Trace</em> label,
-      <em>Back Trace Size</em> label, and <em>Strings</em> button display
+    <p>The <em>Auto Attach</em> boxes, <em>Stack Trace</em> label,
+      <em>Back Trace Size</em> label, and <em>Strings</em> box display
       some options set. For details about these options, see section
       <seealso marker="#options">Options Menu</seealso>.</p>
 
@@ -371,7 +371,7 @@
 
       <taglist>
 	<tag><em>Load Settings...</em></tag>
-	<item><p>Try to load and restore Debugger settings from a file
+	<item><p>Tries to load and restore Debugger settings from a file
 	  previously saved using <em>Save Settings...</em> (see below).
 	  Any errors are silently ignored.</p>
 	<p>Notice that settings saved by Erlang R16B01 or later
@@ -379,7 +379,7 @@
 	</item>
 
 	<tag><em>Save Settings...</em></tag>
-	<item><p>Save Debugger settings to a file. The settings include
+	<item><p>Saves Debugger settings to a file. The settings include
 	  the set of interpreted files, breakpoints, and the selected
 	  options. The settings can be restored in a later Debugger
 	  session using <em>Load Settings...</em> (see above).
@@ -387,7 +387,7 @@
 	</item>
 
 	<tag><em>Exit</em></tag>
-	<item><p>Stop Debugger.</p></item>
+	<item><p>Stops Debugger.</p></item>
       </taglist>
     </section>
 
@@ -395,12 +395,12 @@
       <title>Edit Menu</title>
       <taglist>
 	<tag><em>Refresh</em></tag>
-	<item><p>Update information about debugged processes. Information
+	<item><p>Updates information about debugged processes. Information
 	  about all terminated processes are removed from the window. All
 	  Attach Process windows for terminated processes are closed.</p></item>
 
 	<tag><em>Kill All</em></tag>
-	<item><p>Terminate all processes listed in the window using
+	<item><p>Terminates all processes listed in the window using
 	  <c>exit(Pid,kill)</c>.</p></item>
       </taglist>
     </section>
@@ -409,12 +409,12 @@
       <title>Module Menu</title>
       <taglist>
 	<tag><em>Interpret...</em></tag>
-	<item><p>Open the
-	  <seealso marker="#interpret">Interpret Dialog window</seealso>,
+	<item><p>Opens the
+	  <seealso marker="#interpret">Interpret Modules window</seealso>,
 	  where new modules to be interpreted can be specified.</p></item>
 
 	<tag><em>Delete All</em></tag>
-	<item><p>Stop interpreting all modules. Processes executing in
+	<item><p>Stops interpreting all modules. Processes executing in
 	  interpreted modules terminate.</p></item>
       </taglist>
 
@@ -422,11 +422,11 @@
         the <em>Module</em> menu, with the following submenu:</p>
       <taglist>
 	<tag><em>Delete</em></tag>
-	<item><p>Stop interpreting the selected module. Processes
+	<item><p>Stops interpreting the selected module. Processes
 	  executing in this module terminate.</p></item>
 
 	<tag><em>View</em></tag>
-	<item><p>Open a
+	<item><p>Opens a
 	  <seealso marker="#view">View Module window</seealso>, displaying the
 	  contents of the selected module.</p></item>
       </taglist>
@@ -446,14 +446,14 @@
       </taglist>
 
       <p>The following menu items apply to the currently selected
-        process.</p>
+        process:</p>
       <taglist>
 	<tag><em>Attach</em></tag>
-	<item><p>Attach to the process and open an
+	<item><p>Attaches to the process and open an
 	  <seealso marker="#attach">Attach Process window</seealso>.</p></item>
 
 	<tag><em>Kill</em></tag>
-	<item><p>Terminate the process using <c>exit(Pid,kill)</c>.</p></item>
+	<item><p>Terminates the process using <c>exit(Pid,kill)</c>.</p></item>
       </taglist>
     </section>
 
@@ -465,22 +465,22 @@
 
       <taglist>
 	<tag><em>Line Break...</em></tag>
-	<item><p>Set a line breakpoint.</p></item>
+	<item><p>Sets a line breakpoint.</p></item>
 
 	<tag><em>Conditional Break...</em></tag>
-	<item><p>Set a conditional breakpoint.</p></item>
+	<item><p>Sets a conditional breakpoint.</p></item>
 
 	<tag><em>Function Break...</em></tag>
-	<item><p>Set a function breakpoint.</p></item>
+	<item><p>Sets a function breakpoint.</p></item>
 
 	<tag><em>Enable All</em></tag>
-	<item><p>Enable all breakpoints.</p></item>
+	<item><p>Enables all breakpoints.</p></item>
 
 	<tag><em>Disable All</em></tag>
-	<item><p>Disable all breakpoints.</p></item>
+	<item><p>Disables all breakpoints.</p></item>
 
 	<tag><em>Delete All</em></tag>
-	<item><p>Remove all breakpoints.</p></item>
+	<item><p>Removes all breakpoints.</p></item>
       </taglist>
 
       <p>For each breakpoint, a corresponding entry is added to the
@@ -494,51 +494,51 @@
 
       <taglist>
 	<tag><em>Trace Window</em></tag>
-	<item><p>Set which areas are to be visible in an
+	<item><p>Sets the areas to be visible in an
 	  <seealso marker="#attach">Attach Process window</seealso>.
 	  Does not affect existing Attach Process windows.</p>
 	</item>
 
 	<tag><em>Auto Attach</em></tag>
-	<item><p>Set at which events a debugged process are to be
-	  automatically attached to. Affects existing debugged processes.</p>
+	<item><p>Sets the events a debugged process is to be attached
+	  to automatically. Affects existing debugged processes.</p>
 	  <list type="bulleted">
-	    <item><em>First Call</em> - The first time a process calls a
-	      function in an interpreted module.</item>
-	    <item><em>On Exit</em> - At process termination.</item>
-	    <item><em>On Break</em> - When a process reaches a
-	      breakpoint.</item>
+	    <item><p><em>First Call</em> - The first time a process calls
+	      a function in an interpreted module.</p></item>
+	    <item><p><em>On Exit</em> - At process termination.</p></item>
+	    <item><p><em>On Break</em> - When a process reaches a
+	      breakpoint.</p></item>
 	  </list>
 	</item>
 
 	<tag><em>Stack Trace</em></tag>
-	<item><p>Set the stack trace option, see section
+	<item><p>Sets the stack trace option, see section
 	  <seealso marker="#stack_trace">Stack Trace</seealso>. Does not
 	    affect existing debugged processes.</p>
 	  <list type="bulleted">
-	    <item><em>Stack On, Tail</em> - Save information about all
-	      current calls.</item>
-	    <item><em>Stack On, No Tail</em> - Save information about
+	    <item><p><em>Stack On, Tail</em> - Saves information about all
+	      current calls.</p></item>
+	    <item><p><em>Stack On, No Tail</em> - Saves information about
 	      current calls, discarding previous information when a tail
-	      recursive call is made.</item>
-	    <item><em>Stack Off</em> - Do not save any information about
-	      current calls.</item>
+	      recursive call is made.</p></item>
+	    <item><p><em>Stack Off</em> - Does not save any information about
+	      current calls.</p></item>
 	  </list>
 	</item>
 
 	<tag><em>Strings</em></tag>
-	<item><p>Set which integer lists to be printed as strings.
-	  Does not affect already existing debugged processes.</p>
+	<item><p>Sets the integer lists to be printed as strings.
+	  Does not affect existing debugged processes.</p>
 	  <list type="bulleted">
-	    <item><em>Use range of +pc flag</em> - Use the printable
+	    <item><p><em>Use range of +pc flag</em> - Uses the printable
 	      character range set by the <c>erl(1)</c> flag
-	      <seealso marker="erts:erl#printable_character_range"><c>+pc</c></seealso>.
+	      <seealso marker="erts:erl#printable_character_range"><c>+pc</c></seealso>.</p>
 	    </item>
 	  </list>
 	</item>
 
 	<tag><em>Back Trace Size...</em></tag>
-	<item><p>Set how many call frames to be fetched when
+	<item><p>Sets how many call frames to be fetched when
 	  inspecting the call stack from the Attach Process window.
 	  Does not affect existing Attach Process windows.</p>
 	</item>
@@ -555,7 +555,7 @@
       <title>Help Menu</title>
       <taglist>
 	<tag><em>Help</em></tag>
-	<item><p>View the Debugger documentation. This function requires a
+	<item><p>Shows the Debugger documentation. This function requires a
 	  web browser.</p></item>
       </taglist>
     </section>
@@ -563,14 +563,14 @@
 
   <section>
     <marker id="interpret"/>
-    <title>Interpret Dialog Window</title>
+    <title>Interpret Modules Window</title>
 
-    <p>The Interpret Dialog window is used for selecting which modules
+    <p>The Interpret Modules window is used for selecting which modules
       to interpret. Initially, the window displays the modules (<c>erl</c>
      files) and subdirectories of the current working directory.</p>
 
-    <p>Interpretable modules are modules for which a BEAM file, compiled
-      with option <c>debug_info</c> set, is located in the same
+    <p>Interpretable modules are modules for which a <c>.beam</c> file,
+      compiled with option <c>debug_info</c> set, is located in the same
       directory as the source code, or in an <c>ebin</c> directory next
       to it.</p>
 
@@ -578,8 +578,8 @@
       not interpretable and are therefore displayed within parentheses.</p>
 
     <p>Option <c>debug_info</c> causes <em>debug information</em> or
-      <em>abstract code</em> to be added to the BEAM file. This
-      increases the file size and makes it possible to
+      <em>abstract code</em> to be added to the <c>.beam</c> file.
+      This increases the file size and makes it possible to
       reconstruct the source code. It is therefore recommended not to
       include debug information in code aimed for target systems.</p>
 
@@ -594,7 +594,7 @@
  4> c(module, debug_info).</pre>
 
     <image file="images/interpret.jpg">
-      <icaption>Interpret Dialog Window</icaption>
+      <icaption>Interpret Modules Window</icaption>
     </image>
 
     <p>To browse the file hierarchy and interpret the appropriate modules,
@@ -641,38 +641,43 @@
         <p>Active breakpoints are displayed in red and inactive
           breakpoints in blue.</p>
       </item>
+
       <item>The Button area, with buttons for quick access to frequently
         used functions in the <em>Process</em> menu.</item>
+
       <item>The Evaluator area, where you can evaluate functions
         within the context of the debugged process, if that
-        process execution has been stopped.</item>
+        process execution is stopped.</item>
+
       <item>The Bindings area, displaying all variables bindings. If you
         click a variable name, the value is displayed in the Evaluator area.
 	Double-click a variable name to open a window where
         the variable value can be edited. Notice however that pid,
         reference, binary, or port values cannot be edited.
       </item>
+
       <item><p>The Trace area, which displays a trace output for the
         process.</p>
 	<taglist>
           <tag><c>++ (N) &lt;L&gt;</c></tag>
-          <item>Function call, where <c>N</c> is the call level and
-            <c>L</c> the line number.</item>
+          <item><p>Function call, where <c>N</c> is the call level and
+            <c>L</c> the line number.</p></item>
 
           <tag><c>-- (N)</c></tag>
-          <item>Function return value.</item>
+          <item><p>Function return value</p>.</item>
 
           <tag><c>==> Pid : Msg</c></tag>
-          <item>The message <c>Msg</c> is sent to process <c>Pid</c>.</item>
+          <item><p>The message <c>Msg</c> is sent to process
+            <c>Pid</c>.</p></item>
 
           <tag><c><![CDATA[<== Msg]]></c></tag>
-          <item>The message <c>Msg</c> is received.</item>
+          <item><p>The message <c>Msg</c> is received.</p></item>
 
           <tag><c>++ (N) receive</c></tag>
-          <item>Waiting in a <c>receive</c>.</item>
+          <item><p>Waiting in a <c>receive</c>.</p></item>
 
           <tag><c>++ (N) receive with timeout</c></tag>
-          <item>Waiting in a <c>receive...after</c>.</item>
+          <item><p>Waiting in a <c>receive...after</c>.</p></item>
         </taglist>
 
         <p>The Trace area also displays Back Trace, a summary of the
@@ -680,15 +685,15 @@
       </item>
     </list>
 
-    <p>Using the <em>Options</em> menu, it can be set which areas are to be
-      visible. By default, all areas except the Trace area are displayed.</p>
+    <p>Using the <em>Options</em> menu, you can set which areas to be
+      displayed. By default, all areas except the Trace area are displayed.</p>
 
     <section>
       <title>File Menu</title>
 
       <taglist>
 	<tag><em>Close</em></tag>
-	<item><p>Close this window and detach from the process.</p>
+	<item><p>Closes this window and detach from the process.</p>
 	</item>
       </taglist>
     </section>
@@ -698,10 +703,10 @@
 
       <taglist>
 	<tag><em>Go to line...</em></tag>
-	<item><p>Go to a specified line number.</p></item>
+	<item><p>Goes to a specified line number.</p></item>
 
 	<tag><em>Search...</em></tag>
-	<item><p>Search for a specified string.</p></item>
+	<item><p>Searches for a specified string.</p></item>
       </taglist>
     </section>
 
@@ -710,49 +715,49 @@
 
       <taglist>
 	<tag><em>Step</em></tag> 
-	<item><p>Execute the current code line, stepping into any
+	<item><p>Executes the current code line, stepping into any
 	    (interpreted) function calls.</p></item>
 
 	<tag><em>Next</em></tag>
-	<item><p>Execute the current code line and stop at the next
+	<item><p>Executes the current code line and stop at the next
 	    line.</p></item>
 
 	<tag><em>Continue</em></tag>
-	<item><p>Continue the execution.</p></item>
+	<item><p>Continues the execution.</p></item>
 
 	<tag><em>Finish</em></tag>
-	<item><p>Continue the execution until the current function
+	<item><p>Continues the execution until the current function
 	    returns.</p></item>
 
 	<tag><em>Skip</em></tag>
-	<item><p>Skip the current code line and stop at the next
+	<item><p>Skips the current code line and stop at the next
 	    line. If used on the last line in a function body,
 	    the function returns <c>skipped</c>.</p></item>
 
 	<tag><em>Time Out</em></tag>
-	<item><p>Simulate a time-out when executing a
+	<item><p>Simulates a time-out when executing a
 	    <c>receive...after</c> statement.</p></item>
 
 	<tag><em>Stop</em></tag>
-	<item><p>Stop the execution of a running process, that is, make
+	<item><p>Stops the execution of a running process, that is, make
 	    the process stop at a breakpoint. The command takes
 	    effect (visibly) the next time the process receives a
 	    message.</p></item>
 
 	<tag><em>Where</em></tag>
-	<item><p>Verify that the current location of the execution is
+	<item><p>Verifies that the current location of the execution is
 	    visible in the code area.</p></item>
 
 	<tag><em>Kill</em></tag>
-	<item><p>Terminate the process using <c>exit(Pid,kill)</c>.</p>
+	<item><p>Terminates the process using <c>exit(Pid,kill)</c>.</p>
 	</item>
 
 	<tag><em>Messages</em></tag>
-	<item><p>Inspect the message queue of the process. The queue is
+	<item><p>Inspects the message queue of the process. The queue is
 	    displayed in the Evaluator area.</p></item>
 
 	<tag><em>Back Trace</em></tag>
-	<item><p>Display the back trace of the process, a summary of
+	<item><p>Displays the back trace of the process, a summary of
 	    the current function calls on the stack, in the Trace area.
 	    Requires that the Trace area is visible and that the Stack
 	    Trace option is <em>Stack On, Tail</em> or
@@ -760,11 +765,11 @@
 	</item>
 
 	<tag><em>Up</em></tag>
-	<item><p>Inspect the previous function call on the stack,
+	<item><p>Inspects the previous function call on the stack,
 	    showing the location and variable bindings.</p></item>
 
 	<tag><em>Down</em></tag>
-	<item><p>Inspect the next function call on the stack, showing
+	<item><p>Inspects the next function call on the stack, showing
 	    the location and variable bindings.</p></item>
       </taglist>
     </section>
@@ -774,7 +779,7 @@
 
       <taglist>
 	<tag><em>Trace Window</em></tag>
-	<item><p>Set which areas are to be visible. Does not affect
+	<item><p>Sets which areas are to be visible. Does not affect
 	    other Attach Process windows.</p></item>
 
 	<tag><em>Stack Trace</em></tag>
@@ -788,7 +793,7 @@
 	    process the window is attached to.</p></item>
 
 	<tag><em>Back Trace Size...</em></tag>
-	<item><p>Set how many call frames are to be fetched when
+	<item><p>Sets how many call frames are to be fetched when
 	    inspecting the call stack. Does not affect other Attach
 	    Process windows.</p></item>
       </taglist>
@@ -800,7 +805,8 @@
       <p>The <em>Break</em>, <em>Windows</em>, and <em>Help</em> menus
         are the same as in the
         <seealso marker="#monitor">Monitor Window</seealso>, except
-        that the <em>Breaks</em> menu apply only to local breakpoints.</p>
+        that the <em>Breaks</em> menu applies only to local
+        breakpoints.</p>
     </section>
   </section>
 
@@ -838,7 +844,7 @@
       <p>The <em>Break</em>, <em>Windows</em>, and <em>Help</em> menus
         are the same as in the
         <seealso marker="#monitor">Monitor Window</seealso>, except
-	that the <em>Break</em> menu apply only to local breakpoints.</p>
+	that the <em>Break</em> menu applies only to local breakpoints.</p>
     </section>
   </section>
 
@@ -852,8 +858,8 @@
 
     <p>It is also worth to keep in mind that programs with timers can
       behave differently when debugged. This is especially true when
-      stopping the execution of a process, for example at a
-      breakpoint. Time-outs can then occur in other processes that
+      stopping the execution of a process (for example, at a
+      breakpoint). Time-outs can then occur in other processes that
       continue execution as normal.</p>
   </section>
 

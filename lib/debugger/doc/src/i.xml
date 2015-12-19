@@ -46,7 +46,7 @@
 
     <p>By preference, these functions can be included in module
       <seealso marker="stdlib:shell_default"><c>stdlib:shell_default</c></seealso>.
-      By default, they are.</p>
+      By default, they are included in that module.</p>
   </description>
 
   <funcs>
@@ -101,7 +101,7 @@
 
     <func>
       <name>il() -> ok</name>
-      <fsummary>Make a printout of all interpreted modules</fsummary>
+      <fsummary>Makes a printout of all interpreted modules</fsummary>
       <desc>
 	<p>Makes a printout of all interpreted modules.
 	  Modules are printed together with the full path name of the 
@@ -120,7 +120,7 @@
 
     <func>
       <name>ic() -> ok</name>
-      <fsummary>Clear information about processes executing interpreted
+      <fsummary>Clears information about processes executing interpreted
 	code.</fsummary>
       <desc>
 	<p>Clears information about processes executing interpreted code
@@ -139,8 +139,8 @@
 	<v>&nbsp;Args = [term()]</v>
       </type>
       <desc>
-	<p>Sets when and how to automatically attach to a debugged
-	  process, see
+	<p>Sets when and how to attach to a debugged process
+          automatically, see
 	  <seealso marker="int#auto_attach/0">int:auto_attach/2</seealso>.
 	  <c>Function</c> defaults to the standard function used by
 	  Debugger.</p>
@@ -343,7 +343,7 @@
 	  the current variable bindings. The function must return
 	  <c>true</c> (break) or <c>false</c> (do not break).
 	  To retrieve the value of a variable <c>Var</c>, use
-          <seealso marker="int#get_binding">int:get_binding(Var, Bindings)</seealso>.</p>
+	  <seealso marker="int#get_binding">int:get_binding(Var, Bindings)</seealso>.</p>
       </desc>
     </func>
 
@@ -371,8 +371,7 @@
       <fsummary>Current version number of the interpreter.</fsummary>
       <desc>
 	<p>Returns the current version number of the interpreter.
-	  The same as the version number of the <c>Debugger</c>
-	  application.</p>
+	  Same as the version number of the <c>Debugger</c> application.</p>
       </desc>
     </func>
 
@@ -384,11 +383,6 @@
       </desc>
     </func>
   </funcs>
-
-  <section>
-    <title>Use</title>
-    <p>For information about Debugger, see the User's Guide.</p>
-  </section>
 
   <section>
   <title>See Also</title>

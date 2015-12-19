@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<locatingRules xmlns="http://thaiopensource.com/ns/locating-rules/1.0">
+  <uri resource="int.xml" uri="../../../erl_docgen/priv/dtds/erlref.rnc"/>
+  <uri resource="i.xml" uri="../../../erl_docgen/priv/dtds/erlref.rnc"/>
+  <uri resource="debugger.xml" uri="../../../erl_docgen/priv/dtds/erlref.rnc"/>
+  <uri resource="debugger_chapter.xml" uri="../../../erl_docgen/priv/dtds/chapter.rnc"/>
+  <uri resource="getting_started_chapter.xml" uri="../../../erl_docgen/priv/dtds/chapter.rnc"/>
+  <uri resource="debugger_chapter.xml" uri="../../../erl_docgen/priv/dtds/chapter.rnc"/>
+  <uri resource="introduction.xml" uri="../../../erl_docgen/priv/dtds/chapter.rnc"/>
+  <uri resource="debugger_chapter.xml" uri="../../../erl_docgen/priv/dtds/chapter.rnc"/>
+  <uri resource="part.xml" uri="../../../erl_docgen/priv/dtds/part.rnc"/>
+  <uri resource="book.xml" uri="../../../erl_docgen/priv/dtds/book.rnc"/>
+</locatingRules>
