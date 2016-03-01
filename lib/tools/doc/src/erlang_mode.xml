@@ -30,296 +30,325 @@
     <rev></rev>
   </header>
   <module>erlang.el</module>
-  <modulesummary>Erlang mode for Emacs </modulesummary>
+  <modulesummary>Erlang mode for Emacs.</modulesummary>
   <description>
-    <p>Possibly the most important feature of an editor designed for
-      programmers is the ability to indent a line of code in accordance
+    <p>The most important feature of an editor designed for programmers
+      can be the ability to indent a line of code in accordance
       with the structure of the programming language. The Erlang mode
-      does, of course, provide this feature.  The layout used is based
-      on the common use of the language. The mode also provides things as
+      provides this feature. The layout used is based
+      on the common use of the language. The mode also provides
       syntax highlighting, electric commands, module name verification,
       comment support including paragraph filling, skeletons, tags
-      support etc.</p>
-    <p>In the following descriptions the use of the word <em>Point</em> means: "Point can be seen as the position of the
+      support, and so on.</p>
+    <p>In this section, the use of the word <em>Point</em> means
+      "Point can be seen as the position of the
       cursor. More precisely, the point is the position between two
       characters while the cursor is drawn over the character
       following the point".</p>
   </description>
 
   <section>
-    <title>Indent</title>
-    <p>The following command are directly available for indentation.</p>
+    <title>Indentation</title>
+    <p>The following commands are directly available for indentation:</p>
+    <taglist>
+      <tag><c>TAB</c> (<c>erlang-indent-command</c>)</tag>
+      <item><p>Indents the current line of code.</p></item>
+      <tag><c>M-C-\</c> (<c>indent-region</c>)</tag>
+      <item><p>Indents all lines in the region.</p></item>
+      <tag><c>M-l</c> (<c>indent-for-comment</c>)</tag>
+      <item><p>Inserts a comment character to the right of the code on the
+        line (if any).</p></item>
+    </taglist>
+    <p>Lines containing a comment are indented differently depending on
+      the number of <c>%</c> characters used:</p>
     <list type="bulleted">
-      <item><em><c>TAB</c></em> (<c>erlang-indent-command</c>) -
-       Indents the current line of code. </item>
-      <item><em><c>M-C-\</c></em> (<c>indent-region</c>) - Indents all
-       lines in the region. </item>
-      <item><em><c>M-l</c></em> (<c>indent-for-comment</c>) - Insert a
-       comment character to the right of the code on the line (if
-       any).</item>
+      <item><p>Lines with one <c>%</c> character are indented to the right
+       of the code. The column is specified by variable
+       <c>comment-column</c>, default is column 48.</p></item>
+      <item><p>Lines with two <c>%</c> characters are indented to the same
+       depth as code would have been in the same situation.</p></item>
+      <item><p>Lines with three of more <c>%</c> characters are indented to
+       the left margin.</p></item>
     </list>
-    <p>Lines containing comment are indented differently depending on
-      the number of %-characters used: </p>
-    <list type="bulleted">
-      <item>Lines with one %-character is indented to the right of
-       the code. The column is specified by the variable
-      <c>comment-column</c>, by default column 48 is used.</item>
-      <item>Lines with two %-characters will be indented to the same
-       depth as code would have been in the same situation. </item>
-      <item>Lines with three of more %-characters are indented to the
-       left margin.</item>
-      <item><em><c>C-c C-q</c></em> (<c>erlang-indent-function</c>) -
-       Indents the current Erlang function. </item>
-      <item><em><c>M-x erlang-indent-clause RET</c></em>      <br></br>
- -Indent the
-       current Erlang clause.</item>
-      <item><em><c>M-x erlang-indent-current-buffer RET</c></em> -
-       Indent the entire buffer. </item>
-    </list>
+    <p>More indentation commands:</p>
+    <taglist>
+      <tag><c>C-c C-q</c> (<c>erlang-indent-function</c>)</tag>
+      <item><p>Indents the current Erlang function.</p></item>
+      <tag><c>M-x erlang-indent-clause RET</c></tag>
+      <item><p>Indents the current Erlang clause.</p></item>
+      <tag><c>M-x erlang-indent-current-buffer RET</c></tag>
+      <item><p>Indents the entire buffer.</p></item>
+    </taglist>
   </section>
 
   <section>
-    <title>Edit - Fill Comment </title>
-    <p>When editing normal text in text mode you can let Emacs reformat the
-      text by the <c>fill-paragraph</c> command.  This command will not work
-      for comments since it will treat the comment characters as words.</p>
+    <title>Edit - Fill Comment</title>
+    <p>When editing normal text in text mode, you can let Emacs reformat
+      the text by command <c>fill-paragraph</c>. It does not work
+      for comments, as it treats the comment characters as words.</p>
     <p>The Erlang editing mode provides a command that knows about the
-      Erlang comment structure and can be used to fill text paragraphs
-      in comments. Ex:</p>
+      Erlang comment structure and it can be used to fill text paragraphs
+      in comments.</p>
+    <p><em>Example:</em></p>
+
     <code type="none">
-      %% This is   just a very simple test to show
-      %% how the Erlang fill
-      %% paragraph   command works.</code>
-    <p>Clearly, the text is badly formatted.  Instead of formatting this
-      paragraph line by line, let's try <c>erlang-fill-paragraph</c> by
-      pressing <em><c>M-q</c></em>. The result is:</p>
+%% This is   just a very simple test to show
+%% how the Erlang fill
+%% paragraph   command works.</code>
+
+    <p>Clearly, the text is badly formatted. Instead of formatting this
+      line by line, use <c>erlang-fill-paragraph</c> by
+      pressing <c>M-q</c>. The result is as follows:</p>
+
     <code type="none">
-      %% This is just a very simple test to show how the Erlang fill
-      %% paragraph command works.</code>
+%% This is just a very simple test to show how the Erlang fill
+%% paragraph command works.</code>
   </section>
 
   <section>
-    <title>Edit - Comment/Uncomment Region </title>
-    <p><em><c>C-c C-c</c></em> will put comment characters at the
-      beginning of all lines in a marked region. If you want to have
-      two comment characters instead of one you can do <em><c>C-u 2 C-c C-c</c></em></p>
-    <p><em><c>C-c C-u</c></em> will undo a comment-region command. </p>
+    <title>Edit - Comment/Uncomment Region</title>
+    <taglist>
+      <tag><c>C-c C-c</c></tag>
+      <item><p>Puts comment characters at the beginning of all lines in
+        a marked region.</p></item>
+      <tag><c>C-u 2 C-c C-c</c></tag>
+      <item><p>Puts two comment characters instead of one.</p></item>
+      <tag><c>C-c C-u</c></tag>
+      <item><p>Undoes a comment-region command.</p></item>
+    </taglist>
   </section>
 
   <section>
-    <title>Edit - Moving the marker </title>
-    <list type="bulleted">
-      <item><em><c>C-a M-a </c></em>
-       (<c>erlang-beginning-of-function</c>) - Move the point to the
-       beginning of the current or preceding Erlang function.  With an
-       numeric argument (ex <em><c>C-u 2 C-a M-a</c></em>) the function
-       skips backwards over this many Erlang functions. Should the
-       argument be negative the point is moved to the beginning of a
-       function below the current function. </item>
-      <item><em><c>M-C-a </c></em> (<c>erlang-beginning-of-clause</c>) - As
-       above but move point to the beginning of the current or
-       preceding Erlang clause.</item>
-      <item><em><c>C-a M-e </c></em> (<c>erlang-end-of-function</c>)
-       - Move to the end of the current or following Erlang function.  With
-       an numeric argument (ex <em><c>C-u 2 C-a M-e</c></em>) the function
-       skips backwards over this many Erlang functions. Should the argument
-       be negative the point is moved to the end of a function below
-       the current function.</item>
-      <item><em><c>M-C-e </c></em> (<c>erlang-end-of-clause</c>) - As above
-       but move point to the end of the current or following Erlang
-       clause.</item>
-    </list>
+    <title>Edit - Moving the Marker</title>
+    <taglist>
+      <tag><c>C-a M-a </c> (<c>erlang-beginning-of-function</c>)</tag>
+      <item><p>Moves the point to the beginning of the current or
+       preceding Erlang function. With a
+       numeric argument (for example, <c>C-u 2 C-a M-a</c>), the
+       function skips backwards over this many Erlang functions. If the
+       argument is negative, the point is moved to the beginning of a
+       function below the current function.</p></item>
+      <tag><c>M-C-a </c> (<c>erlang-beginning-of-clause</c>)</tag>
+      <item><p>As above, but moves the point to the beginning of the current
+       orpreceding Erlang clause.</p></item>
+      <tag><c>C-a M-e </c> (<c>erlang-end-of-function</c>)</tag>
+      <item><p>Moves to the
+       end of the current or following Erlang function. With a numeric
+       argument (for example, <c>C-u 2 C-a M-e</c>), the function
+       skips backwards over this many Erlang functions. If the argument
+       is negative, the point is moved to the end of a function below
+       the current function.</p></item>
+      <tag><c>M-C-e </c> (<c>erlang-end-of-clause</c>)</tag>
+      <item><p>As above, but moves the point to the end of the current or
+       following Erlang clause.</p></item>
+    </taglist>
   </section>
 
   <section>
-    <title>Edit - Marking </title>
-    <list type="bulleted">
-      <item><em><c>C-c M-h</c></em> (<c>erlang-mark-function</c>) - Put the
-       region around the current Erlang function.  The point is
+    <title>Edit - Marking</title>
+    <taglist>
+      <tag><c>C-c M-h</c> (<c>erlang-mark-function</c>)</tag>
+      <item><p>Puts the
+       region around the current Erlang function. The point is
        placed in the beginning and the mark at the end of the
-       function.</item>
-      <item><em><c>M-C-h </c></em> (<c>erlang-mark-clause</c>) Put the region
-       around the current Erlang clause.  The point is placed in the
-       beginning and the mark at the end of the function. </item>
-    </list>
+       function.</p></item>
+      <tag><c>M-C-h </c> (<c>erlang-mark-clause</c>)</tag>
+      <item><p>Puts the region
+       around the current Erlang clause. The point is placed in the
+       beginning and the mark at the end of the function.</p></item>
+    </taglist>
   </section>
 
   <section>
-    <title>Edit - Function Header Commands </title>
-    <list type="bulleted">
-      <item><em><c>C-c C-j</c></em> (<c>erlang-generate-new-clause</c>) -
-       Create a new clause in the current Erlang function. The point is
-       placed between the parentheses of the argument list.</item>
-      <item><em><c>C-c C-y</c></em> (<c>erlang-clone-arguments</c>) -
-       Copy the function arguments of the preceding Erlang clause. This
-       command is useful when defining a new clause with almost the same
-       argument as the preceding.</item>
-    </list>
+    <title>Edit - Function Header Commands</title>
+    <taglist>
+      <tag><c>C-c C-j</c> (<c>erlang-generate-new-clause</c>)</tag>
+      <item><p>Creates a new clause in the current Erlang function.
+       The point is
+       placed between the parentheses of the argument list.</p></item>
+      <tag><c>C-c C-y</c> (<c>erlang-clone-arguments</c>)</tag>
+      <item><p>Copies the function arguments of the preceding Erlang clause.
+       This command is useful when defining a new clause with almost the same
+       argument as the preceding clause.</p></item>
+    </taglist>
   </section>
 
   <section>
     <title>Edit - Arrows</title>
-    <list type="bulleted">
-      <item>
-        <p><em><c>C-c C-a</c></em> (<c>erlang-align-arrows</c>) -
-          aligns arrows after clauses inside a region.</p>
-        <code type="none">
-        Example:
-        
-        sum(L) -> sum(L, 0).
-        sum([H|T], Sum) -> sum(T, Sum + H);
-        sum([], Sum) -> Sum.
-        
-        becomes:
-        
-        sum(L)          -> sum(L, 0).
-        sum([H|T], Sum) -> sum(T, Sum + H);
-        sum([], Sum)    -> Sum.</code>
-      </item>
-    </list>
+    <taglist>
+      <tag><c>C-c C-a</c> (<c>erlang-align-arrows</c>)</tag>
+      <item><p>Aligns arrows after clauses inside a region.</p></item>
+    </taglist>
+    <p><em>Example:</em></p>
+
+    <code type="none">
+sum(L) -> sum(L, 0).
+sum([H|T], Sum) -> sum(T, Sum + H);
+sum([], Sum) -> Sum.</code>
+
+    <p>This becomes:</p>
+
+    <code type="none">
+sum(L)          -> sum(L, 0).
+sum([H|T], Sum) -> sum(T, Sum + H);
+sum([], Sum)    -> Sum.</code>
   </section>
 
   <section>
-    <title>Syntax highlighting</title>
-    <p>The syntax highlighting can be activated from the Erlang menu. There
-      are four different alternatives:</p>
+    <title>Syntax Highlighting</title>
+    <p>Syntax highlighting can be activated from the Erlang menu. The
+      following four alternatives are available:</p>
     <list type="bulleted">
-      <item>Off: Normal black and white display.
-      </item>
-      <item>Level 1: Function headers, reserved words, comments,
-       strings, quoted atoms, and character constants will be
-       colored. </item>
-      <item>Level 2: The above, attributes, Erlang bif:s, guards, and
-       words in comments enclosed in single quotes will be colored.</item>
-      <item>Level 3: The above, variables, records, and macros will
-       be colored. (This level is also known as the Christmas tree
-       level.) </item>
+      <item><p>Off: Normal black and white display.</p></item>
+      <item><p>Level 1: Function headers, reserved words, comments,
+       strings, quoted atoms, and character constants are colored.</p></item>
+      <item><p>Level 2: The above, attributes, Erlang BIFs, guards, and
+       words in comments enclosed in single quotes are colored.</p></item>
+      <item><p>Level 3: The above, variables, records, and macros are
+       colored. (This level is also known as the Christmas tree
+       level.)</p></item>
     </list>
   </section>
 
   <section>
     <title>Tags</title>
-    <p>For the tag commands to work it requires that you have
-      generated a tag file. See <seealso marker="erlang_mode_chapter#tags">Erlang mode users guide</seealso></p>
-    <p></p>
-    <list type="bulleted">
-      <item><em><c>M-. </c></em> (<c>find-tag</c>) -
-       Find a function definition. The default value is the function name
-       under the point.  </item>
-      <item>Find Tag (<c>erlang-find-tag</c>) - Like the Elisp-function
-       `find-tag'. Capable of retrieving Erlang modules. Tags can be
-       given on the forms `tag', `module:', `module:tag'.</item>
-      <item><em><c>M-+</c></em> (<c>erlang-find-next-tag</c>) - Find the
-       next occurrence of tag.</item>
-      <item><em><c>M-TAB</c></em> (<c>erlang-complete-tag</c>) -
-       Perform completion on the tag entered in a tag search.
-       Completes to the set of names listed in the current tags table.</item>
-      <item>Tags aprops (<c>tags-apropos</c>) - Display list of all tags in
-       tags table REGEXP matches. </item>
-      <item><em><c>C-x t s</c></em> (<c>tags-search</c>) - Search
-       through all files listed in tags table for match for REGEXP.
-       Stops when a match is found.</item>
-    </list>
+    <p>For the tag commands to work, you must have
+      generated a <c>TAGS</c> file, see the User's Guide, section
+      <seealso marker="erlang_mode_chapter#tags">Tags</seealso>.</p>
+    <taglist>
+      <tag><c>M-.</c> (<c>find-tag</c>)</tag>
+      <item><p>Finds a function definition. The default value is the function
+       name under the point.</p></item>
+      <tag>Find tag (<c>erlang-find-tag</c>)</tag>
+      <item><p>Like the Elisp function
+       <c>find-tag</c>. Can retrieve Erlang modules. Tags can be
+       specified on the forms 'tag', 'module:', and 'module:tag'.</p></item>
+      <tag><c>M-+</c> (<c>erlang-find-next-tag</c>)</tag>
+      <item><p>Finds thenext occurrence of tag.</p></item>
+      <tag><c>M-TAB</c> (<c>erlang-complete-tag</c>)</tag>
+      <item><p>Performs completion on the tag entered in a tag search.
+       Completes to the set of names listed in the current tags
+       table.</p></item>
+      <tag>Tags aprops (<c>tags-apropos</c>)</tag>
+      <item><p>Displays a list of all
+       tags in tags table <c>REGEXP</c> matches.</p></item>
+      <tag><c>C-x t s</c> (<c>tags-search</c>)</tag>
+      <item><p>Searches
+       through all files listed in tags table for match for <c>REGEXP</c>.
+       Stops when a match is found.</p></item>
+    </taglist>
   </section>
 
   <section>
     <title>Skeletons</title>
-    <p>A skeleton is a piece of pre-written code that can be inserted into
+    <p>A skeleton is a piece of prewritten code that can be inserted into
       the buffer. Erlang mode comes with a set of predefined skeletons.
-      The skeletons can be accessed either from the Erlang menu of
+      The skeletons can be accessed either from the Erlang menu or
       from commands named <c>tempo-template-erlang-*</c>, as the
-      skeletons is defined using the standard Emacs package "tempo".
-      Here follows a brief description of the available skeletons:</p>
-    <list type="bulleted">
-      <item>Simple skeletons: If, Case, Receive, Receive After,
-       Receive Loop - Basic code constructs.
-      </item>
-      <item>Header elements: Module, Author - These commands insert
-       lines on the form <c>-module(</c>xxx<c>).  </c> and
-      <c>-author('my@home').</c>. They can be used directly, but are
-       also used as part of the full headers described below.</item>
-      <item>Full Headers: Small (minimum requirement), Medium (with
+      skeletons are defined using the standard Emacs package <c>tempo</c>.</p>
+    <p><em>Brief descriptions of the available skeletons:</em></p>
+    <taglist>
+      <tag>Simple skeletons: If, Case, Receive, Receive After, Receive
+        Loop</tag>
+      <item><p>Basic code constructs.</p></item>
+      <tag>Header elements: Module, Author</tag>
+      <item><p>These commands insert
+       lines on the form <c>-module(</c>xxx<c>).</c> and
+       <c>-author('my@home').</c>. They can be used directly, but are
+       also used as part of the Full Headers described below.</p></item>
+      <tag>Full Headers: Small (minimum requirement), Medium (with
        fields for basic information about the module), and Large
-       Header (medium header with some extra layout structure).</item>
-      <item>Small Server - skeleton for a simple server not using
-       OTP.</item>
-      <item>Application - skeletons for the OTP application
-       behavior</item>
-      <item>Supervisor - skeleton for the OTP supervisor behavior</item>
-      <item>Supervisor Bridge - skeleton for the OTP supervisor bridge
-       behavior </item>
-      <item>gen_server - skeleton for the OTP gen_server
-       behavior</item>
-      <item>gen_event - skeleton for the OTP gen_event behavior</item>
-      <item>gen_fsm - skeleton for the OTP gen_fsm behavior</item>
-      <item>Library module - skeleton for a module that does not
-       implement a process.</item>
-      <item>Corba callback - skeleton for a Corba callback module.</item>
-      <item>Erlang test suite - skeleton for a callback module
-       for the erlang test server.</item>
-    </list>
+       Header (medium header with some extra layout structure).</tag>
+      <item></item>
+      <tag>Small Server</tag>
+      <item><p>Skeleton for a simple server not using OTP.</p></item>
+      <tag>Application</tag>
+      <item><p>Skeletons for the OTP application behavior.</p></item>
+      <tag>Supervisor</tag>
+      <item><p>Skeleton for the OTP supervisor behavior.</p></item>
+      <tag>Supervisor Bridge</tag>
+      <item><p>Skeleton for the OTP supervisor bridge behavior.</p> </item>
+      <tag>gen_server</tag>
+      <item><p>Skeleton for the OTP <c>gen_server</c> behavior.</p></item>
+      <tag>gen_event</tag>
+      <item><p>Skeleton for the OTP <c>gen_event</c> behavior.</p></item>
+      <tag>gen_fsm</tag>
+      <item><p>Skeleton for the OTP <c>gen_fsm</c> behavior.</p></item>
+      <tag>Library module</tag>
+      <item><p>Skeleton for a module that does not provide a
+       process.</p></item>
+      <tag>CORBA callback</tag>
+      <item><p>Skeleton for a CORBA callback module.</p></item>
+      <tag>Erlang test suite</tag>
+      <item><p>Skeleton for a callback modul for the Erlang test
+       server.</p></item>
+    </taglist>
   </section>
 
   <section>
     <title>Shell</title>
-    <list type="bulleted">
-      <item>New shell (<c>erlang-shell</c>) - Starts a new Erlang shell.</item>
-      <item><em><c>C-c C-z,</c></em> (<c>erlang-shell-display </c>) -
-       Displays an Erlang shell, or starts a new one if there is no shell
-       started.</item>
-    </list>
+    <taglist>
+      <tag>New shell (<c>erlang-shell</c>)</tag>
+      <item><p>Starts a new Erlang shell.</p></item>
+      <tag><c>C-c C-z,</c> (<c>erlang-shell-display </c>)</tag>
+      <item><p>Displays an Erlang shell, or starts a new one if no shell is
+       started.</p></item>
+    </taglist>
   </section>
 
   <section>
     <title>Compile</title>
-    <list type="bulleted">
-      <item><em><c>C-c C-k,</c></em> (<c>erlang-compile</c>) -
-       Compiles the Erlang module in the current buffer.
-       You can also use <em><c>C-u C-c C-k</c></em>
-       to debug compile the module with the debug options
-      <c>debug_info</c> and <c>export_all</c>.</item>
-      <item><em><c>C-c C-l,</c></em> (<c>erlang-compile-display</c>) -
-       Display compilation output.</item>
-      <item><em><c>C-u C-x`</c></em> Start parsing the compiler output from the
-       beginning. This command will place the point on the line where
-       the first error was found.</item>
-      <item><em><c>C-x`</c></em> (<c>erlang-next-error</c>) - Move the
-       point on to the next error. The buffer displaying the
-       compilation errors will be updated so that the current error
-       will be visible.</item>
-    </list>
+    <taglist>
+      <tag><c>C-c C-k,</c> (<c>erlang-compile</c>)</tag>
+      <item><p>Compiles the Erlang module in the current buffer.
+       You can also use <c>C-u C-c C-k</c>
+       to debug compile the module with debug options
+       <c>debug_info</c> and <c>export_all</c>.</p></item>
+      <tag><c>C-c C-l,</c> (<c>erlang-compile-display</c>)</tag>
+      <item><p>Displays compilation output.</p></item>
+      <tag><c>C-u C-x`</c></tag>
+      <item><p>Starts parsing the compiler output from the
+       beginning. This command places the point on the line where
+       the first error was found.</p></item>
+      <tag><c>C-x`</c> (<c>erlang-next-error</c>)</tag>
+      <item><p>Moves the
+       point to the next error. The buffer displaying the
+       compilation errors is updated so that the current error
+       is visible.</p></item>
+    </taglist>
   </section>
 
   <section>
     <title>Man</title>
-    <p>On unix you can view the manual pages in emacs.
-      In order to find the manual pages, the variable `erlang-root-dir'
-      should be bound to the name of the directory containing the Erlang
-      installation.  The name should not include the final slash.
-      Practically, you should add a line on the following form to
-      your ~/.emacs,</p>
+    <p>On Unix you can view the manual pages in Emacs.
+      To find the manual pages, variable <c>erlang-root-dir</c>
+      is to be bound to the name of the directory containing the Erlang
+      installation. The name is not to include the final slash.
+      Practically, add a line on the following form to
+      your <c>~/.emacs,</c>:</p>
+
     <code type="none">
-      (setq erlang-root-dir "/the/erlang/root/dir/goes/here")</code>
+(setq erlang-root-dir "/the/erlang/root/dir/goes/here")</code>
   </section>
 
   <section>
-    <title>Starting IMenu</title>
-    <list type="bulleted">
-      <item><em><c>M-x imenu-add-to-menubar RET</c></em> - This
-       command will create the IMenu menu containing all the functions
-       in the current buffer.The command will ask you for a suitable
-       name for the menu. Not supported by Xemacs.</item>
-    </list>
+    <title>Start IMenu</title>
+    <taglist>
+      <tag><c>M-x imenu-add-to-menubar RET</c></tag>
+      <item><p>Creates the <c>IMenu</c> menu containing all the functions
+       in the current buffer. The command asks for a suitable
+       menu name. Not supported by Xemacs.</p></item>
+    </taglist>
   </section>
 
   <section>
     <title>Version</title>
-    <list type="bulleted">
-      <item><em><c>M-x erlang-version RET</c></em> -
-       This command displays the version number of the Erlang editing mode.
-       Remember to always supply the version number when asking questions
-       about the Erlang mode.</item>
-    </list>
+    <taglist>
+      <tag><c>M-x erlang-version RET</c></tag>
+      <item><p>Displays the version number of the Erlang editing mode.
+       Always supply the version number when asking questions
+       about the Erlang mode.</p></item>
+    </taglist>
   </section>
 </erlref>
 

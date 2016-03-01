@@ -22,145 +22,149 @@
     
     </legalnotice>
 
-    <title>The Erlang mode for Emacs</title>
+    <title>Emacs - Erlang Mode for Emacs</title>
     <prepared></prepared>
     <docno></docno>
     <date></date>
     <rev></rev>
     <file>erlang_mode_chapter.xml</file>
   </header>
+  <p>This section provides an introduction to the Erlang mode for Emacs
+    and gives some background information of the functions and features.
+    The Erlang mode facilitate the developing process for the Erlang
+    programmer.</p>
 
   <section>
-    <title>Purpose</title>
-    <p>The purpose of this user guide is to introduce you to the
-      Erlang mode for Emacs and gives some relevant background
-      information of the functions and features. See also <seealso marker="erlang.el">Erlang mode reference manual</seealso> The
-      purpose of the Erlang mode itself is to facilitate the developing
-      process for the Erlang programmer.</p>
-  </section>
-
-  <section>
-    <title>Pre-requisites</title>
-    <p>Basic knowledge of Emacs and Erlang/OTP. </p>
+    <title>Prerequisites</title>
+    <p>It is assumed that the reader is familiar with Emacs.</p>
   </section>
 
   <section>
     <title>Elisp</title>
-    <p>There are two Elisp modules included in this tool package
-      for Emacs. There is erlang.el that defines the actual erlang mode
-      and there is erlang-start.el that makes some nice initializations.</p>
+    <p>The following two Elisp modules are included in this tool package
+      for Emacs:</p>
+    <list type="bulleted">
+      <item><p><c>erlang.el</c> - Defines the Erlang mode.</p></item>
+      <item><p><c>erlang-start.el</c> - Makes some nice initializations.
+      </p></item>
+    </list>
   </section>
 
   <section>
-    <title>Setup on UNIX</title>
-    <p>To set up the Erlang Emacs mode on a UNIX systems, edit/create
-      the file <c>.emacs</c> in the your home directory.</p>
-    <p>Below is a complete example of what should be added to a user's
-      <c>.emacs</c> provided that OTP is installed in the directory
-      <c>/usr/local/otp </c>: </p>
+    <title>Setup on Unix</title>
+    <p>To set up the Erlang Emacs mode on a Unix systems, edit/create
+      file <c>.emacs</c> in your home directory.</p>
+    <p>The following is a complete example of what is to be added to
+      your <c>.emacs</c> file if OTP is installed in directory
+      <c>/usr/local/otp </c>:</p>
+
     <code type="none"><![CDATA[
-      (setq load-path (cons  "/usr/local/otp/lib/tools-<ToolsVer>/emacs"
-      load-path))
-      (setq erlang-root-dir "/usr/local/otp")
-      (setq exec-path (cons "/usr/local/otp/bin" exec-path))
-      (require 'erlang-start)
-    ]]></code>
+(setq load-path (cons  "/usr/local/otp/lib/tools-<ToolsVer>/emacs"
+load-path))
+(setq erlang-root-dir "/usr/local/otp")
+(setq exec-path (cons "/usr/local/otp/bin" exec-path))
+(require 'erlang-start)
+]]></code>
   </section>
 
   <section>
-    <title>Setup on Windows </title>
-    <p>To set up the Erlang Emacs mode on a Windows systems,
-      edit/create the file <c>.emacs</c>, the location of the file
-      depends on the configuration of the system. If the <em>HOME</em>
-      environment variable is set, Emacs will look for the
-      <c>.emacs</c> file in the directory indicated by the
-      <em>HOME</em> variable. If <em>HOME</em> is not set, Emacs
-      will look for the <c>.emacs</c> file in <c>C:\ </c>.</p>
-    <p>Below is a complete example of what should be added to a user's
-      <c>.emacs</c> provided that OTP is installed in the directory
-      <c><![CDATA[C:\Program Files\erl<Ver>]]></c>: </p>
+    <title>Setup on Windows</title>
+    <p>To set up the Erlang Emacs mode on a Windows systems, edit/create
+      file <c>.emacs</c>. The location of the file depends on the system
+      configuration.</p>
+    <p>If environment variable <c>HOME</c> is set, Emacs looks for the
+      <c>.emacs</c> file in the directory indicated by <c>HOME</c>.
+      If <c>HOME</c> is not set, Emacs looks for the <c>.emacs</c> file in
+      <c>C:\</c>.</p>
+    <p>The following is a complete example of what to add to
+      your <c>.emacs</c> file if OTP is installed in directory
+      <c><![CDATA[C:\Program Files\erl<Ver>]]></c>:</p>
+
     <code type="none"><![CDATA[
-      (setq load-path (cons  "C:/Program Files/erl<Ver>/lib/tools-<ToolsVer>/emacs"
-      load-path))
-      (setq erlang-root-dir "C:/Program Files/erl<Ver>")
-      (setq exec-path (cons "C:/Program Files/erl<Ver>/bin" exec-path))
-      (require 'erlang-start)
-    ]]></code>
-    <note>
-      <p>In .emacs, the slash character "/" can be used as path
-        separator. But if you decide to use the backslash character "\",
-        please not that you must use double backslashes, since they are
-        treated as escape characters by Emacs.</p>
+(setq load-path (cons  "C:/Program Files/erl<Ver>/lib/tools-<ToolsVer>/emacs"
+load-path))
+(setq erlang-root-dir "C:/Program Files/erl<Ver>")
+(setq exec-path (cons "C:/Program Files/erl<Ver>/bin" exec-path))
+(require 'erlang-start)
+]]></code>
+
+    <note><p>In the <c>.emacs</c> file, the slash character (<c>/</c>) can
+      be used as path separator. But if you decide to use the backslash
+      character (<c>\</c>), you must use double backslashes, as they are
+      treated as escape characters by Emacs.</p>
     </note>
   </section>
 
   <section>
     <title>Indentation</title>
-    <p>The "Oxford Advanced Learners Dictionary of Current English" says the
-      following about the word "indent":</p>
-    <quote>
-      <p>"start (a line of print or writing) farther from
-        the margin than the others".</p>
-    </quote>
-    <p>The Erlang mode does, of course, provide this feature. The layout
-      used is based on the common use of the language.</p>
-    <p>It is strongly recommend to use this feature and avoid to indent lines
-      in a nonstandard way.  Some motivations are:</p>
+    <p>The "Oxford Advanced Learners Dictionary of Current English" defines
+      the word "indent" as "start (a line of print or writing) farther from
+      the margin than the others".</p>
+    <p>This feature is provided by the Erlang mode. The layout used is based
+      on the common use of the language.</p>
+    <p>It is strongly recommended to use this feature and to avoid indenting
+      lines in a non-standard way. Some motivations are as follows:</p>
     <list type="bulleted">
-      <item>Code using the same layout is easy to read and maintain. </item>
-      <item>Since several features of Erlang mode is based on the
-       standard layout they might not work correctly if a nonstandard layout
-       is used. </item>
+      <item><p>Code using the same layout is easy to read and maintain.
+        </p></item>
+      <item><p>As many features of the Erlang mode are based on the
+       standard layout, it is unsure that they work correctly if a
+       non-standard layout is used.</p></item>
     </list>
-    <p>The indentation features can be used to reindent large sections
-      of a file.  If some lines use nonstandard indentation they will
-      be reindented.</p>
+    <p>The indentation feature can be used to reindent large sections
+      of a file. If some lines use non-standard indentation, they are
+      reindented.</p>
   </section>
 
   <section>
     <title>Editing</title>
-    <list type="bulleted">
-      <item><em><c>M-x erlang-mode RET</c></em> - This command activates
-       the Erlang major mode for the current buffer.  When this
-       mode is active the mode line contain the word "Erlang".</item>
-    </list>
+    <taglist>
+      <tag><c>M-x erlang-mode RET</c></tag>
+      <item>This command activates
+       the Erlang major mode for the current buffer. When this
+       mode is active, the mode line contains the word "Erlang".</item>
+    </taglist>
     <p>When the Erlang mode is correctly installed, it is
       automatically activated when a file ending in <c>.erl</c> or
       <c>.hrl</c> is opened in Emacs.</p>
-    <p>When a file is saved the name in the <c>-module().</c> line is
-      checked against the file name. Should they mismatch Emacs can
-      change the module specifier so that it matches the file name.
-      By default, the user is asked before the change is performed.</p>
-    <p>An "electric" command is a character that in addition to just
-      inserting the character performs some type of action.  For
-      example the ";" character is typed in a situation where is ends
-      a function clause a new function header is generated. The electric
-      commands are as follows: </p>
-    <list type="bulleted">
-      <item><em><c>erlang-electric-comma</c></em> - Insert a comma
-       character and possibly a new indented line. </item>
-      <item><em><c>erlang-electric-semicolon</c></em> - Insert a
-       semicolon character and possibly a prototype for the next line.</item>
-      <item><em><c>erlang-electric-gt</c></em> - "Insert a '>'-sign
-       and possible a new indented line.</item>
-    </list>
-    <p>To disable all electric commands set the variable
-      <c>erlang-electric-commands</c> to the empty list.  In short,
+    <p>When a file is saved, the name on the <c>-module().</c> line is
+      checked against the filename. If they mismatch, Emacs can
+      change the module specifier so that it matches the filename.
+      By default, you are asked before the change is performed.</p>
+    <p>An "electric" command is a character that in addition to only
+      inserting the character performs some type of action. For
+      example, if character <c>;</c> is typed in a situation where it ends
+      a function clause, a new function header is generated. The electric
+      commands are as follows:</p>
+    <taglist>
+      <tag><c>erlang-electric-comma</c></tag>
+      <item><p>Inserts a comma
+        character and possibly a new indented line.</p></item>
+      <tag><c>erlang-electric-semicolon</c></tag>
+      <item><p>Inserts a semicolon
+        character and possibly a prototype for the next line.</p></item>
+      <tag><c>erlang-electric-gt</c></tag>
+      <item><p>Inserts a &gt; sign
+       and possible a new indented line.</p></item>
+    </taglist>
+    <p>To disable all electric commands, set variable
+      <c>erlang-electric-commands</c> to the empty list. In short,
       place the following line in your <c>.emacs</c>-file:</p>
+
     <code type="none">
-      (setq erlang-electric-commands '())</code>
+(setq erlang-electric-commands '())</code>
   </section>
 
   <section>
-    <title>Syntax highlighting</title>
-    <p>It is possible for Emacs to use colors when displaying a buffer. By
-      "syntax highlighting", we mean that syntactic components, for example
-      keywords and function names, will be colored.</p>
-    <p>The basic idea of syntax highlighting is to make the structure of a
-      program clearer. For example, the highlighting will make it easier to
-      spot simple bugs.  Have not you ever written a variable in lower-case
-      only?  With syntax highlighting a variable will colored while atoms
-      will be shown with the normal text color.</p>
+    <title>Syntax Highlighting</title>
+    <p>Emacs can use colors when displaying a buffer.
+      "Syntax highlighting" means that syntactic components, for example,
+      keywords and function names, are colored.</p>
+    <p>The basic idea of syntax highlighting is to make the program structure
+      clearer. For example, the highlighting makes it easier to spot
+      simple bugs. Have you ever written a variable in lower-case
+      only? With syntax highlighting, a variable is colored while atoms
+      are displayed with the normal text color.</p>
   </section>
 
   <section>
@@ -168,85 +172,87 @@
     <title>Tags</title>
     <p>Tags is a standard Emacs package used to record information
       about source files in large development projects. In addition to
-      listing the files of a project, a tags file normally contains
-      information about all functions and variables that are defined.
-      By far, the most useful command of the tags system is its ability
-      to find the definition of functions in any file in the project.
-      However the Tags system is not limited to this feature, for
-      example, it is possible to do a text search in all files in a
-      project, or to perform a project-wide search and replace.</p>
-    <p>In order to use the Tags system a file named <c>TAGS</c> must be
-      created.  The file can be seen as a database over all functions,
-      records, and macros in all files in the project.  The
+      listing the project files, a Tags file normally contains
+      information about all defined functions and variables.
+      By far, the most useful command of the Tags system is its ability
+      to find the definition of functions in any project file.
+      However, the Tags system is not limited to this feature.
+      You can, for example, do a text search in all project files
+      or do a project-wide search and replace.</p>
+    <p>To use the Tags system, a file named <c>TAGS</c> must be
+      created. The file can be seen as a database over all functions,
+      records, and macros in all project files. The
       <c>TAGS</c> file can be created using two different methods for
-      Erlang.  The first is the standard Emacs utility "etags", the
-      second is by using the Erlang module <c>tags</c>.</p>
+      Erlang, one uses the standard Emacs utility <c>etags</c>, the
+      other uses the Erlang module 
+      <seealso marker="tags"><c>tags</c></seealso>.</p>
   </section>
 
   <section>
-    <title>Etags</title>
+    <title>etags</title>
     <p><c>etags</c> is a program that is part of the Emacs
-      distribution.  It is normally executed from a command line, like
-      a unix shell or a DOS box.</p>
+      distribution. It is normally executed from a command line, like
+      a Unix shell or a DOS box.</p>
     <p>The <c>etags</c> program of fairly modern versions of Emacs and XEmacs
-      has native support for Erlang.  To check if your version does include
-      this support, issue the command <c>etags --help</c> at a the command
-      line prompt.  At the end of the help text there is a list of supported
-      languages.  Unless Erlang is a member of this list I suggest that you
-      should upgrade to a newer version of Emacs.</p>
-    <p>As seen in the help text -- unless you have not upgraded your
-      Emacs yet (well, what are you waiting around here for?  Off you go and
-      upgrade!)  -- <c>etags</c> associate the file extensions <c>.erl</c>
+      has native support for Erlang. To check if your version includes
+      this support, issue command <c>etags --help</c> at the command-line
+      prompt. At the end of the help text, a list of supported languages is
+      included. Unless Erlang is a member of this list, it is recommended
+      that you upgrade to a newer version of Emacs.</p>
+    <p>As seen in the help text (unless you have not upgraded your Emacs),
+      <c>etags</c> associates the file extensions <c>.erl</c>
       and <c>.hrl</c> with Erlang.</p>
-    <p>Basically, the <c>etags</c> utility is ran using the following form:</p>
+    <p>Basically, the <c>etags</c> utility is run using the following form:</p>
+
     <code type="none">
-      etags file1.erl file2.erl</code>
-    <p>This will create a file named <c>TAGS</c> in the current directory.</p>
+etags file1.erl file2.erl</code>
+
+    <p>This creates a file named <c>TAGS</c> in the current directory.</p>
     <p>The <c>etags</c> utility can also read a list of files from its
-      standard input by supplying a single dash in place of the file
-      names.  This feature is useful when a project consists of a
-      large number of files.  The standard UNIX command <c>find</c>
-      can be used to generate the list of files, e.g:</p>
+      standard input by supplying a single dash in place of the filenames.
+      This feature is useful when a project consists of
+      many files.  The standard Unix command <c>find</c>
+      can be used to generate the list of files, for example:</p>
+
     <code type="none">
-      find . -name "*.[he]rl" -print | etags -</code>
-    <p>The above line will create a <c>TAGS</c> file covering all the
+find . -name "*.[he]rl" -print | etags -</code>
+
+    <p>This creates a <c>TAGS</c> file covering all the
       Erlang source files in the current directory, and in the
       subdirectories below.</p>
-    <p>Please see the GNU Emacs Manual and the etags man page for more
-      info.</p>
+    <p>For more information, see the GNU Emacs Manual and the <c>etags</c>
+      manual page.</p>
   </section>
 
   <section>
     <title>Shell</title>
-    <p>The look and feel on an Erlang shell inside Emacs should be the
-      same as in a normal Erlang shell.  There is just one major
-      difference, the cursor keys will actually move the cursor around
-      just like in any normal Emacs buffer. The command line history
-      can be accessed by the following commands: </p>
+    <p>The look and feel of an Erlang shell inside Emacs is to be the
+      same as in a normal Erlang shell. There is only one major
+      difference, the cursor keys move the cursor around
+      like in any normal Emacs buffer. The command-line history
+      can be accessed by the following commands:</p>
     <list type="bulleted">
-      <item><em><c>C-up </c></em>  or <em><c>M-p </c></em>
-       (<c>comint-previous-input</c>) -
-       Move to the previous line in the input history.</item>
-      <item><em><c>C-down </c></em> or <em><c>M-n </c></em>
-       (<c>comint-next-input</c>) - Move to the next line in the
-       input history.</item>
+      <item><p><c>C-up</c> or <c>M-p</c> (<c>comint-previous-input</c>) -
+        Moves to the previous line in the input history.</p></item>
+      <item><p><c>C-down</c> or <c>M-n</c> (<c>comint-next-input</c>) -
+        Moves to the next line in the input history.</p></item>
     </list>
-    <p>If the Erlang shell buffer would be killed the command line
-      history is saved to a file.  The command line history is
+    <p>If the Erlang shell buffer is killed, the command-line
+      history is saved to a file. The command-line history is
       automatically retrieved when a new Erlang shell is started.</p>
   </section>
 
   <section>
     <title>Compilation</title>
-    <p>The classic edit-compile-bugfix cycle for Erlang is to edit the
-      source file in an editor, save it to a file and switch to an
-      Erlang shell. In the shell the compilation command is given.
-      Should the compilation fail you have to bring out the editor and
+    <p>The classic edit-compile-bug fix cycle for Erlang is to edit the
+      source file in an editor, save it to a file, and switch to an
+      Erlang shell. The compilation command is specified in the shell.
+      If the compilation fails, bring out the editor and
       locate the correct line.</p>
-    <p>With the Erlang editing mode the entire edit-compile-bugfix cycle can
-      be performed without leaving Emacs.  Emacs can order Erlang to compile
-      a file and it can parse the error messages to automatically place the
-      point on the erroneous lines.</p>
+    <p>With the Erlang editing mode, the entire edit-compile-bug fix cycle can
+      be performed without leaving Emacs. Emacs can order Erlang to compile
+      a file and it can parse the error messages to place the
+      point on the erroneous lines automatically.</p>
   </section>
 </chapter>
 

@@ -22,363 +22,1201 @@
     
     </legalnotice>
 
-    <title>Xref - The Cross Reference Tool</title>
+    <title>Xref - Cross Reference Tool</title>
     <prepared>Hans Bolinder</prepared>
-    <responsible>nobody</responsible>
+    <responsible></responsible>
     <docno></docno>
-    <approved>nobody</approved>
-    <checked>no</checked>
+    <approved></approved>
+    <checked></checked>
     <date>2000-08-18</date>
     <rev>PA1</rev>
     <file>xref_chapter.xml</file>
   </header>
   <p>Xref is a cross reference tool that can be used for
-    finding dependencies between functions, modules, applications
+    finding dependencies between functions, modules, applications,
     and releases. It does so by analyzing the defined functions
-    and the function calls.
-    </p>
-  <p>In order to make Xref easy to use, there are predefined
-    analyses that perform some common tasks. Typically, a module
+    and the function calls.</p>
+  <p>To make Xref easy to use, predefined
+    analyses perform some common tasks. Typically, a module
     or a release can be checked for calls to undefined functions.
-    For the somewhat more advanced user there is a small, but
-    rather flexible, language that can be used for selecting parts
-    of the analyzed system and for doing some simple graph
-    analyses on selected calls.
-    </p>
-  <p>The following sections show some features of Xref, beginning
-    with a module check and a predefined analysis. Then follow
-    examples that can be skipped on the first reading; not all of
-    the concepts used are explained, and it is assumed that the
-    <seealso marker="xref">reference manual</seealso> has been at
-    least skimmed.
-    </p>
+    The more advanced user can use a small, but rather flexible, language
+    to select parts of the analyzed system and to do simple graph
+    analyses on selected calls.</p>
+
+  <section>
+    <title>Calls</title>
+    <p><em>Calls</em> between functions are either
+      <marker id="local_call"></marker>
+      <em>local calls</em> like <c>f()</c> or
+      <marker id="external_call"></marker>
+      <em>external calls</em> like <c>m:f()</c>.</p>
+      <marker id="module_data"></marker>
+    <p><em>Module data</em>, which is extracted from BEAM files, include local
+      functions, exported functions, local calls, and external calls.</p>
+    <p>By default, calls to built-in functions (BIFs) are ignored. However, if
+      option <c>builtins</c>, accepted by some functions in this module, is set
+      to <c>true</c>, calls to BIFs are included also. The analyzing OTP version
+      decides what functions are BIFs.</p>
+    <p>Functional objects are assumed to be called where they are created (and
+      nowhere else).</p>
+      <marker id="unresolved_call"></marker>
+    <p><em>Unresolved calls</em> are calls to <c>apply</c> or <c>spawn</c> with
+      variable module, variable function, or variable arguments. Examples are
+      <c>M:F(a)</c>, <c>apply(M,&nbsp;f,&nbsp;[a])</c>, and
+      <c>spawn(m,&nbsp;f(),&nbsp;Args)</c>. Unresolved calls are represented by
+      calls where:</p>
+    <list type="bulleted">
+      <item><p>Variable modules are replaced with the atom
+        <c>'$M_EXPR'</c>.</p></item>
+      <item><p>Variable functions are replaced with the atom
+        <c>'$F_EXPR'</c>.</p></item>
+      <item><p>Variable number of arguments are replaced with the number
+        <c>-1</c>.</p></item>
+    </list>
+    <p>These examples are represented by calls to <c>'$M_EXPR':'$F_EXPR'/1</c>,
+      <c>'$M_EXPR':f/1</c>, and <c>m:'$F_EXPR'/-1</c>. The unresolved calls
+      are a subset of the external calls.</p>
+    <warning>
+      <p>Unresolved calls make module data incomplete, which implies that the
+        results of analyses can be invalid.</p>
+    </warning>
+  </section>
+
+  <section>
+    <title>Applications and Releases</title>
+    <p><em>Applications</em> are collections of modules. The BEAM files of the
+      modules are located in subdirectory <c>ebin</c> of the application
+      directory. The name of the application directory determines the name and
+      version of the application.</p>
+    <p><em>Releases</em> are collections of applications
+      located in subdirectory <c>lib</c> of the release directory.</p> 
+    <p>For more information about applications and releases, see section
+      <seealso marker="doc/design_principles">OTP Design Principles</seealso>
+      in System Documentation.</p>
+  </section>
+
+  <section>
+    <title>Xref Servers</title>
+    <marker id="xref_server"></marker>
+    <p><em>Xref servers</em> are identified by names, supplied when creating
+      new servers. Each Xref server hold the following:</p>
+    <list type="bulleted">
+      <item>A set of releases</item>
+      <item>A set of applications</item>
+      <item>a set of modules with module data</item>
+    </list>
+    <p>Xref servers are independent of each other.
+      All analyses are evaluated in the context of a
+      single Xref server (exceptions are the functions <c>xref:m/1</c> and
+      <c>xref:d/1</c>, which do not use servers).</p>
+      <marker id="mode"></marker>
+    <p>The <em>mode</em> of an Xref server determines what module
+      data is extracted from BEAM files as modules are added to the
+      server. Starting with OTP R7, BEAM files compiled with option
+      <c>debug_info</c> contain so called
+      <marker id="debug_info"></marker>
+      debug information, which is an abstract
+      representation of the code.</p>
+    <p>In <c>functions</c> mode, which is the default mode, function calls
+      and line numbers are extracted from the debug information.</p>
+    <p>In <c>modules</c> mode, debug
+      information is ignored if present, but dependencies between
+      modules are extracted from other parts of the BEAM files.
+      The <c>modules</c> mode is significantly less time and space
+      consuming than the <c>functions</c> mode, but only limited analyses
+      can be done.</p>
+  </section>
+
+  <section>
+    <title>Modules and Functions</title>
+      <list type="bulleted">
+        <item><p>An
+          <marker id="analyzed_module"></marker>
+          <em>analyzed module</em> is a module that is added to an Xref
+          server together with its module data.</p></item>
+        <item><p>A
+          <marker id="library_module"></marker>
+          <em>library module</em> is a module located in some directory
+          mentioned in the
+          <marker id="library_path"></marker>
+          <em>library path</em>. A library module is said to be used if some of
+          its exported functions are used by some analyzed module.</p></item>
+        <item><p>An
+          <marker id="unknown_module"></marker>
+          <em>unknown module</em> is a module that is not an analyzed module
+          or a library module, but whose exported functions are used by some
+          analyzed module.</p></item>
+        <item><p>An
+          <marker id="unknown_function"></marker>
+          <em>unknown function</em> is a used function that is not local or
+          exported by any analyzed module, and not exported by any library
+          module.</p></item>
+        <item><p>An 
+          <marker id="undefined_function"></marker>
+          <em>undefined function</em> is an externally used function that
+          is not exported by any analyzed module or library module. With this
+          notion, a local function can be an undefined function, namely if it
+          is externally used from some module. All unknown functions are also
+          undefined functions. Section
+          <seealso marker="#venn2">Predefined Analysis</seealso>
+          later in this User's Guide includes a figure illustrating this
+          relatonship.</p></item>
+      </list>
+      <p>Starting with OTP R9C, the module attribute tag <c>deprecated</c>
+        can be used to inform Xref about
+        <marker id="deprecated_function"></marker>
+        <em>deprecated functions</em> and optionally when functions are
+        planned to be removed. Some examples show the idea:</p>
+    <taglist>
+      <tag><c>-deprecated({f,1}).</c></tag>
+      <item><p>The exported function <c>f/1</c> is deprecated. Nothing is
+        said if <c>f/1</c> is removed in a later release.</p></item>
+      <tag><c>-deprecated({f,'_'}).</c></tag>
+      <item><p>All exported functions <c>f/0</c>, <c>f/1</c> and so on are
+        deprecated.</p></item>
+      <tag><c>-deprecated(module).</c></tag>
+      <item><p>All exported functions in the module are deprecated.
+        Equivalent to <c>-deprecated({'_','_'}).</c>.</p></item>
+      <tag><c>-deprecated([{g,1,next_version}]).</c></tag>
+      <item><p>Function <c>g/1</c> is deprecated and is
+        removed in the next version.</p></item>
+      <tag><c>-deprecated([{g,2,next_major_release}]).</c></tag>
+      <item><p>Function <c>g/2</c> is deprecated and is
+        removed in the next major release.</p></item>
+      <tag><c>-deprecated([{g,3,eventually}]).</c></tag>
+      <item><p>Function <c>g/3</c> is deprecated and is
+        eventually removed.</p></item>
+      <tag><c>-deprecated({'_','_',eventually}).</c></tag>
+      <item><p>All exported functions in the module are deprecated and
+        are eventually removed.</p></item>
+    </taglist>
+  </section>
+
+  <section>
+    <title>Set Up Module Data</title>
+    <p>Before any analysis can start, module data must be set up.</p>
+    <p>For example, the cross reference and the unknown functions are
+      computed when all module data are known.</p>
+    <p>Functions that need complete data take care of setting up data
+      automatically. These functions are as follows:</p>
+    <list type="bulleted">
+      <item><p><c>xref:analyze</c></p></item>
+      <item><p><c>xref:q</c></p></item>
+      <item><p><c>xref:variables</c></p></item>
+    </list>
+    <p>Module data must be set up (again) after calls to any of the
+      following functions;</p>
+    <list type="bulleted">
+      <item><p><c>xref:add_application</c></p></item>
+      <item><p><c>xref:add_directoty</c></p></item>
+      <item><p><c>xref:add_module</c></p></item>
+      <item><p><c>xref:add_release</c></p></item>
+      <item><p><c>xref:remove_application</c></p></item>
+      <item><p><c>xref:remove_module</c></p></item>
+      <item><p><c>xref:remove_release</c></p></item>
+      <item><p><c>xref:replace_application</c></p></item>
+      <item><p><c>xref:replace_module</c></p></item>
+      <item><p><c>xref:set_library_path</c></p></item>
+      <item><p><c>xref:update</c></p></item>
+    </list>
+  </section>
+
+  <section>
+    <title>Call Graphs</title>
+      <marker id="call_graph"></marker>
+    <p>The result of setting up module data is the <em>Call Graph</em>.
+      A (directed) graph consists of a set of vertices and a set of
+      (directed) edges. The edges represent
+      <marker id="call"></marker>
+      <em>calls</em> (From,&nbsp;To) between functions, modules, applications,
+      or releases. From is said to call To, and To is said to be used by From.
+      The vertices of the Call Graph are the functions of all module data:</p>
+    <list type="bulleted">
+      <item><p>Local and exported functions of analyzed modules</p></item>
+      <item><p>Used BIFs</p></item>
+      <item><p>Used exported functions of library modules</p></item>
+      <item><p>Unknown functions</p></item>
+    </list>
+    <p>The functions <c>module_info/0,1</c> added by the compiler are
+      included among the exported functions, but only when called from
+      some module. The edges are the function calls of all module
+      data. A consequence of the edges being a set is that there is
+      only one edge if a function is locally or externally used
+      many times on the same code line.</p>
+    <p>The Call Graph is
+      <marker id="representation"></marker>
+      represented by Erlang terms (the sets are lists),
+      which is suitable for many
+      analyses. But for analyses that look at chains of calls, a list
+      representation is much too
+      slow. Instead the representation offered by module <c>digraph</c>
+      is used. The translation of the list representation of
+      the Call Graph, or a subgraph thereof, to the <c>digraph</c>
+      representation does not
+      come for free. The language used for expressing queries, to be
+      described below, has a special operator for this task and a
+      possibility to save the <c>digraph</c> representation for
+      subsequent analyses.</p>
+    <p>In addition to the Call Graph, there is a graph called the
+      <marker id="inter_call_graph"></marker>
+      <em>Inter Call Graph</em>. This is a graph of calls (From,&nbsp;To)
+      such that:</p>
+    <list type="bulleted">
+      <item><p>There is a chain of calls from From to To in the Call Graph.</p>
+      </item>
+      <item><p>Every From and To is an exported function or an unused local
+        function.</p></item>
+    </list>
+    <p>The vertices are the same as for the Call Graph.</p>
+    <p>Calls between modules, applications, and releases are also
+      directed graphs. The
+      <marker id="type"></marker>
+      <em>types</em> of the vertices and edges of these graphs are (ranging
+      from the most special to the most general):</p>
+    <list type="bulleted">
+      <item><c>Fun</c> for functions</item>
+      <item><c>Mod</c> for modules</item>
+      <item><c>App</c> for applications</item>
+      <item><c>Rel</c> for releases</item>
+    </list>
+  </section>
+
+  <section>
+    <title>Constructs</title>
+    <p>This section describes the constructs of the language used for
+      selecting and analyzing parts of the graphs.</p>
+
+  <section>
+    <title>Constants</title>
+    <marker id="constants"></marker>
+      <list type="bulleted">
+      <item>Expression ::= Constants</item>
+      <item>Constants ::= Consts | Consts <c>:</c> Type | RegExpr</item>
+      <item>Consts ::= Constant | <c>[</c>Constant<c>,</c>&nbsp;...<c>]</c> 
+        | <c>{</c>Constant<c>,</c>&nbsp;...<c>}</c></item>
+      <item>Constant ::= Call | Const</item>
+      <item>Call ::= FunSpec&nbsp;<c>-></c>&nbsp;FunSpec 
+        | <c>{</c>MFA<c>,</c>&nbsp;MFA<c>}</c> 
+        | AtomConst&nbsp;<c>-></c>&nbsp;AtomConst 
+        | <c>{</c>AtomConst<c>,</c>&nbsp;AtomConst<c>}</c></item>
+      <item>Const ::= AtomConst | FunSpec | MFA</item>
+      <item>AtomConst ::= Application | Module | Release</item>
+      <item>FunSpec ::= Module <c>:</c> Function <c>/</c> Arity</item>
+      <item>MFA ::=
+        <c>{</c>Module<c>,</c>&nbsp;Function<c>,</c>&nbsp;Arity<c>}</c></item>
+      <item>RegExpr ::= RegString <c>:</c> Type 
+        | RegFunc 
+        | RegFunc <c>:</c> Type</item>
+      <item>RegFunc ::= RegModule <c>:</c> RegFunction <c>/</c> RegArity</item>
+      <item>RegModule ::= RegAtom</item>
+      <item>RegFunction ::= RegAtom</item>
+      <item>RegArity ::= RegString | Number | <c>_</c> | <c>-1</c></item>
+      <item>RegAtom ::= RegString | Atom | <c>_</c></item>
+      <item>RegString ::= (a regular expression, as described in module
+        <seealso marker="stdlib:re"><c>re</c></seealso>, enclosed in double
+        quotes)</item>
+      <item>Type ::= <c>Fun</c> | <c>Mod</c> | <c>App</c> | <c>Rel</c></item>
+      <item>Function ::= Atom</item>
+      <item>Application ::= Atom</item>
+      <item>Module ::= Atom</item>
+      <item>Release ::= Atom</item>
+      <item>Arity ::= Number | <c>-1</c></item>
+      <item>Atom ::= (same as Erlang atoms)</item>
+      <item>Number ::= (same as non-negative Erlang integers)</item>
+    </list>
+    <p>Examples of constants:</p>
+    <list type="bulleted">
+      <item><c>kernel</c></item>
+      <item><c>kernel->stdlib</c></item>
+      <item><c>[kernel, sasl]</c></item>
+      <item><c>[pg -> mnesia, {tv, mnesia}] : Mod</c></item>
+    </list>
+    <p>The following apply:</p>
+    <list type="bulleted">
+      <item><p>If an instance of <c>Const</c> does not match any vertex of any
+        graph, it is an error.</p></item>
+      <item><p>If more than one vertex matches an untyped instance of
+        <c>AtomConst</c>, the one of the most general type is chosen.</p></item>
+      <item><p>A list of constants is interpreted as a set of constants, all
+        the same type.</p></item>
+      <item><p>A tuple of constants constitutes a chain of calls (which can,
+        but does not have to, correspond to an actual chain of calls of some
+        graph).</p></item>
+      <item><p>Assigning a type to a list or tuple of <c>Constant</c> is
+        equivalent to assigning the type to each <c>Constant</c>.</p></item>
+    </list>
+  </section>
+
+  <section>
+    <title>Regular Expressions</title>
+    <marker id="regexp"></marker>
+    <p><em>Regular expressions</em> are used as a
+      means to select some of the vertices of a graph.
+      A <c>RegExpr</c> consisting of a <c>RegString</c> and a type
+      (an example is <c>"xref_.*" : Mod</c>) is interpreted as those
+      modules (or applications or releases, depending on the type)
+      that match the expression.</p>
+    <p>Similarly, a <c>RegFunc</c> is interpreted as those vertices
+      of the Call Graph that match the expression.
+      An example is <c>"xref_.*":"add_.*"/"(2|3)"</c>, which matches
+      all <c>add</c> functions of arity two or three of any of the Xref modules.
+      Another example, one that matches all functions of arity 10 or
+      more, is <c>_:_/"[1-9].+"</c>. Here <c>_</c> is an abbreviation for
+      <c>".*"</c>, that is, the regular expression that matches anything.</p>
+  </section>
+
+  <section>
+    <title>Variables</title>
+    <marker id="variable"></marker>
+    <p>The syntax of <em>variables</em> is simple:</p>
+    <list type="bulleted">
+      <item>Expression ::= Variable</item>
+      <item>Variable ::= (same as Erlang variables)</item>
+    </list>
+    <p>Two kinds of variables are provided:</p>
+      <list type="bulleted">
+        <item><p>
+          <marker id="predefined_variable"></marker>
+          <em>Predefined variables</em> hold set up module data, and cannot
+            be assigned to but only used in queries.</p></item>
+        <item><p>
+          <marker id="user_variable"></marker>
+          <em>User variables</em> can be assigned to, and are typically used
+          for temporary results while evaluating a query, and for keeping
+          results of queries for use in subsequent queries.</p></item>
+      </list> 
+    <p>The following table describes the <em>predefined variables</em>.
+      Variables marked with (*) are available in <c>functions</c> mode
+      only).</p>
+    <table>
+      <row>
+        <cell align="left" valign="top"><em>Variable</em></cell>
+        <cell align="left" valign="top"><em>Description</em></cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>E</c></cell>
+        <cell align="left" valign="middle">Call graph edges (*)</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>V</c></cell>
+        <cell align="left" valign="middle">Call graph vertices (*)</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>M</c></cell>
+        <cell align="left" valign="middle">Modules; all modules: analyzed
+          modules, used library modules, and unknown modules</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>A</c></cell>
+        <cell align="left" valign="middle">Applications</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>R</c></cell>
+        <cell align="left" valign="middle">Releases</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>ME</c></cell>
+        <cell align="left" valign="middle">Module edges; all module calls</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>AE</c></cell>
+        <cell align="left" valign="middle">Application edges; all application
+          calls</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>RE</c></cell>
+        <cell align="left" valign="middle">Release edges; all release
+          calls</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>L</c></cell>
+        <cell align="left" valign="middle">Local functions (*); all local
+          functions of analyzed modules</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>X</c></cell>
+        <cell align="left" valign="middle">Exported functions; all exported
+          functions of analyzed modules and all used exported functions of
+          library modules</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>F</c></cell>
+        <cell align="left" valign="middle">Functions (*)</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>B</c></cell>
+        <cell align="left" valign="middle">Used BIFs; <c>B</c> is empty if
+          <c>builtins</c> is <c>false</c> for all analyzed modules</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>U</c></cell>
+        <cell align="left" valign="middle">Unknown functions</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>UU</c></cell>
+        <cell align="left" valign="middle">Unused functions (*); all local and
+          exported functions of analyzed modules that have not been used</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>XU</c></cell>
+        <cell align="left" valign="middle">Externally used functions; functions
+          of all modules (including local functions) that have been used in
+          some external call</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>LU</c></cell>
+        <cell align="left" valign="middle">Locally used functions (*); functions
+          of all modules that have been used in some local call</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>LC</c></cell>
+        <cell align="left" valign="middle">Local calls (*)</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>XC</c></cell>
+        <cell align="left" valign="middle">External calls (*)</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>AM</c></cell>
+        <cell align="left" valign="middle">Analyzed modules</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>UM</c></cell>
+        <cell align="left" valign="middle">Unknown modules</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>LM</c></cell>
+        <cell align="left" valign="middle">Used library modules</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>UC</c></cell>
+        <cell align="left" valign="middle">Unresolved calls; empty in
+          <c>modules</c> mode</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>EE</c></cell>
+        <cell align="left" valign="middle">Inter Call Graph edges (*)</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>DF</c></cell>
+        <cell align="left" valign="middle">Deprecated functions; all deprecated
+          exported functions and all used deprecated BIFs</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>DF_1</c></cell>
+        <cell align="left" valign="middle">Deprecated functions; all deprecated
+          functions to be removed in the next version</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>DF_2</c></cell>
+        <cell align="left" valign="middle">Deprecated functions; all deprecated
+          functions to be removed in the next version or the next major
+          release</cell>
+      </row>
+      <row>
+        <cell align="left" valign="middle"><c>DF_3</c></cell>
+        <cell align="left" valign="middle">Deprecated functions; all deprecated
+          functions to be removed in the next version, the next major release,
+          or later</cell>
+      </row>
+      <tcaption>Predefined Variables</tcaption>
+    </table>
+
+    <marker id="simple_facts"></marker>
+    <p><em>Facts about the predefined variables</em> (the set operators
+      <c>+</c> (union) and <c>-</c> (difference) and the cast operator
+      <c>(</c>Type<c>)</c>):</p>
+    <list type="bulleted">
+      <item><c>F</c> = <c>L + X</c>.</item>
+      <item><c>V</c> = <c>X + L + B + U</c>, where <c>X</c>, <c>L</c>,
+        <c>B</c>, and <c>U</c> are pairwise disjoint (that is, have no
+        elements in common).</item>
+      <item><c>UU</c> = <c>V - (XU + LU)</c>, where <c>XU</c> and <c>LU</c>
+        can have elements in common. Put in another way:
+        <c>V</c> = <c>UU + XU + LU</c>.</item>
+      <item><c>E</c> = <c>LC + XC</c>. Notice that <c>LC</c> and <c>XC</c> can
+        have elements in common, namely if some function is locally and
+        externally used from the same function.</item>
+      <item><c>U</c> is a subset of <c>XU</c>.</item>
+      <item><c>B</c> is a subset of <c>XU</c>.</item>
+      <item><c>LU</c> = <c>range LC</c>.</item>
+      <item><c>XU</c> = <c>range XC</c>.</item>
+      <item><c>LU</c> is a subset of <c>F</c>.</item>
+      <item><c>UU</c> is a subset of <c>F</c>. </item>
+      <item><c>range UC</c> is a subset of <c>U</c>.</item>
+      <item><c>M</c> = <c>AM + LM + UM</c>, where <c>AM</c>, <c>LM</c>, and
+        <c>UM</c> are pairwise disjoint.</item>
+      <item><c>ME</c> = <c>(Mod) E</c>.</item>
+      <item><c>AE</c> = <c>(App) E</c>.</item>
+      <item><c>RE</c> = <c>(Rel) E</c>.</item>
+      <item><c>(Mod) V</c> is a subset of <c>M</c>. Equality holds if all
+        analyzed modules have some local, exported, or unknown function.</item>
+      <item><c>(App) M</c> is a subset of <c>A</c>. Equality holds if all
+        applications have some module.</item>
+      <item><c>(Rel) A</c> is a subset of <c>R</c>. Equality holds if all
+        releases have some application.</item>
+      <item><c>DF_1</c> is a subset of <c>DF_2</c>.</item>
+      <item><c>DF_2</c> is a subset of <c>DF_3</c>.</item>
+      <item><c>DF_3</c> is a subset of <c>DF</c>.</item>
+      <item><c>DF</c> is a subset of <c>X + B</c>.</item>
+    </list>
+  </section>
+
+  <section>
+    <title>Conversion of Expressions</title>
+    <marker id="conversion"></marker>
+    <p>An important notion is that of <em>conversion</em> of expressions.
+      The syntax of a cast expression is as follows:</p>
+    <list type="bulleted">
+      <item>Expression ::= <c>(</c>Type<c>)</c> Expression</item>
+    </list>
+    <p>The interpretation of the cast operator depends on the following:</p>
+    <list type="bulleted">
+      <item><p>The named type <c>Type</c></p></item>
+      <item><p>The type of <c>Expression</c></p></item>
+      <item><p>The structure of the elements of the interpretation of
+        <c>Expression</c>.</p></item>
+      </list>
+    <p>If the named type is equal to the
+      expression type, no conversion is done. Otherwise, the
+      conversion is done one step at a time. For example,
+      <c>(Fun)&nbsp;(App)&nbsp;RE</c> is equivalent to
+      <c>(Fun)&nbsp;(Mod)&nbsp;(App)&nbsp;RE</c>.</p>
+    <p>If the interpretation of <c>Expression</c> is a set of
+      constants (functions, modules, applications, or releases), the
+      following apply:</p>
+    <list type="bulleted">
+      <item><p>If the named
+        type is more general than the expression type, say <c>Mod</c>
+        and <c>Fun</c> respectively, the interpretation of the cast
+        expression is the set of modules that have at least one
+        of their functions mentioned in the interpretation of the
+        expression.</p></item>
+      <item><p>If the named
+        type is more special than the expression type, say <c>Fun</c>
+        and <c>Mod</c>, the interpretation is the set of all the
+        functions of the modules. In <c>modules</c> mode, the conversion
+        is partial, as the local functions are unknown.</p></item>
+      <item><p>The conversions to and from applications and releases
+        work analogously. For example, <c>(App) "xref_.*" : Mod</c>
+        returns all applications containing at least one module
+        such that <c>xref_</c> is a prefix of the module name.</p></item>
+    </list>
+    <p>If the interpretation of <c>Expression</c> is a
+      set of calls, the following apply:</p>
+    <list type="bulleted">
+      <item><p>If the named type is more general than the
+        expression type, say <c>Mod</c> and <c>Fun</c> respectively,
+        the interpretation of the cast expression is the set of
+        calls (M1,&nbsp;M2) such that the interpretation of the
+        expression contains a call from some function
+        of M1 to some function of M2.</p></item>
+      <item><p>If the named type is more special
+        than the expression type, say <c>Fun</c> and <c>Mod</c>,
+        the interpretation is the set of all function calls
+        (F1,&nbsp;F2) such that the interpretation of the expression
+        contains a call (M1,&nbsp;M2), F1 is
+        a function of M1 and F2 is a function of M2. In <c>modules</c>
+        mode, there are no functions calls, so a cast to <c>Fun</c>
+        always yields an empty set.</p></item>
+      <item><p>The conversions to and from applications and releases
+        work analogously.</p></item>
+    </list>
+  </section>
+
+  <section>
+    <title>Set Operators</title>
+    <p>The interpretation of constants and variables are sets, and
+      those sets can be used as the basis for forming new sets by the
+      application of
+      <marker id="set_operator"></marker>
+      <em>set operators</em>. The syntax is as follows:</p>
+    <list type="bulleted">
+      <item>Expression ::= Expression BinarySetOp Expression</item>
+      <item>BinarySetOp ::= <c>+</c> | <c>*</c> | <c>-</c></item>
+    </list>
+    <p>Where:</p>
+    <list type="bulleted">
+      <item><p><c>+</c> denotes the union. The union of two sets contains the
+        elements of both sets.</p></item>
+      <item><p><c>*</c> denotes the intersection. The intersection of two
+        sets contains the elements common to both sets.</p></item>
+      <item><p><c>-</c> denotes the difference. The difference of two sets
+        contains the elements of the first set that are not members of the
+        second set.</p></item>
+    </list>
+    <p>The elements of the two sets must be
+      of the same structure. For example, a function call cannot be
+      combined with a function. But if a cast operator can make the
+      elements compatible, the more general elements are
+      converted to the less general element type. For example,
+      <c>M&nbsp;+&nbsp;F</c> is equivalent to
+      <c>(Fun)&nbsp;M&nbsp;+&nbsp;F</c>, and <c>E&nbsp;-&nbsp;AE</c>
+      is equivalent to <c>E&nbsp;-&nbsp;(Fun)&nbsp;AE</c>.</p>
+    <p>Another example: <c>X * xref : Mod</c> is interpreted as the set of
+      functions exported by module <c>xref</c>. <c>xref : Mod</c>
+      is converted to the more special type of <c>X</c> (<c>Fun</c>,
+      that is) yielding all functions of Xref. The
+      intersection with <c>X</c> (all functions exported by analyzed 
+      modules and library modules) is interpreted as those functions
+      that are exported by some module <em>and</em> functions of 
+      Xref.</p>
+    <p>There are also unary set operators:</p>
+    <list type="bulleted">
+      <item>Expression ::= UnarySetOp Expression</item>
+      <item>UnarySetOp ::= <c>domain</c> | <c>range</c> | <c>strict</c></item>
+    </list>
+    <p>Recall that a call is a pair (From,&nbsp;To). <c>domain</c>
+      applied to a set of calls is interpreted as the set of all
+      vertices From, and <c>range</c> as the set of all vertices To.
+      The interpretation of operator <c>strict</c> is the operand
+      with all calls on the form (A,&nbsp;A) removed.</p>
+  </section>
+
+  <section>
+    <title>Restriction Operators</title>
+    <marker id="restriction"></marker>
+    <p>The interpretation of the <em>restriction operators</em> is a 
+      subset of the first operand, a set of calls. The second operand,
+      a set of vertices, is converted to the type of the first operand.
+      The syntax of the restriction operators is as follows:</p>
+    <list type="bulleted">
+      <item><p>Expression ::= Expression RestrOp Expression</p></item>
+      <item><p>RestrOp ::= <c>|</c></p>
+        <p>The subset of calls from any of the vertices.</p></item>
+      <item><p>RestrOp ::= <c>||</c></p>
+        <p>The subset of calls to any of the vertices.</p></item>
+      <item><p>RestrOp ::= <c>|||</c></p>
+        <p>The subset of calls to and from any of the vertices.
+          For all sets of calls, <c>CS</c> and all sets of vertices
+          <c>VS</c>, <c>CS&nbsp;|||&nbsp;VS&nbsp;</c> is equivalent to
+          <c>CS&nbsp;|&nbsp;VS&nbsp;*&nbsp;CS&nbsp;||&nbsp;VS</c>.</p></item>
+    </list>
+  </section>
+
+  <section>
+    <title>Graph Analyzing Operators</title>
+    <marker id="graph_analyses"></marker>
+    <p>Two functions (modules,
+      applications, releases) belong to the same strongly connected
+      component if they call each other (in)directly. The
+      interpretation of the <c>components</c> operator is the set of
+      strongly connected components of a set of calls.</p>
+    <p>The<c>condensation</c> of a set of calls is a new set of calls
+      between the strongly connected components. That is, there is an
+      edge between two components if there is some constant of the first
+      component that calls some constant of the second component.</p>
+    <p>The interpretation of operator <c>of</c> is a chain of
+      calls of the second operand (a set of calls) that passes through
+      all the vertices of the first operand (a tuple of
+      constants), in the specified order. The second operand
+      is converted to the type of the first operand.
+      For example, operator <c>of</c> can be used to determine
+      if a function calls another function indirectly, and the
+      chain of calls demonstrates how this is done.</p>
+    <p>The syntax of the graph analyzing operators is as follows:</p>
+    <list type="bulleted">
+      <item>Expression ::= Expression GraphOp Expression</item>
+      <item>GraphOp ::= <c>components</c> | <c>condensation</c> | <c>of</c>
+      </item>
+    </list>
+  </section>
+
+  <section>
+    <title>Closure Operator</title>
+    <p>As mentioned earlier, the graph analyses operate on
+      the <c>digraph</c> representation of graphs.
+      By default, the <c>digraph</c> representation is created when
+      needed (and deleted when no longer used), but it can also be
+      created explicitly by use of operator <c>closure</c>. The
+      syntax is as follows:</p>
+    <list type="bulleted">
+      <item>Expression ::= ClosureOp Expression</item>
+      <item>ClosureOp ::= <c>closure</c></item>
+    </list>
+    <p>The interpretation of operator <c>closure</c> is the
+      transitive closure of the operand.</p>
+    <p>The restriction operators are defined for closures as well:</p>
+    <list type="bulleted">
+      <item><p><c>closure&nbsp;E&nbsp;|&nbsp;xref&nbsp;:&nbsp;Mod</c> is
+        interpreted as the direct or indirect function calls from module
+        <c>xref</c>.</p></item>
+      <item><p><c>E&nbsp;|&nbsp;xref&nbsp;:&nbsp;Mod</c> is interpreted
+        as the set of direct calls from Xref.</p></item>
+    </list>
+    <p>If some graph is to be used in many graph analyses, it saves
+      time to assign the <c>digraph</c> representation of the graph
+      to a user variable, 
+      and then ensure that every graph analysis operates on that
+      variable instead of the list representation of the graph.</p>
+  </section>
+
+  <section>
+    <title>Line Operators</title>
+    <p>The lines where functions are defined (more precisely: where
+      the first clause begins) and the lines where functions are used
+      are available in <c>functions</c> mode. The line numbers refer
+      to the files where the functions are defined. This holds also for
+      files included with the <c>-include</c> and <c>-include_lib</c>
+      directives, which can result in functions defined apparently in
+      the same line.</p>
+    <p>The <em>line operators</em> are used for assigning
+      line numbers to functions and for assigning sets of line numbers
+      to function calls.
+      The syntax is similar to the one of the cast operator:</p>
+    <list type="bulleted">
+      <item>Expression ::= <c>(</c>LineOp<c>)</c> Expression</item>
+      <item>Expression ::= <c>(</c>XLineOp<c>)</c> Expression</item>
+      <item>LineOp ::= <c>Lin</c> | <c>ELin</c> | <c>LLin</c> | <c>XLin</c>
+      </item>
+      <item>XLineOp ::= <c>XXL</c></item>
+    </list>
+    <p>The interpretation of operator <c>Lin</c> applied to a set
+      of functions assigns to each function the line number where the
+      function is defined. Unknown functions and functions of library
+      modules are assigned the number 0.</p>
+    <p>The interpretation of some LineOp operator applied to a
+      set of function calls assigns to each call the set of line
+      numbers where the first function calls the second function. Not
+      all calls are assigned line numbers by all operators. The
+      following apply:</p>
+    <list type="bulleted">
+      <item>the <c>Lin</c> operator is defined for Call Graph edges</item>
+      <item>the <c>LLin</c> operator is defined for local calls</item>
+      <item>the <c>XLin</c> operator is defined for external calls</item>
+      <item>the <c>ELin</c> operator is defined for Inter Call Graph edges
+      </item>
+    </list>
+    <p>Operator <c>Lin</c> (<c>LLin</c>, <c>XLin</c>) assigns
+      the lines where calls (local calls, external calls) are made.</p>
+    <p>Operator <c>ELin</c> assigns to each call (From,&nbsp;To),
+      for which it is defined, every line L such that there is
+      a chain of calls from From to To beginning with a call on line
+      L.</p>
+    <p>Operator <c>XXL</c> is defined for the interpretation of
+      any of the LineOp operators applied to a set of function
+      calls. The result is that of replacing the function call with
+      a line numbered function call. That is, each of the two
+      functions of the call is replaced by a pair of the function and
+      the line where the function is defined. The effect of operator
+      <c>XXL</c> can be undone by the LineOp operators. For
+      example, <c>(Lin)&nbsp;(XXL)&nbsp;(Lin)&nbsp;E</c> is
+      equivalent to <c>(Lin)&nbsp;E</c>.</p>
+    <p>Operators <c>+</c>, <c>-</c>, <c>*</c> and <c>#</c> are
+      defined for line number expressions, if the operands are
+      compatible.</p>
+    <p>The LineOp operators are also defined for
+      modules, applications, and releases; the operand is implicitly
+      converted to functions. Similarly, the cast operator is defined
+      for the interpretation of the LineOp operators.</p>
+  </section>
+
+  <section>
+    <title>Counting Operator</title>
+    <p>The interpretation of the
+      <marker id="count"></marker>
+      <em>counting operator</em> is the number of elements of a set.
+      The operator is undefined for closures.
+      Operators <c>+</c>, <c>-</c>, and <c>*</c>
+      are interpreted as the obvious arithmetical operators
+      when applied to numbers. The syntax of the counting operator
+      is as follows:</p>
+    <list type="bulleted">
+      <item>Expression ::= CountOp Expression</item>
+      <item>CountOp ::= <c>#</c></item>
+    </list>
+  </section>
+
+  <section>
+    <title>Operator Precedence</title>
+    <p>All binary operators are left associative. For example,
+      <c>A&nbsp;|&nbsp;B &nbsp;||&nbsp;C</c> is equivalent to
+      <c>(A&nbsp;|&nbsp;B)&nbsp;||&nbsp;C</c>.</p>
+    <marker id="precedence"></marker>
+    <p>The following is a list of all operators, in increasing order of
+      precedence:</p>
+    <list type="bulleted">
+      <item><c>+</c>, <c>-</c></item>
+      <item><c>*</c></item>
+      <item><c>#</c></item>
+      <item><c>|</c>, <c>||</c>, <c>|||</c></item>
+      <item><c>of</c></item>
+      <item>(Type)</item>
+      <item><c>closure</c>, <c>components</c>, <c>condensation</c>,
+        <c>domain</c>, <c>range</c>, <c>strict</c></item>
+    </list>
+    <p>Parentheses are used for grouping, either to make an expression
+      more readable or to override the default precedence of operators:</p>
+    <list type="bulleted">
+      <item>Expression ::= (Expression)</item>
+    </list>
+  </section>
+
+  <section>
+    <title>Query</title>
+    <marker id="query"></marker>
+    <p>A <em>query</em> is a non-empty sequence of
+      statements. A statement is either an assignment of a user
+      variable or an expression. The value of an assignment is the
+      value of the right-hand side expression. It makes no sense to
+      put a plain expression anywhere else but last in queries. The
+      syntax of queries is summarized by the following productions:</p>
+    <list type="bulleted">
+      <item>Query ::= Statement,&nbsp;...</item>
+      <item>Statement ::= Assignment | Expression</item>
+      <item>Assignment ::= Variable := Expression | Variable = Expression</item>
+    </list>
+    <p>A variable cannot be assigned a new value unless first removed.
+      Variables assigned to by operator <c>=</c> are removed at
+      the end of the query, while variables assigned to by operator
+      <c>:=</c> can only be removed by calls to
+      <c>forget</c>.</p>
+    <p>There are no user variables when module data
+      must be set up again. If any of the functions that make it
+      necessary to set up module data again is called, all user
+      variables are forgotten.</p>
+  </section>
+  </section>
+
+  <section>
+    <title>Examples</title>
 
   <section>
     <title>Module Check</title>
-    <p>Assume we want to check the following module:
-      </p>
+    <p>Assume you want to check the following module:</p>
+
     <pre>
-    -module(my_module).
+-module(my_module).
 
-    -export([t/1]).
+-export([t/1]).
 
-    t(A) ->
-      my_module:t2(A).
+t(A) ->
+  my_module:t2(A).
 
-    t2(_) ->
-      true.    </pre>
-    <p>Cross reference data are read from BEAM files, so the first
-      step when checking an edited module is to compile it:
-      </p>
+t2(_) ->
+  true.</pre>
+
+    <p>Cross reference data is read from Beam files, so the first
+      step when checking an edited module is to compile it:</p>
+
     <pre>
-    1> <input>c(my_module, debug_info).</input>
-    ./my_module.erl:10: Warning: function t2/1 is unused
-    {ok, my_module}    </pre>
-    <p>The <c>debug_info</c> option ensures that the BEAM file
+1> <input>c(my_module, debug_info).</input>
+./my_module.erl:10: Warning: function t2/1 is unused
+{ok, my_module}</pre>
+
+    <p>Option <c>debug_info</c> ensures that the Beam file
       contains debug information, which makes it possible to find
-      unused local functions.
-      </p>
-    <p>The module can now be checked for calls to <seealso marker="xref#deprecated_function">deprecated functions</seealso>, calls to <seealso marker="xref#undefined_function">undefined functions</seealso>,
-      and for unused local functions:
-      </p>
+      unused local functions.</p>
+    <p>The module can now be checked for calls to
+      <seealso marker="#deprecated_function">deprecated functions</seealso>,
+      calls to <seealso marker="#undefined_function">undefined functions</seealso>,
+      and for unused local functions:</p>
+
     <pre>
-    2> <input>xref:m(my_module)</input>
-    [{deprecated,[]},
-     {undefined,[{{my_module,t,1},{my_module,t2,1}}]},
-     {unused,[{my_module,t2,1}]}]    </pre>
-    <p><c>m/1</c> is also suitable for checking that the
-      BEAM file of a module that is about to be loaded into a
-      running a system does not call any undefined functions. In
-      either case, the code path of the code server (see the module
-      <c>code</c>) is used for finding modules that export externally
-      called functions not exported by the checked module itself, so
-      called <seealso marker="xref#library_module">library modules</seealso>.
-      </p>
+2> <input>xref:m(my_module)</input>
+[{deprecated,[]},
+ {undefined,[{{my_module,t,1},{my_module,t2,1}}]},
+ {unused,[{my_module,t2,1}]}]</pre>
+
+    <p>The function <seealso marker="xref#m"><c>xref:m/1</c></seealso>
+      is also suitable for checking that the Beam
+      file of a module, which is about to be loaded into a
+      running system, does not call undefined functions. In
+      either case, the code path of the code server (see module
+      <seealso marker="kernel:code"><c>code</c></seealso>)
+      is used for finding modules that export externally
+      called functions not exported by the checked module itself, so called
+      <seealso marker="#library_module">library modules</seealso>.</p>
   </section>
 
   <section>
     <title>Predefined Analysis</title>
-    <p>In the last example the module to analyze was given as an
-      argument to <c>m/1</c>, and the code path was (implicitly)
-      used as <seealso marker="xref#library_path">library path</seealso>. In this example an <seealso marker="xref#xref_server">xref server</seealso> will be used,
-      which makes it possible to analyze applications and releases,
-      and also to select the library path explicitly.
-      </p>
+    <p>In the previous example, the module to analyze was specified as an
+      argument to function
+      <seealso marker="xref#m"><c>xref:m/1</c></seealso>,
+      and the code path was (implicitly) used as
+      <seealso marker="#library_path">library path</seealso>.
+      In this example, an
+      <seealso marker="#xref_server">Xref server</seealso> is used.
+      This makes it possible to analyze applications and releases,
+      and to select the library path explicitly.</p>
     <p>Each Xref server is referred to by a unique name. The name
-      is given when creating the server:
-      </p>
+      is specified when creating the server:</p>
+
     <pre>
-    1> <input>xref:start(s).</input>
-    {ok,&lt;0.27.0>}    </pre>
-    <p>Next the system to be analyzed is added to the Xref server.
-      Here the system will be OTP, so no library path will be needed.
+1> <input>xref:start(s).</input>
+{ok,&lt;0.27.0>}</pre>
+
+    <p>Next, the system to be analyzed is added to the Xref server.
+      The system is here OTP, so no library path is needed.
       Otherwise, when analyzing a system that uses OTP, the OTP
       modules are typically made library modules by
       setting the library path to the default OTP code path (or to
-      <c>code_path</c>, see the <seealso marker="xref#code_path">reference manual</seealso>). By
-      default, the names of read BEAM files and warnings are output
-      when adding analyzed modules, but these messages can be avoided
-      by setting default values of some options:
-      </p>
+      <seealso marker="#code_path"><c>code_path</c></seealso>).</p>
+    <p>By default, the names of read Beam files and warnings are
+      output when adding analyzed modules, but these messages can be avoided
+      by setting default values of some options:</p>
+
     <pre>
-    2> <input>xref:set_default(s, [{verbose,false}, {warnings,false}]).</input>
-    ok
-    3> <input>xref:add_release(s, code:lib_dir(), {name, otp}).</input>
-    {ok,otp}    </pre>
-    <p><c>add_release/3</c> assumes that all subdirectories of the
+2> <input>xref:set_default(s, [{verbose,false}, {warnings,false}]).</input>
+ok
+3> <input>xref:add_release(s, code:lib_dir(), {name, otp}).</input>
+{ok,otp}</pre>
+
+    <p>Function
+      <seealso marker="xref#add_release"><c>xref:add_release/3</c></seealso>
+      assumes that all subdirectories of the
       library directory returned by <c>code:lib_dir()</c> contain
-      applications; the effect is that of reading all
-      applications' BEAM files.
-      </p>
+      applications. The effect is that of reading the Beam files
+      of all applications.</p>
     <p>It is now easy to check the release for calls to undefined
-      functions:
-      </p>
+      functions:</p>
+
     <pre>
-    4> <input>xref:analyze(s, undefined_function_calls).</input>
-    {ok, [...]}    </pre>
-    <p>We can now continue with further analyses, or we can delete
-      the Xref server:
-      </p>
+4> <input>xref:analyze(s, undefined_function_calls).</input>
+{ok, [...]}</pre>
+
+    <p>It is now possible to continue with further analyses, or to
+      delete the Xref server:</p>
+
     <pre>
-    5> <input>xref:stop(s).</input>    </pre>
+5> <input>xref:stop(s).</input></pre>
+
     <p>The check for calls to undefined functions is an example of a
       predefined analysis, probably the most useful one. Other
       examples are the analyses that find unused local
-      functions, or functions that call some given functions. See
-      the <seealso marker="xref#analyze">analyze/2,3</seealso>
-      functions for a complete list of predefined analyses.
-      </p>
-    <p>Each predefined analysis is a shorthand for a <seealso marker="xref#query">query</seealso>, a sentence of a tiny
-      language providing cross reference data as
-      values of <seealso marker="xref#predefined_variable">predefined variables</seealso>.
+      functions, or functions that call some specified functions.
+      For a complete list of predefined analyses, see functions
+      <seealso marker="xref#analyze"><c>analyze/2,3</c></seealso>.</p>
+    <p>Each predefined analysis is a shorthand for a
+      <seealso marker="#query">query</seealso>, a sentence of a tiny
+      language providing cross reference data as values of
+      <seealso marker="#predefined_variable">predefined variables</seealso>.
       The check for calls to undefined functions can thus be stated as
-      a query:
-      </p>
+      a query:</p>
+
     <pre>
-    4> <input>xref:q(s, "(XC - UC) || (XU - X - B)").</input>
-    {ok,[...]}    </pre>
-    <p>The query asks for the restriction of external calls except the
-      unresolved calls to calls to functions that are externally used
-      but neither exported nor built-in functions (the <c>||</c>
-      operator restricts the used functions while the <c>|</c>
-      operator restricts the calling functions). The <c>-</c> operator
-      returns the difference of two sets, and the <c>+</c> operator to
-      be used below returns the union of two sets.
-      </p>
+4> <input>xref:q(s, "(XC - UC) || (XU - X - B)").</input>
+{ok,[...]}</pre>
+
+    <p>The query asks for the restriction of external calls, except
+      unresolved calls to functions that are externally used,
+      but are not exported and are not built-in functions (operator <c>||</c>
+      restricts the used functions and operator <c>|</c> restricts the
+      calling functions). Operator <c>-</c> returns the difference of two
+      sets, and operator <c>+</c> returns the union of two sets.</p>
     <p>The relationships between the predefined variables
-      <c>XU</c>, <c>X</c>, <c>B</c> and a few
-      others are worth elaborating upon. 
-      The reference manual mentions two ways of expressing the set of
-      all functions, one that focuses on how they are defined:
-      <c>X&nbsp;+&nbsp;L&nbsp;+&nbsp;B&nbsp;+&nbsp;U</c>, and one
-      that focuses on how they are used:
-      <c>UU&nbsp;+&nbsp;LU&nbsp;+&nbsp;XU</c>. 
-      The reference also mentions some <seealso marker="xref#simple_facts">facts</seealso> about the
-      variables:
-      </p>
+      <c>XU</c>, <c>X</c>, <c>B</c>, and a few others are worth elaborating
+      upon. The <seealso marker="xref"><c>xref</c></seealso> manual page in
+      the Reference Manual mentions two ways of expressing the set of
+      all functions, one focuses on how they are defined
+      (<c>X&nbsp;+&nbsp;L&nbsp;+&nbsp;B&nbsp;+&nbsp;U</c>) and one focuses
+      on how they are used (<c>UU&nbsp;+&nbsp;LU&nbsp;+&nbsp;XU</c>).</p>
+    <p>Section <seealso marker="#simple_facts">Variables</seealso> earlier
+      mentions some facts about the variables:</p>
     <list type="bulleted">
-      <item><c>F</c> is equal to <c>L + X</c> (the defined functions
-       are the local functions and the external functions);</item>
-      <item><c>U</c> is a subset of <c>XU</c> (the unknown functions
-       are a subset of the externally used functions since
-       the compiler ensures that locally used functions are defined);</item>
-      <item><c>B</c> is a subset of <c>XU</c> (calls to built-in
+      <item><p><c>F</c> is equal to <c>L + X</c> (the defined functions
+       are the local functions and the external functions).</p></item>
+      <item><p><c>U</c> is a subset of <c>XU</c> (the unknown functions
+       are a subset of the externally used functions, as the
+       compiler ensures that locally used functions are defined).</p></item>
+      <item><p><c>B</c> is a subset of <c>XU</c> (calls to built-in
        functions are always external by definition, and unused
-       built-in functions are ignored);</item>
-      <item><c>LU</c> is a subset of <c>F</c> (the locally used
+       built-in functions are ignored).</p></item>
+      <item><p><c>LU</c> is a subset of <c>F</c> (the locally used
        functions are either local functions or exported functions,
-       again ensured by the compiler);</item>
-      <item><c>UU</c> is equal to
-      <c>F&nbsp;-&nbsp;(XU&nbsp;+&nbsp;LU)</c> (the unused functions
-       are defined functions that are neither used externally nor
-       locally);</item>
-      <item><c>UU</c> is a subset of <c>F</c> (the unused functions
-       are defined in analyzed modules).</item>
+       again ensured by the compiler).</p></item>
+      <item><p><c>UU</c> is equal to
+       <c>F&nbsp;-&nbsp;(XU&nbsp;+&nbsp;LU)</c> (the unused functions
+       are defined functions that are not used externally or
+       locally).</p>;</item>
+      <item><p><c>UU</c> is a subset of <c>F</c> (the unused functions
+       are defined in analyzed modules).</p></item>
     </list>
-    <p>Using these facts, the two small circles in the picture below
-      can be combined. 
-      </p>
+    <p>Using these facts, the two small circles in the following picture
+      can be combined.</p>
+
     <image file="venn1.gif">
-      <icaption>Definition and use of functions</icaption>
+      <icaption>Definition and Use of Functions</icaption>
     </image>
+
     <p>It is often clarifying to mark the variables of a query in such
-      a circle. This is illustrated in the picture below for some of
-      the predefined analyses. Note that local functions used by local
+      a circle. This is illustrated in the following picture for some of
+      the predefined analyses. Notice that local functions used by local
       functions only are not marked in the <c>locals_not_used</c>
-      circle.       <marker id="venn2"></marker>
-</p>
+      circle.</p>
+    <marker id="venn2"></marker>
     <image file="venn2.gif">
-      <icaption>Some predefined analyses as subsets of all functions</icaption>
+      <icaption>Some Predefined Analyses as Subsets of All Functions</icaption>
     </image>
   </section>
 
   <section>
     <title>Expressions</title>
     <p>The module check and the predefined analyses are useful, but
-      limited. Sometimes more flexibility is needed, for instance one
-      might not need to apply a graph analysis on all calls, but some
-      subset will do equally well. That flexibility is provided with 
-      a simple language. Below are some expressions of the language
+      limited. Sometimes more flexibility is needed. For example, if there
+      is no need to apply a graph analysis on all calls, but some
+      subset is equally well. Such flexibility is provided with 
+      a simple language.</p>
+    <p>Here follows some expressions of the language
       with comments, focusing on elements of the language rather than
       providing useful examples. The analyzed system is assumed to be
-      OTP, so in order to run the queries, first evaluate these calls:
-      </p>
+      OTP, so to run the queries, first evaluate these calls:</p>
+
     <pre>
-    xref:start(s).
-    xref:add_release(s, code:root_dir()).    </pre>
+xref:start(s).
+xref:add_release(s, code:root_dir()).</pre>
+
     <taglist>
       <tag><c>xref:q(s, "(Fun) xref : Mod").</c></tag>
-      <item>All functions of the <c>xref</c> module. </item>
+      <item><p>All functions of the <c>xref</c> module.</p></item>
       <tag><c>xref:q(s, "xref : Mod * X").</c></tag>
-      <item>All exported functions of the <c>xref</c> module. The first
-       operand of the intersection operator <c>*</c> is implicitly
-       converted to the more special type of the second operand.</item>
+      <item><p>All exported functions of the <c>xref</c> module. The first
+        operand of intersection operator <c>*</c> is implicitly
+        converted to the more special type of the second operand.</p></item>
       <tag><c>xref:q(s, "(Mod) tools").</c></tag>
-      <item>All modules of the <c>tools</c> application.</item>
+      <item><p>All modules of the <c>Tools</c> application.</p></item>
       <tag><c>xref:q(s, '"xref_.*" : Mod').</c></tag>
-      <item>All modules with a name beginning with <c>xref_</c>.</item>
+      <item><p>All modules with a name beginning with <c>xref_</c>.</p></item>
       <tag><c>xref:q(s, "# E&nbsp;|&nbsp;X&nbsp;").</c></tag>
-      <item>Number of calls from exported functions.</item>
+      <item><p>Number of calls from exported functions.</p></item>
       <tag><c>xref:q(s, "XC&nbsp;||&nbsp;L&nbsp;").</c></tag>
-      <item>All external calls to local functions.</item>
+      <item><p>All external calls to local functions.</p></item>
       <tag><c>xref:q(s, "XC&nbsp;*&nbsp;LC").</c></tag>
-      <item>All calls that have both an external and a local version.</item>
+      <item><p>All calls that have both an external and a local version.</p>
+      </item>
       <tag><c>xref:q(s, "(LLin) (LC * XC)").</c></tag>
-      <item>The lines where the local calls of the last example
-       are made.</item>
+      <item><p>The lines where the local calls of the last example
+        are made.</p></item>
       <tag><c>xref:q(s, "(XLin) (LC * XC)").</c></tag>
-      <item>The lines where the external calls of the example before
-       last are made.</item>
+      <item><p>The lines where the external calls of the example before
+        the last are made.</p></item>
       <tag><c>xref:q(s, "XC * (ME - strict ME)").</c></tag>
-      <item>External calls within some module.</item>
+      <item><p>External calls within some module.</p></item>
       <tag><c>xref:q(s, "E&nbsp;|||&nbsp;kernel").</c></tag>
-      <item>All calls within the <c>kernel</c> application. </item>
+      <item><p>All calls within the <c>Kernel</c> application.</p></item>
       <tag><c>xref:q(s, "closure&nbsp;E&nbsp;|&nbsp;kernel&nbsp;||&nbsp;kernel").</c></tag>
-      <item>All direct and indirect calls within the <c>kernel</c>
-       application. Both the calling and the used functions of
-       indirect calls are defined in modules of the kernel
-       application, but it is possible that some functions outside
-       the kernel application are used by indirect calls.</item>
+      <item><p>All direct and indirect calls within the <c>Kernel</c>
+        application. Both the calling and the used functions of
+        indirect calls are defined in modules of the <c>Kernel</c>
+        application. However, it is possible that some functions outside
+        the <c>Kernel</c> application are used by indirect calls.</p></item>
       <tag><c>xref:q(s, "{toolbar,debugger}:Mod of ME").</c></tag>
-      <item>A chain of module calls from <c>toolbar</c> to
-      <c>debugger</c>, if there is such a chain, otherwise
-      <c>false</c>. The chain of calls is represented by a list of
-       modules, <c>toolbar</c> being the first element and
-      <c>debugger</c>the last element.</item>
+      <item><p>A chain of module calls from <c>toolbar</c> to
+        <c>debugger</c>, if there is such a chain, otherwise
+        <c>false</c>. The chain of calls is represented by a list of
+        modules, where <c>toolbar</c> is the first element and
+        <c>debugger</c> the last element.</p></item>
       <tag><c>xref:q(s, "closure E | toolbar:Mod || debugger:Mod").</c></tag>
-      <item>All (in)direct calls from functions in <c>toolbar</c> to
-       functions in <c>debugger</c>.</item>
+      <item><p>All (in)direct calls from functions in <c>toolbar</c> to
+        functions in <c>debugger</c>.</p></item>
       <tag><c>xref:q(s, "(Fun) xref -> xref_base").</c></tag>
-      <item>All function calls from <c>xref</c> to <c>xref_base</c>.</item>
+      <item><p>All function calls from <c>xref</c> to <c>xref_base</c>.</p>
+      </item>
       <tag><c>xref:q(s, "E * xref -> xref_base").</c></tag>
-      <item>Same interpretation as last expression.</item>
+      <item><p>Same interpretation as last expression.</p></item>
       <tag><c>xref:q(s, "E || xref_base | xref").</c></tag>
-      <item>Same interpretation as last expression.</item>
+      <item><p>Same interpretation as last expression.</p></item>
       <tag><c>xref:q(s, "E * [xref -> lists, xref_base -> digraph]").</c></tag>
-      <item>All function calls from <c>xref</c> to <c>lists</c>, and
-       all function calls from <c>xref_base</c> to <c>digraph</c>.</item>
+      <item><p>All function calls from <c>xref</c> to <c>lists</c>, and
+        all function calls from <c>xref_base</c> to <c>digraph</c>.</p></item>
       <tag><c>xref:q(s, "E | [xref, xref_base] || [lists, digraph]").</c></tag>
-      <item>All function calls from <c>xref</c> and <c>xref_base</c>
-       to <c>lists</c> and <c>digraph</c>.</item>
+      <item><p>All function calls from <c>xref</c> and <c>xref_base</c>
+        to <c>lists</c> and <c>digraph</c>.</p></item>
       <tag><c>xref:q(s, "components EE").</c></tag>
-      <item>All strongly connected components of the Inter Call
-       Graph. Each component is a set of exported or unused local functions
-       that call each other (in)directly.</item>
+      <item><p>All strongly connected components of the Inter Call
+        Graph. Each component is a set of exported or unused local functions
+        that call each other (in)directly.</p></item>
       <tag><c>xref:q(s,  "X * digraph * range (closure (E | digraph) | (L * digraph))").</c></tag>
-      <item>All exported functions of the <c>digraph</c> module
-       used (in)directly by some function in <c>digraph</c>.</item>
-      <tag><c>xref:q(s, "L * yeccparser:Mod - range (closure (E |</c></tag>
-      <item></item>
-      <tag><c>yeccparser:Mod) | (X * yeccparser:Mod))").</c></tag>
-      <item>The interpretation is left as an exercise. </item>
+      <item><p>All exported functions of the <c>digraph</c> module
+        used (in)directly by some function in <c>digraph</c>.</p></item>
+      <tag><c>xref:q(s, "L * yeccparser:Mod - range (closure (E | yeccparser:Mod) | (X * yeccparser:Mod))").</c></tag>
+      <item><p>The interpretation is left as an exercise.</p></item>
     </taglist>
   </section>
 
   <section>
     <title>Graph Analysis</title>
-    <p>The list <seealso marker="xref#representation">representation of graphs</seealso> is used analyzing direct calls,
+    <p>The list
+      <seealso marker="#representation">representation of graphs</seealso>
+      is used for analyzing direct calls,
       while the <c>digraph</c> representation is suited for analyzing
-      indirect calls. The restriction operators (<c>|</c>, <c>||</c>
+      indirect calls. The restriction operators (<c>|</c>, <c>||</c>,
       and <c>|||</c>) are the only operators that accept both
-      representations. This means that in order to analyze indirect
-      calls using restriction, the <c>closure</c> operator (which creates the
-      <c>digraph</c> representation of graphs) has to be
-      applied explicitly.
-      </p>
+      representations. This means that to analyze indirect
+      calls using restriction, operator <c>closure</c> (which creates the
+      <c>digraph</c> representation of graphs) must be applied explicitly.</p>
     <p>As an example of analyzing indirect calls, the following Erlang
       function tries to answer the question:
-      if we want to know which modules are used indirectly by some
-      module(s), is it worth while using the <seealso marker="xref#call_graph">function graph</seealso> rather
-      than the module graph? Recall that a module M1 is said to call
-      a module M2 if there is some function in M1 that calls some
-      function in M2. It would be nice if we could use the much
-      smaller module graph, since it is available also in the light
-      weight <c>modules</c><seealso marker="xref#mode">mode</seealso> of Xref servers.
-      </p>
+      if you want to know which modules are used indirectly by some
+      module(s), is it worthwhile using the
+      <seealso marker="#call_graph">function graph</seealso> rather
+      than the module graph? Recall that a module <c>M1</c> is said to call
+      a module <c>M2</c> if there is some function in <c>M1</c> that calls
+      some function in <c>M2</c>. It would be nice if the much smaller module
+      graph can be used, as it is available also in the lightweight
+      <c>modules</c> <seealso marker="#mode">mode</seealso> of
+      Xref servers.</p>
+
     <code type="erl">
-    t(S) ->
-      {ok, _} = xref:q(S, "Eplus := closure E"),
-      {ok, Ms} = xref:q(S, "AM"),
-      Fun = fun(M, N) -> 
-          Q = io_lib:format("# (Mod) (Eplus | ~p : Mod)", [M]),
-          {ok, N0} = xref:q(S, lists:flatten(Q)),
-          N + N0
-        end,
-      Sum = lists:foldl(Fun, 0, Ms),
-      ok = xref:forget(S, 'Eplus'),
-      {ok, Tot} = xref:q(S, "# (closure ME | AM)"),
-      100 * ((Tot - Sum) / Tot).    </code>
-    <p>Comments on the code:
-      </p>
+t(S) ->
+  {ok, _} = xref:q(S, "Eplus := closure E"),
+  {ok, Ms} = xref:q(S, "AM"),
+  Fun = fun(M, N) -> 
+      Q = io_lib:format("# (Mod) (Eplus | ~p : Mod)", [M]),
+      {ok, N0} = xref:q(S, lists:flatten(Q)),
+      N + N0
+    end,
+  Sum = lists:foldl(Fun, 0, Ms),
+  ok = xref:forget(S, 'Eplus'),
+  {ok, Tot} = xref:q(S, "# (closure ME | AM)"),
+  100 * ((Tot - Sum) / Tot).</code>
+
+    <p>Comments on the code:</p>
     <list type="bulleted">
-      <item>We want to find the reduction of the closure of the
-       function graph to modules. 
-       The direct expression for doing that would be
-      <c>(Mod)&nbsp;(closure&nbsp;E&nbsp;|&nbsp;AM)</c>, but then we
-       would have to represent all of the transitive closure of E in
-       memory. Instead the number of indirectly used modules is
+      <item><p>We want to find the reduction of the closure of the
+       function graph to modules.
+       The direct expression for doing that is
+       <c>(Mod)&nbsp;(closure&nbsp;E&nbsp;|&nbsp;AM)</c>, but then it would
+       be needed to represent all of the transitive closure of <c>E</c> in
+       memory. Instead, the number of indirectly used modules is
        found for each analyzed module, and the sum over all modules
-       is calculated.
-      </item>
-      <item>A user variable is employed for holding the <c>digraph</c>
+       is calculated.</p></item>
+      <item><p>A user variable is employed for holding the <c>digraph</c>
        representation of the function graph for use in many
-       queries. The reason is efficiency. As opposed to the
-      <c>=</c> operator, the <c>:=</c> operator saves a value for
-       subsequent analyses.  Here might be the place to note that
+       queries. The reason is efficiency. As opposed to operator
+       <c>=</c>, operator <c>:=</c> saves a value for
+       subsequent analyses. Notice that
        equal subexpressions within a query are evaluated only once;
-      <c>=</c> cannot be used for speeding things up.
-      </item>
-      <item><c>Eplus | ~p : Mod</c>. The <c>|</c> operator converts
+       <c>=</c> cannot be used for speeding up things.</p></item>
+      <item><p><c>Eplus | ~p : Mod</c>. Operator <c>|</c> converts
        the second operand to the type of the first operand. In this
-       case the module is converted to all functions of the
+       case, the module is converted to all functions of the
        module. It is necessary to assign a type to the module
-       (<c>:&nbsp;Mod</c>), otherwise modules like <c>kernel</c> would be
-       converted to all functions of the application with the same
-       name; the most general constant is used in cases of ambiguity.
-      </item>
-      <item>Since we are only interested in a ratio, the unary
-       operator <c>#</c> that counts the elements of the operand is
+       (<c>:&nbsp;Mod</c>), otherwise modules like <c>kernel</c> are
+       converted to all functions of the application with the same name;
+       the most general constant is used in cases of ambiguity.</p></item>
+      <item><p>As we are only interested in a ratio, the unary
+       operator <c>#</c>, which counts the elements of the operand, is
        used. It cannot be applied to the <c>digraph</c> representation
-       of graphs.
-      </item>
-      <item>We could find the size of the closure of the module graph
-       with a loop similar to one used for the function graph, but
-       since the module graph is so much smaller, a more direct
-       method is feasible.
-      </item>
+       of graphs.</p></item>
+      <item><p>The size of the closure of the module graph can be found
+       with a loop similar to one used for the function graph. However,
+       as the module graph is so much smaller, a more direct
+       method is feasible.</p></item>
     </list>
     <p>When the Erlang function <c>t/1</c> was applied to an Xref
       server loaded with the current version of OTP, the returned
-      value was close to 84&nbsp;(percent). This means that the number
-      of indirectly used modules is approximately six times greater
+      value was close to 84%. This means that the number
+      of indirectly used modules is about six times greater
       when using the module graph.
-      So the answer to the above stated question is that it is
-      definitely worth while using the function graph for this
+      So the answer to the question earlier is that it is
+      definitely worthwhile using the function graph for this
       particular analysis.
-      Finally, note that in the presence of unresolved calls, the
-      graphs may be incomplete, which means that there may be
-      indirectly used modules that do not show up.
-      </p>
+      Notice that in the presence of unresolved calls, the
+      graphs can be incomplete, which means that there can be
+      indirectly used modules that do not show up.</p>
+  </section>
   </section>
 </chapter>
 

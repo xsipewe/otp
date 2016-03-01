@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE application SYSTEM "application.dtd">
+<!DOCTYPE chapter SYSTEM "chapter.dtd">
 
-<application xmlns:xi="http://www.w3.org/2001/XInclude">
+<chapter>
   <header>
     <copyright>
-      <year>1996</year><year>2013</year>
+      <year>2001</year><year>2013</year>
       <holder>Ericsson AB. All Rights Reserved.</holder>
     </copyright>
     <legalnotice>
@@ -19,25 +19,26 @@
       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
       See the License for the specific language governing permissions and
       limitations under the License.
-
+    
     </legalnotice>
 
-    <title>Tools Reference Manual</title>
+    <title>Eprof - Time Profiler</title>
     <prepared></prepared>
+    <responsible></responsible>
     <docno></docno>
-    <date></date>
-    <rev></rev>
+    <approved></approved>
+    <checked></checked>
+    <date>2016-01-04</date>
+    <rev>PA1</rev>
+    <file>eprof_chapter.xml</file>
   </header>
-  <description></description>
-  <xi:include href="cover.xml"/>
-  <xi:include href="cprof.xml"/>
-  <xi:include href="eprof.xml"/>
-  <xi:include href="fprof.xml"/>
-  <xi:include href="erlang_mode.xml"/>
-  <xi:include href="instrument.xml"/>
-  <xi:include href="lcnt.xml"/>
-  <xi:include href="make.xml"/>
-  <xi:include href="tags.xml"/>
-  <xi:include href="xref.xml"/>
-</application>
+  <p>Eprof is a time profiling tool that measures how execution time is
+    used in Erlang programs. It is a predessor of the Fprof tool.</p>
+  <p>For more information, see
+    <seealso marker="eprof"><c>eprof(3)</c></seealso>.</p>
+<section>
+<title>
+</title>
+</section>
+</chapter>
 

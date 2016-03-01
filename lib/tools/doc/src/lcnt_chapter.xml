@@ -2,12 +2,12 @@
 <!DOCTYPE chapter SYSTEM "chapter.dtd">
 
 <chapter>
-    <header>
-	<copyright>
-	    <year>2009</year><year>2013</year>
-	    <holder>Ericsson AB. All Rights Reserved.</holder>
-	</copyright>
-	<legalnotice>
+  <header>
+    <copyright>
+      <year>2009</year><year>2013</year>
+      <holder>Ericsson AB. All Rights Reserved.</holder>
+    </copyright>
+    <legalnotice>
       Licensed under the Apache License, Version 2.0 (the "License");
       you may not use this file except in compliance with the License.
       You may obtain a copy of the License at
@@ -20,72 +20,96 @@
       See the License for the specific language governing permissions and
       limitations under the License.
 
-	</legalnotice>
+    </legalnotice>
 
-	<title>lcnt - The Lock Profiler</title>
-	<prepared>Björn-Egil Dahlberg</prepared>
-	<responsible>nobody</responsible>
-	<docno></docno>
-	<approved>nobody</approved>
-	<checked>no</checked>
-	<date>2009-11-26</date>
-	<rev>PA1</rev>
-	<file>lcnt_chapter.xml</file>
-    </header>
-    <p>
-	Internally in the Erlang runtime system locks are used to protect resources from being updated from multiple threads in a fatal way. Locks are necessary
-	to ensure that the runtime system works properly but it also introduces a couple of limitations. Lock contention and locking overhead.
-    </p>
-    <p>
-	With lock contention we mean when one thread locks a resource and another thread, or threads, tries to acquire the same resource at the same time. The lock will deny
-	the other thread access to the resource and the thread will be blocked from continuing its execution. The second thread has to wait until the first thread has
-	completed its access to the resource and unlocked it. The <c>lcnt</c> tool measures these lock conflicts.
-    </p>
-    <p>
-	Locks has an inherent cost in execution time and memory space. It takes time initialize, destroy, aquiring or releasing locks. To decrease lock contention it
-	some times necessary to use finer grained locking strategies. This will usually also increase the locking overhead and hence there is a tradeoff
-	between lock contention and overhead. In general, lock contention increases with the number of threads running concurrently. The <c>lcnt</c> tool does not measure locking overhead.
-    </p>
-    <section>
-	<title> Enabling lock-counting </title>
-	<p>For investigation of locks in the emulator we use an internal tool called <c>lcnt</c> (short for lock-count). The VM needs to be compiled with this option enabled. To enable this, use:</p>
+    <title>Lcnt - Lock Profiler</title>
+    <prepared>Björn-Egil Dahlberg</prepared>
+    <responsible></responsible>
+    <docno></docno>
+    <approved></approved>
+    <checked></checked>
+    <date>2009-11-26</date>
+    <rev>PA1</rev>
+    <file>lcnt_chapter.xml</file>
+  </header>
 
-	<pre>
+  <p>Internally in the Erlang runtime system, locks are used to protect
+    resources from being updated from multiple threads in a fatal way. Locks
+    are necessary to ensure that the runtime system works properly, but it
+    also introduces some limitations: lock contention and locking overhead.</p>
+  <p>Lock contention is when one thread locks a resource and another thread,
+    or threads, tries to acquire the same resource at the same time. The lock
+    denies the other thread access to the resource, and the thread is blocked
+    from continuing its execution. The second thread must wait until the first
+    thread has completed its access to the resource and unlocked it. The
+    Lcnt tool measures these lock conflicts.</p>
+  <p>Locks have an inherent cost in execution time and memory space. It takes
+    time to initialize, destroy, acquire, or release locks. To decrease lock
+    contention, it is sometimes necessary to use finer grained locking
+    strategies. This often also increases the locking overhead and hence there
+    is a tradeoff between lock contention and overhead. In general, lock
+    contention increases with the number of threads running concurrently. The
+    Lcnt tool does not measure locking overhead.</p>
+
+  <section>
+    <title>Enable Lock-Counting</title>
+    <p>For investigation of locks in the emulator, an internal tool named
+      Lcnt (short for lock-count) is used. The VM must be compiled
+      with this option enabled. To enable, use:</p>
+
+    <pre>
 cd $ERL_TOP
-./configure --enable-lock-counter
-	</pre>
+./configure --enable-lock-counter</pre>
 
-	<p>
-	    Another way to enable this alongside a normal VM is to compile it at emulator directory level, much like a debug build. To compile it this way do the following,
-	</p>
-	<pre>
+    <p>Another way to enable this alongside a normal VM is to compile it at
+      emulator directory level, much like a debug build. To compile it this
+      way, do as follows:</p>
+
+    <pre>
 cd $ERL_TOP/erts/emulator
-make lcnt FLAVOR=smp
-	</pre>
-	<p> and then starting Erlang with,</p>
-	<pre>
-$ERL_TOP/bin/cerl -lcnt
-	</pre>
-	<p>To verify that you lock-counting enabled check that <c>[lock-counting]</c> appears in the status text when the VM is started.</p>
-	<pre>
+make lcnt FLAVOR=smp</pre>
+
+    <p>Then start Erlang:</p>
+
+    <pre>
+$ERL_TOP/bin/cerl -lcnt</pre>
+
+    <p>To verify that lock-counting is enabled, check that
+      <c>[lock-counting]</c> is displayed in the status text when the VM is
+      started:</p>
+
+    <pre>
 Erlang R13B03 (erts-5.7.4) [source] [64-bit] [smp:8:8] [rq:8] [async-threads:0] [hipe]
- [kernel-poll:false] [lock-counting]
-	</pre>
-    </section>
-    <section>
-	<title>Getting started</title>
-	<p>Once you have a lock counting enabled VM the module <c>lcnt</c> can be used. The module is intended to be used from the current running nodes shell. To access remote nodes use <c>lcnt:clear(Node)</c> and <c>lcnt:collect(Node)</c>. </p>
+ [kernel-poll:false] [lock-counting]</pre>
+  </section>
 
-	<p>All locks are continuously monitored and its statistics updated. Use <c>lcnt:clear/0</c> to initially clear all counters before running any specific tests. This command will also reset the duration timer internally.</p>
-	<p>To retrieve lock statistics information use, <c>lcnt:collect/0,1</c>. The collect operation will start a <c>lcnt</c> server if it not already started. All collected data will be built into an erlang term and uploaded to the server and a duration time will also be uploaded. This duration is the time between <c>lcnt:clear/0,1</c> and <c>lcnt:collect/0,1</c>.</p>
+  <section>
+    <title>Getting Started</title>
+    <p>Once you have a lock counting enabled, the module <c>lcnt</c> can be
+      used. The module is intended to be used from the current running nodes
+      shell. To access remote nodes, use
+      <seealso marker="lcnt#clear-1"><c>lcnt:clear(Node)</c></seealso> and
+      <seealso marker="lcnt#collect-1"><c>lcnt:collect(Node)</c></seealso>.</p>
+    <p>All locks are continuously monitored and its statistics updated. Use
+      <seealso marker="lcnt#clear-0"><c>lcnt:clear/0</c></seealso> to clear
+      all counters initially before running any specific tests. This command
+      also resets the duration timer internally.</p>
+    <p>To retrieve lock statistics information, use
+      <seealso marker="lcnt#collect-0"><c>lcnt:collect/0,1</c></seealso>. The
+      collect operation starts an Lcnt server if it is not already started.
+      All collected data is built into an Erlang term and uploaded to the
+      server. A duration time is also uploaded. This duration is the time
+      between <seealso marker="lcnt#clear-0"><c>lcnt:clear/0,1</c></seealso>
+      and <seealso marker="lcnt#collect-0"><c>lcnt:collect/0,1</c></seealso>.</p>
+    <p>Once the data is collected to the server, it can be filtered, sorted,
+      and printed in many different ways.</p>
+  </section>
 
-	<p>Once the data is collected to the server it can be filtered, sorted and printed in many different ways.</p>
-	<p>See the <seealso marker="lcnt">reference manual</seealso> for a description of each function.</p>
-    </section>
-    <section>
-	<title> Example of usage </title>
-	<p>From the Erlang shell:</p>
-	<pre>
+  <section>
+    <title>Example of Use</title>
+    <p>From the Erlang shell:</p>
+
+    <pre>
 Erlang R13B03 (erts-5.7.4) [source] [smp:8:8] [rq:8] [async-threads:0] [hipe]
  [kernel-poll:false] [lock-counting]
 1> lcnt:rt_opt({copy_save, true}).
@@ -104,13 +128,18 @@ ok
  message_pre_alloc_lock    8 2008569          134          0.0067         90        0.0019
               timeofday    1   54065            8          0.0148         22        0.0005
                 gc_info    1    7071            7          0.0990          5        0.0001
-ok
-</pre>
-<p>
-    Another way to to profile a specific function is to use <c>lcnt:apply/3</c> or <c>lcnt:apply/1</c> which does <c>lcnt:clear/0</c> before the function and <c>lcnt:collect/0</c> after its invocation.
-    It also sets <c>copy_save</c> to <c>true</c> for the duration of the function call
-</p>
-<pre>
+ok</pre>
+
+    <p>Another way to profile a specific function is to use
+      <seealso marker="lcnt#apply-3"><c>lcnt:apply/3</c></seealso> or
+      <seealso marker="lcnt#apply-1"><c>lcnt:apply/1</c></seealso>, which does
+      <seealso marker="lcnt#clear-0"><c>lcnt:clear/0</c></seealso> before the
+      function and
+      <seealso marker="lcnt#collect-0"><c>lcnt:collect/0</c></seealso> after
+      its invocation. It also sets <c>copy_save</c> to <c>true</c> for the
+      duration of the function call.</p>
+
+    <pre>
 Erlang R13B03 (erts-5.7.4) [source] [smp:8:8] [rq:8] [async-threads:0] [hipe]
  [kernel-poll:false] [lock-counting]
 1> lcnt:apply(fun() -> big:bang(1000) end).
@@ -127,10 +156,14 @@ Erlang R13B03 (erts-5.7.4) [source] [smp:8:8] [rq:8] [async-threads:0] [hipe]
  message_pre_alloc_lock    8 2009322          147          0.0073         82        0.0018
               timeofday    1   48616            9          0.0185         13        0.0003
                 gc_info    1    7455           12          0.1610          9        0.0002
-ok
-</pre>
-<p> The process locks are sorted after its class like all other locks. It is convenient to look at specific processes and ports as classes. We can do this by swapping class and class identifiers with <c>lcnt:swap_pid_keys/0</c>.  </p>
-<pre>
+ok</pre>
+
+    <p>The process locks are sorted by class like all other locks. It
+      is convenient to look at specific processes and ports as classes. This
+      can be done by swapping class and class identifiers with
+      <seealso marker="lcnt#swap_pid_keys-0"><c>lcnt:swap_pid_keys/0</c></seealso>:</p>
+
+    <pre>
 3> lcnt:swap_pid_keys().
 ok
 4> lcnt:conflicts([{print, [name, tries, ratio, time]}]).
@@ -156,13 +189,14 @@ ok
   &lt;nonode@nohost.596.0&gt;   13141          1.6437         14
   &lt;nonode@nohost.592.0&gt;   13346          1.2064         13
   &lt;nonode@nohost.526.0&gt;   13076          1.1701         13
-ok
-</pre>
-      </section>
-      <section>
-	<title> Example with Mnesia Transaction Benchmark </title>
-	<p>From the Erlang shell:</p>
-<pre>
+ok</pre>
+  </section>
+
+  <section>
+    <title>Example with Mnesia Transaction Benchmark</title>
+    <p>From the Erlang shell:</p>
+
+    <pre>
 Erlang R13B03 (erts-5.7.4) [source] [smp:8:8] [rq:8] [async-threads:0] [hipe]
  [kernel-poll:false] [lock-counting]
 
@@ -180,21 +214,22 @@ Eshell V5.7.4  (abort with ^G)
  {stop_after,60000},
  {reuse_history_id,true}]
 2> mnesia_tpcb:init([{use_running_mnesia, false}|Conf]).
-ignore
-</pre>
-<p>Initial configuring of the benchmark is done. It is time to profile the actual benchmark and Mnesia</p>
-<pre>
+ignore</pre>
+
+    <p>Initial configuring of the benchmark is done. It is time to profile the
+      actual benchmark and <c>Mnesia</c>:</p>
+
+    <pre>
 3> lcnt:apply(fun() -> {ok,{time, Tps,_,_,_,_}} = mnesia_tpcb:run([{use_running_mnesia,
  true}|Conf]), Tps/60 end).
 12037.483333333334
 ok
 4> lcnt:swap_pid_keys().
-ok
-</pre>
-<p>The <c>id</c> header represents the number of unique identifiers under a class when the option <c>{combine, true}</c> is used (which is on by default). It will otherwise show the specific identifier.
-The <c>db_tab</c> listing shows 722287 unique locks, it is one for each ets-table created and Mnesia creates one for each transaction.
-</p>
-<pre>
+ok</pre>
+
+    <p>Next, view the internal locks and their statistics.</p>
+
+    <pre>
 5> lcnt:conflicts().
                    lock     id   #tries  #collisions  collisions [%]  time [us]  duration [%]
                   -----    ---  ------- ------------ --------------- ---------- -------------
@@ -218,10 +253,18 @@ The <c>db_tab</c> listing shows 722287 unique locks, it is one for each ets-tabl
  &lt;nonode@nohost.1107.0&gt;      4  4292190          302          0.0070        315        0.0005
  &lt;nonode@nohost.1112.0&gt;      4  4208858          265          0.0063        276        0.0005
  &lt;nonode@nohost.1109.0&gt;      4  4377502          267          0.0061        276        0.0005
-ok
-</pre>
-<p>The listing shows <c>mnesia_locker</c>, a process, has highly contended locks.</p>
-<pre>
+ok</pre>
+
+    <p>Header <c>id</c> represents the number of unique identifiers under
+      a class when option <c>{combine, true}</c> is used (which is
+      default). Otherwise, its shows the specific identifier. The <c>db_tab</c>
+      listing shows 722287 unique locks, one for each created <c>ets</c> table,
+      and <c>Mnesia</c> creates one for each transaction.</p>
+    <p>The listing shows that <c>mnesia_locker</c>, a process, has highly
+      contended locks.</p>
+    <p>Next, view the internal lock counters for <c>mnesia_locker</c>:</p>
+
+    <pre>
 6> lcnt:inspect(mnesia_locker).
           lock          id  #tries  #collisions  collisions [%]  time [us]  duration [%]
          -----         --- ------- ------------ --------------- ---------- -------------
@@ -229,11 +272,11 @@ ok
  mnesia_locker   proc_main 4462782      1487374         33.3284      14398        0.0240
  mnesia_locker proc_status 7564921        71800          0.9491      12913        0.0215
  mnesia_locker   proc_link       0            0          0.0000          0        0.0000
-ok
-</pre>
-<p>Listing without class combiner.</p>
+ok</pre>
 
-<pre>
+    <p>The following shows a listing without class combiner:</p>
+
+    <pre>
 7> lcnt:conflicts([{combine, false}, {print, [name, id, tries, ratio, time]}]).
                    lock                        id   #tries  collisions [%]  time [us]
                   -----                       ---  ------- --------------- ----------
@@ -257,12 +300,14 @@ ok
               run_queue                         4  2343585          1.3115      44300
                  db_tab                    branch  1446529          0.5229      38244
                 gc_info                 undefined   823460          0.0763      24826
-ok
-</pre>
-<p>
-In this scenario the lock that protects ets-table <c>mnesia_transient_decision</c> has spent most of its waiting for. That is 1.8 seconds in a test that run for 60 seconds. The time is also spread on eight different scheduler threads.
-</p>
-<pre>
+ok</pre>
+
+    <p>In this scenario, the lock that protects the <c>ets</c> table,
+      <c>mnesia_transient_decision</c> has spent most of its time waiting,
+      that is, 1,856852 us in a test that ran for 60 seconds. The time is
+      also spread over eight different scheduler threads as follows:</p>
+
+    <pre>
 8> lcnt:inspect(db_tab, [{print, [name, id, tries, colls, ratio, duration]}]).
    lock                        id  #tries  #collisions  collisions [%]  duration [%]
   -----                       --- ------- ------------ --------------- -------------
@@ -286,17 +331,17 @@ In this scenario the lock that protects ets-table <c>mnesia_transient_decision</
  db_tab        mnesia_trans_store      53            0          0.0000        0.0000
  db_tab        mnesia_trans_store      53            0          0.0000        0.0000
  db_tab        mnesia_trans_store      53            0          0.0000        0.0000
-ok
-</pre>
+ok</pre>
+  </section>
 
-    </section>
-    <section>
-	<title> Deciphering the output </title>
-	<p> Typically high <c>time</c> values are bad and this is often the thing to look for. However, one should also look for high lock acquisition frequencies (#tries) since locks generate overhead and because high frequency could become problematic if they begin to have conflicts even if it is not shown in a particular test.  </p>
-    </section>
-
-    <section>
-	<title>See Also</title>
-	<p> <seealso marker="lcnt">LCNT Reference Manual</seealso></p>
-    </section>
+  <section>
+    <title>Decipher the Output</title>
+    <p>Typically high <c>time</c> values are bad and this is often what to
+      look for.</p>
+    <p>Also look for high lock acquisition frequencies (<c>#tries</c>), as
+      locks generate overhead and because high frequency can become problematic
+      if they begin to have conflicts, even if it is not shown in a particular
+      test.</p>
+  </section>
 </chapter>
+

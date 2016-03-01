@@ -29,38 +29,41 @@
     <rev></rev>
   </header>
   <module>eprof</module>
-  <modulesummary>A Time Profiling Tool for Erlang</modulesummary>
+  <modulesummary>A time profiling tool for Erlang.</modulesummary>
   <description>
-    <p>The module <c>eprof</c> provides a set of functions for time
-      profiling of Erlang programs to find out how the execution time is
+    <p>The <c>eprof</c> module provides functions for time
+      profiling of Erlang programs to determine how the execution time is
       used. The profiling is done using the Erlang trace BIFs. Tracing of
       local function calls for a specified set of processes is enabled when
-      profiling is begun, and disabled when profiling is stopped.</p>
-    <p>When using Eprof, expect a slowdown in program execution.</p>
+      profiling is started, and disabled when profiling is stopped.</p>
+    <p>When using <c>eprof</c>, expect a slowdown in program execution.</p>
   </description>
+
   <funcs>
     <func>
       <name>start() -> {ok,Pid} | {error,Reason}</name>
-      <fsummary>Start Eprof.</fsummary>
+      <fsummary>Starts Eprof.</fsummary>
       <type>
         <v>Pid = pid()</v>
         <v>Reason = {already_started,Pid}</v>
       </type>
       <desc>
-        <p>Starts the Eprof server which holds the internal state of the collected data.</p>
+        <p>Starts the Eprof server, which holds the internal state of the
+          collected data.</p>
       </desc>
     </func>
+
     <func>
       <name>start_profiling(Rootset) -> profiling | {error, Reason}</name>
       <name>start_profiling(Rootset,Pattern) -> profiling | {error, Reason}</name>
       <name>start_profiling(Rootset,Pattern,Options) -> profiling | {error, Reason}</name>
-      <fsummary>Start profiling.</fsummary>
+      <fsummary>Starts profiling.</fsummary>
       <type>
         <v>Rootset = [atom() | pid()]</v>
-		<v>Pattern = {Module, Function, Arity}</v>
-		<v>Module = Function = atom()</v>
-		<v>Arity = integer()</v>
-		<v>Options = [set_on_spawn]</v>
+        <v>Pattern = {Module, Function, Arity}</v>
+        <v>Module = Function = atom()</v>
+        <v>Arity = integer()</v>
+        <v>Options = [set_on_spawn]</v>
         <v>Reason = term()</v>
       </type>
       <desc>
@@ -68,24 +71,28 @@
           processes spawned from them). Information about activity in any
           profiled process is stored in the Eprof database.</p>
         <p><c>Rootset</c> is a list of pids and registered names.</p>
-        <p>The function returns <c>profiling</c> if tracing could be enabled
-          for all processes in <c>Rootset</c>, or <c>error</c> otherwise.</p>
-        <p>A pattern can be selected to narrow the profiling. For instance a
+        <p>The function returns <c>profiling</c> if tracing can be enabled
+          for all processes in <c>Rootset</c>, otherwise <c>error</c>.</p>
+        <p>A pattern can be selected to narrow the profiling. For example, a
           specific module can be selected, and only the code executed in that
-          module will be profiled.</p>
-	    <p>The <c>set_on_spawn</c> option will active call time tracing for
-			all processes spawned by processes in the rootset. This is
-			the default behaviour.</p>
+          module is then profiled.</p>
+         <p>Option <c>set_on_spawn</c> activates call time tracing for
+          all processes spawned by processes in <c>Rootset</c>. This is
+          the default behavior.</p>
       </desc>
     </func>
+
     <func>
       <name>stop_profiling() -> profiling_stopped | profiling_already_stopped</name>
-      <fsummary>Stop profiling.</fsummary>
+      <fsummary>Stops profiling.</fsummary>
       <desc>
-        <p>Stops profiling started with <c>start_profiling/1</c> or
-          <c>profile/1</c>.</p>
+        <p>Stops profiling started with
+          <seealso marker="#start_profiling-1"><c>start_profiling/1</c></seealso>
+          or
+          <seealso marker="#profile-1"><c>profile/1</c></seealso>.</p>
       </desc>
     </func>
+
     <func>
       <name>profile(Fun) -> profiling | {error, Reason}</name>
       <name>profile(Fun, Options) -> profiling | {error, Reason}</name>
@@ -95,43 +102,48 @@
       <name>profile(Rootset,Module,Function,Args) -> {ok, Value} | {error, Reason}</name>
       <name>profile(Rootset,Module,Function,Args,Pattern) -> {ok, Value} | {error, Reason}</name>
       <name>profile(Rootset,Module,Function,Args,Pattern,Options) -> {ok, Value} | {error, Reason}</name>
-      <fsummary>Start profiling.</fsummary>
+      <fsummary>Starts profiling.</fsummary>
       <type>
         <v>Rootset = [atom() | pid()]</v>
         <v>Fun = fun() -> term() end</v>
-		<v>Pattern = {Module, Function, Arity}</v>
+        <v>Pattern = {Module, Function, Arity}</v>
         <v>Module = Function = atom()</v>
         <v>Args = [term()]</v>
-		<v>Arity = integer()</v>
-		<v>Options = [set_on_spawn]</v>
+        <v>Arity = integer()</v>
+        <v>Options = [set_on_spawn]</v>
         <v>Value = Reason = term()</v>
       </type>
       <desc>
-        <p>This function first spawns a process <c>P</c> which evaluates
-          <c>Fun()</c> or <c>apply(Module,Function,Args)</c>. Then, it
+        <p>This function first spawns a process <c>P</c>, which evaluates
+          <c>Fun()</c> or <c>apply(Module,Function,Args)</c>. Then it
           starts profiling for <c>P</c> and the processes in <c>Rootset</c>
           (and any new processes spawned from them). Information about
           activity in any profiled process is stored in the Eprof database.</p>
         <p><c>Rootset</c> is a list of pids and registered names.</p>
-        <p>If tracing could be enabled for <c>P</c> and all processes in
-          <c>Rootset</c>, the function returns <c>{ok,Value}</c> when
-          <c>Fun()</c>/<c>apply</c> returns with the value <c>Value</c>, or
-          <c>{error,Reason}</c> if <c>Fun()</c>/<c>apply</c> fails with
-		  exit reason <c>Reason</c>. Otherwise it returns <c>{error, Reason}</c>
+        <p>If tracing can be enabled for <c>P</c> and all processes in
+          <c>Rootset</c>, the function returns one of the following:</p>
+        <list type="bulleted">
+          <item><p><c>{ok,Value}</c> when <c>Fun()</c>/<c>apply</c>
+            returns with value <c>Value</c></p></item>
+          <item><p><c>{error,Reason}</c> if <c>Fun()</c> or <c>apply</c>
+            fails with exit reason <c>Reason</c>.</p></item>
+        </list>
+        <p>Otherwise the function returns <c>{error, Reason}</c>
           immediately.</p>
-	    <p>The <c>set_on_spawn</c> option will active call time tracing for
-			all processes spawned by processes in the rootset. This is
-			the default behaviour.</p>
-        <p>The programmer must ensure that the function given as argument
-          is truly synchronous and that no work continues after
+        <p>Option <c>set_on_spawn</c> activates call time tracing for
+          all processes spawned by processes in <c>Rootset</c>. This is
+          the default behavior.</p>
+        <p>You must ensure that the function specified as argument
+          is truly synchronous, and that no work continues after
           the function has returned a value.</p>
       </desc>
     </func>
+
     <func>
       <name>analyze() -> ok</name>
       <name>analyze(Type) -> ok</name>
       <name>analyze(Type,Options) -> ok</name>
-      <fsummary>Display profiling results per process.</fsummary>
+      <fsummary>Displays profiling results per process.</fsummary>
       <type>
         <v>Type = procs | total</v>
 	<v>Options = [{filter, Filter} | {sort, Sort}</v>
@@ -139,33 +151,35 @@
 	<v>Sort = time | calls | mfa</v>
       </type>
       <desc>
-        <p>Call this function when profiling has been stopped to display
+        <p>Call this function when profiling is stopped to display
           the results per process, that is:</p>
         <list type="bulleted">
-          <item>how much time has been used by each process, and</item>
-          <item>in which function calls this time has been spent.</item>
+          <item><p>How much time is  used by each process</p></item>
+          <item><p>In which function calls this time is spent</p></item>
         </list>
-	<p>Call <c>analyze</c> with <c>total</c> option when profiling has been stopped to display
-          the results per function call, that is in which function calls
-          the time has been spent.</p>
+	<p>Call <c>analyze</c> with option <c>total</c> when profiling
+          is stopped to display the results per function call, that is, in
+          which function calls the time is spent.</p>
         <p>Time is shown as percentage of total time and as absolute time.</p>
       </desc>
     </func>
+
     <func>
       <name>log(File) -> ok</name>
-      <fsummary>Activate logging of <c>eprof</c>printouts.</fsummary>
+      <fsummary>Activates logging of Eprof printouts.</fsummary>
       <type>
         <v>File = atom() | string()</v>
       </type>
       <desc>
-        <p>This function ensures that the results displayed by
-          <c>analyze/0,1,2</c> are printed both to the file
-          <c>File</c> and the screen.</p>
+        <p>Ensures that the results displayed by
+          <seealso marker="#analyze-0"><c>analyze/0,1,2</c></seealso>
+          are printed both to the file <c>File</c> and the screen.</p>
       </desc>
     </func>
+
     <func>
       <name>stop() -> stopped</name>
-      <fsummary>Stop Eprof.</fsummary>
+      <fsummary>Stops Eprof.</fsummary>
       <desc>
         <p>Stops the Eprof server.</p>
       </desc>

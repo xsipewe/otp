@@ -22,7 +22,7 @@
     
     </legalnotice>
 
-    <title>fprof - The File Trace Profiler</title>
+    <title>Fprof - File Trace Profiler</title>
     <prepared>Raimo Niskanen</prepared>
     <responsible>nobody</responsible>
     <docno></docno>
@@ -32,111 +32,109 @@
     <rev>PA1</rev>
     <file>fprof_chapter.xml</file>
   </header>
-  <p><c>fprof</c> is a profiling tool that can be used to get a picture of
+  <p>Fprof is a profiling tool that can be used to determine
     how much processing time different functions consumes and in which
-    processes.
-    </p>
-  <p><c>fprof</c> uses tracing with timestamps to collect profiling
-    data. Therfore there is no need for special compilation of any
-    module to be profiled.
-    </p>
-  <p><c>fprof</c> presents wall clock times from the host machine OS,
-    with the assumption that OS scheduling will randomly load the
-    profiled functions in a fair way. Both <em>own time</em> i.e the
-    time used by a function for its own execution, and
-    <em>accumulated time</em> i.e execution time including called
-    functions. 
-    </p>
-  <p>Profiling is essentially done in 3 steps:</p>
-  <taglist>
-    <tag><c>1</c></tag>
-    <item>Tracing; to file, as mentioned in the previous paragraph.</item>
-    <tag><c>2</c></tag>
-    <item>Profiling; the trace file is read and raw profile data is
-     collected into an internal RAM storage on the node. During
-     this step the trace data may be dumped in text format to file
-     or console.</item>
-    <tag><c>3</c></tag>
-    <item>Analysing; the raw profile data is sorted and dumped
-     in text format either to file or console.</item>
-  </taglist>
-  <p>Since <c>fprof</c> uses trace to file, the runtime performance 
-    degradation is minimized, but still far from negligible, 
-    especially not for programs that use the filesystem heavily 
-    by themselves. Where you place the trace file is also important, 
-    e.g on Solaris <c>/tmp</c> is usually a good choice,
-    while any NFS mounted disk is a lousy choice.
-    </p>
-  <p>Fprof can also skip the file step and trace to a tracer process
-    of its own that does the profiling in runtime.
-    </p>
-  <p>The following sections show some examples of how to profile with
-    Fprof. See also the reference manual 
-    <seealso marker="fprof">fprof(3)</seealso>.
-    </p>
+    processes.</p>
+  <p>This tool uses tracing with time stamps to collect profiling
+    data. There is therefore no need for special compilation of
+    modules to be profiled.</p>
+  <p>Wall clock times from the host machine OS are presented by
+    Fprof, with the assumption that OS scheduling randomly loads the
+    profiled functions in a fair way. Both <em>own time</em> (the
+    time used by a function for its own execution) and
+    <em>accumulated time</em> (the execution time including called
+    functions) are presented.</p>
 
   <section>
-    <title>Profiling from the source code</title>
-    <p>If you can edit and recompile the source code, it is convenient 
-      to insert <c>fprof:trace(start)</c> and 
-      <c>fprof:trace(stop)</c> before and after the code to be
-      profiled. All spawned processes are also traced. If you want
-      some other filename than the default try
-      <c>fprof:trace(start, "my_fprof.trace")</c>.
-      </p>
-    <p>Then read the trace file and create the raw profile data with 
-      <c>fprof:profile()</c>, or perhaps 
-      <c>fprof:profile(file, "my_fprof.trace")</c> for non-default
-      filename. 
-      </p>
-    <p>Finally create an informative table dumped on the console with
-      <c>fprof:analyse()</c>, or on file with
-      <c>fprof:analyse(dest, [])</c>, or perhaps even 
-      <c>fprof:analyse([{dest, "my_fprof.analysis"}, {cols, 120}])</c>
-      for a wider listing on non-default filename.
-      </p>
-    <p>See the <seealso marker="fprof">fprof(3)</seealso> manual page
-      for more options and arguments to the functions
-      <seealso marker="fprof#trace">trace</seealso>,
-      <seealso marker="fprof#profile">profile</seealso>
-      and 
-      <seealso marker="fprof#analyse">analyse</seealso>.
-      </p>
+    <title>Main Profiling Steps</title> 
+    <p>The three main steps for profiling are as follows:</p>
+    <p><em>Step 1.</em> Tracing to file.</p>
+    <p>The trace contains entries for function calls, returns to function,
+      process scheduling, other process-related (spawn, and others) events,
+      and garbage collection. All trace entries are time-stamped.</p>
+    <p><em>Step 2.</em> Profiling.</p>
+    <p>The trace file is read, the execution call stack is simulated, raw
+      profile data is collected from the simulated call stack and the trace
+      time-stamps, and the data is collected into an internal RAM storage
+      on the node. The profile data is stored in the Fprof server
+      state. During this step, the trace data can be dumped in text format
+      to file or console.</p>
+    <p><em>Step 3.</em> Analyzing.</p>
+    <p>The raw profile data is sorted, filtered, and dumped in text format
+      to file or console. The text format is intended to be both readable
+      for a human and parsable with the standard Erlang parsing tools.</p>
+    <p>As Fprof uses trace to file, the runtime performance 
+      degradation is minimized, but still far from negligible, especially
+      for programs using the file system heavily by themselves. Where
+      you place the trace file is also important, for example, on Solaris
+      <c>/tmp</c> is often a good choice, but any NFS (network) mounted
+      disk is a bad idea.</p>
+    <p>Fprof can also skip the file step and trace to a tracer
+      process of its own, which does the profiling in runtime.</p>
+    <p>The following sections show some examples of profiling with Fprof.
+      For details, see
+      <seealso marker="fprof"><c>fprof(3)</c></seealso>.</p>
   </section>
 
   <section>
-    <title>Profiling a function</title>
-    <p>If you have one function that does the task that you want to
-      profile, and the function returns when the profiling should
-      stop, it is convenient to use 
-      <c>fprof:apply(Module, Function, Args)</c> and related for the
-      tracing step.
-      </p>
-    <p>If the tracing should continue after the function returns, for
-      example if it is a start function that spawns processes to be
-      profiled, you can use 
-      <c>fprof:apply(M, F, Args, [continue | OtherOpts])</c>. 
-      The tracing has to be stopped at a suitable later time using
-      <c>fprof:trace(stop)</c>.
-      </p>
+    <title>Profile from Source Code</title>
+    <p>Do as follows:</p>
+    <p><em>Step 1:</em> If you can edit and recompile the source code,
+      it is convenient to insert <c>fprof:trace(start)</c> and
+      <c>fprof:trace(stop)</c> before and after the code to be profiled.
+      All spawned processes are also traced. If you want another filename
+      than the default, use
+       <seealso marker="fprof#trace"><c>fprof:trace(start, "my_fprof.trace")</c></seealso>.
+    </p>
+    <p><em>Step 2:</em> Read the trace file and create the raw profile data
+      with
+      <seealso marker="fprof#profile"><c>fprof:profile()</c></seealso> or
+      <seealso marker="fprof#profile"><c>fprof:profile(file, "my_fprof.trace")</c></seealso>
+      for non-default filename.</p>
+    <p><em>Step 3:</em> Create an informative table dumped on the console
+      using one of the following alternatives:</p>
+    <list type="bulleted">
+      <item><p><seealso marker="fprof#analyse"><c>fprof:analyse()</c></seealso>
+      </p></item>
+      <item><p>On file with
+      <seealso marker="fprof#analyse"><c>fprof:analyse(dest, [])</c></seealso>
+      </p></item>
+      <item><p><seealso marker="fprof#analyse"><c>fprof:analyse([{dest, "my_fprof.analysis"}, {cols, 120}])</c></seealso>
+        for a wider listing on non-default filename.</p></item>
+    </list>
   </section>
 
   <section>
-    <title>Immediate profiling</title>
-    <p>It is also possible to trace immediately into the profiling
-      process that creates the raw profile data, that is to short
-      circuit the tracing and profiling steps so that the filesystem
-      is not used.
-      </p>
+    <title>Profile a Function</title>
+    <p>If you have a function that does the task that you want to
+      profile, and the function returns when the profiling is to
+      stop, it is convenient to use
+      <seealso marker="fprof#apply"><c>fprof:apply(Module, Function, Args)</c></seealso>
+      and the related for the tracing step.</p>
+    <p>If the tracing is to continue after the function returns, for
+      example, if it is a start function that spawns processes to be
+      profiled,
+      <seealso marker="fprof#apply"><c>fprof:apply(M, F, Args, [continue | OtherOpts])</c></seealso>
+      can be used. The tracing must be stopped at a suitable later time using
+      <c>fprof:trace(stop)</c>.</p>
+  </section>
+
+  <section>
+    <title>Immediate Profiling</title>
+    <p>Tracing can also be done immediately into the profiling
+      process that creates the raw profile data. That is, to short
+      circuit the tracing and profiling steps so that the file system
+      is not used.</p>
     <p>Do something like this:</p>
+
     <pre>
 {ok, Tracer} = fprof:profile(start),
 fprof:trace([start, {tracer, Tracer}]),
 %% Code to profile
 fprof:trace(stop);</pre>
-    <p>This puts less load on the filesystem, but much more on the
-      Erlang runtime system.
-      </p>
+
+    <p>This puts less load on the file system, but much more on the
+      Erlang runtime system.</p>
   </section>
 </chapter>
 

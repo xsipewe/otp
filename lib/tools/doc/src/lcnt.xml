@@ -2,13 +2,13 @@
 <!DOCTYPE erlref SYSTEM "erlref.dtd">
 
 <erlref>
-    <header>
-	<copyright>
-	    <year>2009</year>
-	    <year>2013</year>
-	    <holder>Ericsson AB, All Rights Reserved</holder>
-	</copyright>
-	<legalnotice>
+  <header>
+    <copyright>
+      <year>2009</year>
+      <year>2013</year>
+      <holder>Ericsson AB, All Rights Reserved</holder>
+    </copyright>
+    <legalnotice>
       Licensed under the Apache License, Version 2.0 (the "License");
       you may not use this file except in compliance with the License.
       You may obtain a copy of the License at
@@ -22,445 +22,515 @@
       limitations under the License.
 
       The Initial Developer of the Original Code is Ericsson AB.
-	</legalnotice>
 
-	<title>lcnt</title>
-	<prepared>Björn-Egil Dahlberg</prepared>
-	<responsible>nobody</responsible>
-	<docno></docno>
-	<approved>nobody</approved>
-	<checked></checked>
-	<date>2009-11-26</date>
-	<rev>PA1</rev>
-	<file>lcnt.xml</file>
-    </header>
-    <module>lcnt</module>
-    <modulesummary>A runtime system Lock Profiling tool.</modulesummary>
-    <description>
-	<p>The <c>lcnt</c> module is used to profile the internal ethread locks in the
-	    Erlang Runtime System. With <c>lcnt</c> enabled, Internal counters in the
-	    runtime system are updated each time a lock is taken. The counters stores
-	    information about the number of acquisition tries and the number of collisions
-	    that has occurred during the acquisition tries. The counters also record the
-	    waiting time a lock has caused for a blocked thread when a collision has occurred.
-	</p>
-	<p>
-	    The data produced by the lock counters will give an estimate on how well
-	    the runtime system will behave from a parallelizable view point for the
-	    scenarios tested. This tool was mainly developed to help erlang runtime
-	    developers iron out potential and generic bottlenecks.
-	</p>
-	<p>Locks in the emulator are named after what type of resource they protect and where
-	    in the emulator they are initialized, those are lock 'classes'. Most of those
-	    locks are also instantiated several times, and given unique identifiers, to increase
-	    locking granularity. Typically an instantiated lock protects a disjunct set of
-	    the resource, i.e ets-tables, processes or ports. In other cases it protects a
-	    specific range of a resource, e.g. <c>pix_lock</c> which protects index to process
-	    mappings, and is given a unique number within the class. A unique lock in <c>lcnt</c>
-	    is referenced by a name (class) and an identifier, <c>{Name, Id}</c>.
-	</p>
-	<p>Some locks in the system are static and protects global resources, for example
-	    <c>bif_timers</c> and the <c>run_queue</c> locks. Other locks are dynamic and not
-	    necessarily long lived, for example process locks and ets-table locks. The
-	    statistics data from short lived locks can be stored separately when the locks
-	    are deleted. This behavior is by default turned off to save memory but can be
-	    turned on via <c>lcnt:rt_opt({copy_save, true})</c>. The <c>lcnt:apply/1,2,3</c>
-	    functions enables this behavior during profiling.
-	</p>
-    </description>
-    <funcs>
+    </legalnotice>
 
-	<func>
-	    <name>start() -> {ok, Pid} | {error, {already_started, Pid}} </name>
-	    <fsummary>Starts the lock profiler server.</fsummary>
-	    <type>
-		<v>Pid = pid()</v>
-	    </type>
-	    <desc>
-		<p>Starts the lock profiler server. The server only act as a medium for the
-		    user and performs filtering and printing of data collected by <c>lcnt:collect/1</c>.
-		</p>
-	    </desc>
-	</func>
+    <title>lcnt</title>
+    <prepared>Björn-Egil Dahlberg</prepared>
+    <responsible></responsible>
+    <docno></docno>
+    <approved></approved>
+    <checked></checked>
+    <date>2009-11-26</date>
+    <rev>PA1</rev>
+    <file>lcnt.xml</file>
+  </header>
+  <module>lcnt</module>
+  <modulesummary>A runtime system lock profiling tool.</modulesummary>
+  <description>
+    <p>The <c>lcnt</c> module is used to profile the internal thread locks in
+      the Erlang runtime system. With Lcnt enabled, internal counters in
+      the runtime system are updated each time a lock is taken. The counters
+      store information about the number of acquisition tries and the number of
+      collisions during the acquisition tries. The counters
+      also record the waiting time a lock cause for a blocked thread because
+      of a collision.</p>
+    <p>The data produced by the lock counters gives an estimate on how well the
+      runtime system behaves from a parallelizable view point for the scenarios
+      tested. This tool was mainly developed to help Erlang runtime developers
+      iron out potential and generic bottlenecks.</p>
+    <p>Locks in the emulator are named after what type of resource they protect
+      and where in the emulator they are initialized, those are lock "classes".
+      Most of those locks are also instantiated many times, and given unique
+      identifiers, to increase locking granularity. Typically an instantiated
+      lock protects a disjunct set of the resource, that is, <c>ets</c> tables,
+      processes, or ports. In other cases, it protects a specific range of a
+      resource, for example, <c>pix_lock</c>, which protects index to process
+      mappings, and is given a unique number within the class. A unique lock in
+      Lcnt is referenced by a name (class) and an identifier,
+      <c>{Name, Id}</c>.</p>
+    <p>Some locks in the system are static and protect global resources, for
+      example, <c>bif_timers</c> and <c>run_queue</c> locks. Other locks are
+      dynamic and not necessarily long lived, for example, process locks and
+      <c>ets</c> table locks. The statistics data from short lived locks can be
+      stored separately when the locks are deleted. This behavior is by default
+      turned off to save memory. To turn it on, use function
+      <seealso marker="#rt-opt-1"><c>rt_opt({copy_save, true})</c></seealso>.
+      The functions
+      <seealso marker="#apply-1"><c>apply/1,2,3</c></seealso> enable this
+      behavior during profiling.</p>
+  </description>
 
-	<func>
-	    <name>stop() -> ok</name>
-	    <fsummary>Stops the lock profiler server.</fsummary>
-	    <desc>
-		<p>Stops the lock profiler server.</p>
-	    </desc>
-	</func>
+  <funcs>
+    <func>
+      <name>start() -> {ok, Pid} | {error, {already_started, Pid}} </name>
+      <fsummary>Starts the lock profiler server.</fsummary>
+      <type>
+        <v>Pid = pid()</v>
+      </type>
+      <desc>
+        <p>Starts the lock profiler server, which only acts as a medium
+          for the user. It filters and prints data collected by
+          <seealso marker="#collect-1"><c>collect/1</c></seealso>.</p>
+      </desc>
+    </func>
 
-	<func>
-	    <name>collect() -> ok</name>
-	    <fsummary>Same as <c>collect(node())</c>.</fsummary>
-	    <desc><p>Same as <c>collect(node())</c>.</p></desc>
-	</func>
+    <func>
+      <name>stop() -> ok</name>
+      <fsummary>Stops the lock profiler server.</fsummary>
+      <desc>
+        <p>Stops the lock profiler server.</p>
+      </desc>
+    </func>
 
-	<func>
-	    <name>collect(Node) -> ok</name>
-	    <fsummary>Collects lock statistics from the runtime system.</fsummary>
-	    <type>
-		<v>Node = node()</v>
-	    </type>
-	    <desc>
-		<p>Collects lock statistics from the runtime system. The function starts a
-		    server if it is not already started. It then populates the server with lock
-		    statistics. If the server held any lock statistics data before the collect then
-		    that data is lost.
-		</p>
-		<note>
-		    <p>
-			When collection occurs the runtime system transitions to a single thread,
-			blocking all other threads. No other tasks will be scheduled during this
-			operation. Depending on the size of the data this might take a long time
-			(several seconds) and cause timeouts in the system.
-		    </p>
-		</note>
-	    </desc>
-	</func>
+    <func>
+      <name>collect() -> ok</name>
+      <fsummary>Same as <c>collect(node())</c>.</fsummary>
+      <desc>
+        <p>Same as
+          <seealso marker="#collect-1"><c>collect(node())</c></seealso>.</p>
+      </desc>
+    </func>
 
-	<func>
-	    <name>clear() -> ok</name>
-	    <fsummary>Same as <c>clear(node())</c>.</fsummary>
-	    <desc><p>Same as <c>clear(node())</c>.</p></desc>
-	</func>
+    <func>
+      <name>collect(Node) -> ok</name>
+      <fsummary>Collects lock statistics from the runtime system.</fsummary>
+      <type>
+        <v>Node = node()</v>
+      </type>
+      <desc>
+        <p>Collects lock statistics from the runtime system. Starts a server,
+          if it is not already started, and then populates the server with
+          lock statistics. If the server held any lock statistics data before
+          the collect, that data is lost.</p>
+        <note>
+          <p>When collection occurs, the runtime system transitions to a single
+            thread, blocking all other threads. No other tasks are scheduled
+            during this operation. Depending on the size of the data, this can
+            take a long time (many seconds) and cause time-outs in the
+            system.</p>
+        </note>
+      </desc>
+    </func>
 
-	<func>
-	    <name>clear(Node) -> ok</name>
-	    <fsummary>Clears the internal lock statistics from runtime system.</fsummary>
-	    <type>
-		<v>Node = node()</v>
-	    </type>
-	    <desc>
-		<p>Clears the internal lock statistics from the runtime system. This does not clear the
-		    data on the server only on runtime system. All counters for static locks are zeroed,
-		    all dynamic locks currently alive are zeroed and all saved locks now destroyed are removed.
-		    It also resets the duration timer.
-		</p>
-	    </desc>
-	</func>
-	<func>
-	    <name>conflicts() -> ok</name>
-	    <fsummary>Same as <c>conflicts([])</c>.</fsummary>
-	    <desc><p>Same as <c>conflicts([])</c>.</p></desc>
-	</func>
-	<func>
-	    <name>conflicts([Option]) -> ok</name>
-	    <fsummary>Prints a list of internal lock counters.</fsummary>
-	    <type>
-		<v>Option     = {sort, Sort} | {reverse, bool()} | {thresholds, [Thresholds]} | {print, [Print | {Print, integer()}]} | {max_locks, MaxLocks} | {combine, bool()}</v>
-		<v>Sort       = name | id | type | tries | colls | ratio | time | entry</v>
-		<v>Thresholds = {tries, integer()} | {colls, integer()} | {time, integer()}</v>
-		<v>Print      = name | id | type | entry | tries | colls | ratio | time | duration</v>
-		<v>MaxLocks   = integer() | none</v>
-	    </type>
-	    <desc>
-		<p>Prints a list of internal locks and its statistics.</p>
-		<p>For option description, see <seealso marker="#inspect/2">lcnt:inspect/2</seealso>.</p>
-	    </desc>
-	</func>
+    <func>
+      <name>clear() -> ok</name>
+      <fsummary>Same as <c>clear(node())</c>.</fsummary>
+      <desc>
+        <p>Same as
+          <seealso marker="#clear-1"><c>clear(node())</c></seealso>.</p>
+      </desc>
+    </func>
 
-	<func>
-	    <name>locations() -> ok</name>
-	    <fsummary>Same as <c>locations([])</c>.</fsummary>
-	    <desc>
-		<p>Same as <c>locations([])</c>.</p>
-	    </desc>
-	</func>
-	<func>
-	    <name>locations([Option]) -> ok</name>
-	    <fsummary>Prints a list of internal lock counters by source code locations.</fsummary>
-	    <type>
-		<v>Option     = {sort, Sort} | {thresholds, [Thresholds]} | {print, [Print | {Print, integer()}]} | {max_locks, MaxLocks} | {combine, bool()}</v>
-		<v>Sort       = name | id | type | tries | colls | ratio | time | entry</v>
-		<v>Thresholds = {tries, integer()} | {colls, integer()} | {time, integer()}</v>
-		<v>Print      = name | id | type | entry | tries | colls | ratio | time | duration</v>
-		<v>MaxLocks   = integer() | none</v>
-	    </type>
-	    <desc>
-		<p>Prints a list of internal lock counters by source code locations.</p>
-		<p>For option description, see <seealso marker="#inspect/2">lcnt:inspect/2</seealso>.</p>
-	    </desc>
-	</func>
+    <func>
+      <name>clear(Node) -> ok</name>
+      <fsummary>Clears the internal lock statistics from runtime system.</fsummary>
+      <type>
+        <v>Node = node()</v>
+      </type>
+      <desc>
+        <p>Clears the internal lock statistics from the runtime system. This
+          does not clear the data on the server, only on the runtime system.
+          All counters for static locks are zeroed, all dynamic locks currently
+          alive are zeroed, and all saved locks now destroyed are removed. Also,
+          the duration timer is reset.</p>
+      </desc>
+    </func>
 
-	<func>
-	    <name>inspect(Lock) -> ok</name>
-	    <fsummary>Same as <c>inspect(Lock, [])</c>.</fsummary>
-	    <desc><p>Same as <c>inspect(Lock, [])</c>.</p></desc>
-	</func>
-	<func>
-	    <name>inspect(Lock, [Option]) -> ok</name>
-	    <fsummary>Prints a list of internal lock counters for a specific lock.</fsummary>
-	    <type>
-		<v>Lock       = Name | {Name, Id | [Id]}</v>
-		<v>Name       = atom() | pid() | port()</v>
-		<v>Id         = atom() | integer() | pid() | port()</v>
-		<v>Option     = {sort, Sort} | {thresholds, [Thresholds]} | {print, [Print | {Print, integer()}]} | {max_locks, MaxLocks} | {combine, bool()} | {locations, bool()}</v>
-		<v>Sort       = name | id | type | tries | colls | ratio | time</v>
-		<v>Thresholds = {tries, integer()} | {colls, integer()} | {time, integer()}</v>
-		<v>Print      = name | id | type | entry | tries | colls | ratio | time | duration</v>
-		<v>MaxLocks   = integer() | none</v>
-	    </type>
-	    <desc>
-		<p>Prints a list of internal lock counters for a specific lock.</p>
-		<p>Lock <c>Name</c> and <c>Id</c> for ports and processes are interchangeable with the use of <c>lcnt:swap_pid_keys/0</c> and is the reason why <c>pid()</c> and <c>port()</c> options can be used in both <c>Name</c> and <c>Id</c> space. Both pids and ports are special identifiers with stripped creation and can be recreated with <seealso marker="#pid/3">lcnt:pid/2,3</seealso> and <seealso marker="#port/2">lcnt:port/1,2</seealso>.  </p>
-		<p>Option description:</p>
-		<taglist>
-		    <tag><c>{combine, bool()}</c></tag>
-		    <item>Combine the statistics from different instances of a lock class.
-			<br/>Default: <c>true</c>
-		    </item>
+    <func>
+      <name>conflicts() -> ok</name>
+      <fsummary>Same as <c>conflicts([])</c>.</fsummary>
+      <desc>
+        <p>Same as
+          <seealso marker="#conflict-1"><c>conflicts([])</c></seealso>.</p>
+      </desc>
+    </func>
 
-		    <tag><c>{locations, bool()}</c></tag>
-		    <item>Print the statistics by source file and line numbers.
-			<br/>Default: <c>false</c>
-		    </item>
+    <func>
+      <name>conflicts([Option]) -> ok</name>
+      <fsummary>Prints a list of internal lock counters.</fsummary>
+      <type>
+        <v>Option = {sort, Sort} | {reverse, bool()} | {thresholds, [Thresholds]} | {print, [Print | {Print, integer()}]} | {max_locks, MaxLocks} | {combine, bool()}</v>
+        <v>Sort = name | id | type | tries | colls | ratio | time | entry</v>
+        <v>Thresholds = {tries, integer()} | {colls, integer()} | {time, integer()}</v>
+        <v>Print = name | id | type | entry | tries | colls | ratio | time | duration</v>
+        <v>MaxLocks = integer() | none</v>
+      </type>
+      <desc>
+        <p>Prints a list of internal locks and its statistics.</p>
+        <p>For option description, see
+          <seealso marker="#inspect/2"><c>inspect/2</c></seealso>.</p>
+      </desc>
+    </func>
 
-		    <tag><c>{max_locks, MaxLocks}</c></tag>
-		    <item>Maximum number of locks printed or no limit with <c>none</c>.
-			<br/>Default: <c>20</c>
-		    </item>
+    <func>
+      <name>locations() -> ok</name>
+      <fsummary>Same as <c>locations([])</c>.</fsummary>
+      <desc>
+        <p>Same as
+          <seealso marker="#locations-1"><c>locations([])</c></seealso>.</p>
+      </desc>
+    </func>
 
-		    <tag><c>{print, PrintOptions}</c></tag>
-		    <item>Printing options:
-			<taglist>
-			    <tag><c>name</c></tag>
-			    <item>Named lock or named set of locks (classes). The same name used for initializing the lock in the VM.</item>
+    <func>
+      <name>locations([Option]) -> ok</name>
+      <fsummary>Prints a list of internal lock counters by source code
+        locations.</fsummary>
+      <type>
+        <v>Option = {sort, Sort} | {thresholds, [Thresholds]} | {print, [Print | {Print, integer()}]} | {max_locks, MaxLocks} | {combine, bool()}</v>
+        <v>Sort = name | id | type | tries | colls | ratio | time | entry</v>
+        <v>Thresholds = {tries, integer()} | {colls, integer()} | {time, integer()}</v>
+        <v>Print = name | id | type | entry | tries | colls | ratio | time | duration</v>
+        <v>MaxLocks = integer() | none</v>
+      </type>
+      <desc>
+        <p>Prints a list of internal lock counters by source code locations.</p>
+        <p>For option description, see
+          <seealso marker="#inspect/2"><c>inspect/2</c></seealso>.</p>
+      </desc>
+    </func>
 
-			    <tag><c>id</c></tag>
-			    <item>Internal id for set of locks, not always unique. This could be table name for ets tables (db_tab), port id for ports, integer identifiers for allocators, etc.</item>
+    <func>
+      <name>inspect(Lock) -> ok</name>
+      <fsummary>Same as <c>inspect(Lock, [])</c>.</fsummary>
+      <desc>
+        <p>Same as
+          <seealso marker="#inspect-2"><c>inspect(Lock, [])</c></seealso>.</p>
+      </desc>
+    </func>
 
-			    <tag><c>type</c></tag>
-			    <item>Type of lock: <c>rw_mutex</c>, <c>mutex</c>, <c>spinlock</c>, <c>rw_spinlock</c> or <c>proclock</c>.</item>
+    <func>
+      <name>inspect(Lock, [Option]) -> ok</name>
+      <fsummary>Prints a list of internal lock counters for a specific
+        lock.</fsummary>
+      <type>
+        <v>Lock = Name | {Name, Id | [Id]}</v>
+        <v>Name = atom() | pid() | port()</v>
+        <v>Id = atom() | integer() | pid() | port()</v>
+        <v>Option = {sort, Sort} | {thresholds, [Thresholds]} | {print, [Print | {Print, integer()}]} | {max_locks, MaxLocks} | {combine, bool()} | {locations, bool()}</v>
+        <v>Sort = name | id | type | tries | colls | ratio | time</v>
+        <v>Thresholds = {tries, integer()} | {colls, integer()} | {time, integer()}</v>
+        <v>Print = name | id | type | entry | tries | colls | ratio | time | duration</v>
+        <v>MaxLocks = integer() | none</v>
+      </type>
+      <desc>
+        <p>Prints a list of internal lock counters for a specific lock.</p>
+        <p>Lock <c>Name</c> and <c>Id</c> for ports and processes are
+          interchangeable with the use of function
+          <seealso marker="#swap_pid_keys-0"><c>swap_pid_keys/0</c></seealso>
+          and is why options <c>pid()</c> and <c>port()</c> can be used in
+          both <c>Name</c> and <c>Id</c> space. Both pids and ports are
+          special identifiers with stripped creation and can be recreated with
+          <seealso marker="#pid/2"><c>pid/2,3</c></seealso> and
+          <seealso marker="#port/2"><c>port/1,2</c></seealso>.</p>
+        <p><em>Options:</em></p>
+	<taglist>
+          <tag><c>{combine, bool()}</c></tag>
+          <item><p>Combines the statistics from different instances of a lock
+            class.</p>
+            <p>Default: <c>true</c>.</p></item>
 
-			    <tag><c>entry</c></tag>
-			    <item>In combination with <c>{locations, true}</c> this option prints the lock operations source file and line number entry-points along with statistics for each entry. </item>
+          <tag><c>{locations, bool()}</c></tag>
+          <item><p>Prints the statistics by source file and line numbers.</p>
+	    <p>Default: <c>false</c>.</p></item>
 
-			    <tag><c>tries</c></tag>
-			    <item>Number of acquisitions of this lock.</item>
+          <tag><c>{max_locks, MaxLocks}</c></tag>
+          <item><p>Maximum number of locks printed or no limit with
+            <c>none</c>.</p>
+            <p>Default: <c>20</c>.</p></item>
 
-			    <tag><c>colls</c></tag>
-			    <item>Number of collisions when a thread tried to acquire this lock. This is when a trylock is EBUSY, a write try on read held rw_lock, a try read on write held rw_lock, a thread tries to lock an already locked lock. (Internal states supervises this).</item>
+          <tag><c>{print, PrintOptions}</c></tag>
+          <item><p>Printing options:</p>
+          <taglist>
+            <tag><c>name</c></tag>
+            <item><p>Named lock or named set of locks (classes). The same name
+              used for initializing the lock in the VM.</p></item>
 
-			    <tag><c>ratio</c></tag>
-			    <item>The ratio between the number of collisions and the number of tries (acquisitions) in percentage.</item>
+            <tag><c>id</c></tag>
+            <item><p>Internal id for set of locks, not always unique. This can
+              be table name for <c>ets</c> tables (<c>db_tab</c>), port id for
+              ports, integer identifiers for allocators, and so on.</p></item>
 
-			    <tag><c>time</c></tag>
-			    <item>Accumulated waiting time for this lock. This could be greater than actual wall clock time, it is accumulated for all threads. Trylock conflicts does not accumulate time.</item>
+            <tag><c>type</c></tag>
+            <item><p>Type of lock: <c>rw_mutex</c>, <c>mutex</c>,
+              <c>spinlock</c>, <c>rw_spinlock</c>, or <c>proclock</c>.</p>
+            </item>
 
-			    <tag><c>duration</c></tag>
-			    <item>Percentage of accumulated waiting time of wall clock time. This percentage can be higher than 100% since accumulated time is from all threads.</item>
-			</taglist>
-			<br/>Default: <c>[name,id,tries,colls,ratio,time,duration]</c>
-		    </item>
+            <tag><c>entry</c></tag>
+            <item><p>In combination with <c>{locations, true}</c>, this option
+              prints the lock operations source file and line number
+              entry points along with statistics for each entry.</p></item>
 
-		    <tag><c>{reverse, bool()}</c></tag>
-		    <item>Reverses the order of sorting.
-			<br/>Default: <c>false</c>
-		    </item>
+            <tag><c>tries</c></tag>
+            <item><p>Number of acquisitions of this lock.</p></item>
 
-		    <tag><c>{sort, Sort}</c></tag>
-		    <item>Column sorting orders.
-			<br/>Default: <c>time</c>
-		    </item>
+            <tag><c>colls</c></tag>
+            <item><p>Number of collisions when a thread tried to acquire this
+              lock. This is when a trylock is <c>EBUSY</c>, a write try on
+              read held <c>rw_lock</c>, a try read on write
+              <c>held rw_lock</c>, a thread tries to lock an already locked
+              lock. (Internal states supervises this.)</p></item>
 
-		    <tag><c>{thresholds, Thresholds}</c></tag>
-		    <item>Filtering thresholds. Anything values above the threshold value are passed through.
-			<br/>Default: <c>[{tries, 0}, {colls, 0}, {time, 0}]</c>
-		    </item>
+            <tag><c>ratio</c></tag>
+            <item><p>The ratio between the number of collisions and the number
+              of tries (acquisitions) in percentage.</p></item>
 
-		</taglist>
+            <tag><c>time</c></tag>
+            <item><p>Accumulated waiting time for this lock. Can be greater
+              than the actual wallclock time, as it is accumulated for all
+              threads. Trylock conflicts do not accumulate time.</p></item>
 
-	    </desc>
-	</func>
+            <tag><c>duration</c></tag>
+            <item><p>Percentage of accumulated waiting time of wallclock time.
+              Can be higher than 100%, as accumulated time is from all
+              threads.</p></item>
+          </taglist>
+	  <p>Default:
+            <c>[name,id,tries,colls,ratio,time,duration]</c>.</p></item>
 
-	<func>
-	    <name>information() -> ok</name>
-	    <fsummary>Prints lcnt server state and generic information about collected lock statistics.</fsummary>
-	    <desc>
-		<p>Prints lcnt server state and generic information about collected lock statistics.</p>
-	    </desc>
-	</func>
+          <tag><c>{reverse, bool()}</c></tag>
+          <item><p>Reverses the sorting order.</p>
+            <p>Default: <c>false</c>.</p></item>
 
-	<func>
-	    <name>swap_pid_keys() -> ok</name>
-	    <fsummary>Swaps places on <c>Name</c> and <c>Id</c> space for ports and processes.</fsummary>
-	    <desc>
-		<p>Swaps places on <c>Name</c> and <c>Id</c> space for ports and processes.</p>
-	    </desc>
-	</func>
+          <tag><c>{sort, Sort}</c></tag>
+          <item><p>Column sorting orders.</p>
+            <p>Default: <c>time</c>.</p></item>
 
-	<func>
-	    <name>load(Filename) -> ok</name>
-	    <fsummary>Restores previously saved data to the server.</fsummary>
-	    <type>
-		<v>Filename = filename()</v>
-	    </type>
-	    <desc>
-		<p>Restores previously saved data to the server.</p>
-	    </desc>
-	</func>
+          <tag><c>{thresholds, Thresholds}</c></tag>
+          <item><p>Filtering thresholds. Any values above the threshold value
+            are passed through.</p>
+            <p>Default: <c>[{tries, 0}, {colls, 0}, {time, 0}]</c>.</p></item>
+        </taglist>
+      </desc>
+    </func>
 
-	<func>
-	    <name>save(Filename) -> ok</name>
-	    <fsummary>Saves the collected data to file.</fsummary>
-	    <type>
-		<v>Filename = filename()</v>
-	    </type>
-	    <desc>
-		<p>Saves the collected data to file.</p>
-	    </desc>
-	</func>
-    </funcs>
+    <func>
+      <name>information() -> ok</name>
+      <fsummary>Prints Lcnt server state and generic information about
+        collected lock statistics.</fsummary>
+      <desc>
+        <p>Prints Lcnt server state and generic information about
+          collected lock statistics.</p>
+      </desc>
+    </func>
 
-    <section>
-	<title>Convenience functions</title>
-	<p>The following functions are used for convenience.</p>
-    </section>
-    <funcs>
-	<func>
-	    <name>apply(Fun) -> term()</name>
-	    <fsummary>Same as <c>apply(Fun, [])</c>.</fsummary>
-	    <desc>
-		<p>Same as <c>apply(Fun, [])</c>.</p>
-	    </desc>
-	</func>
-	<func>
-	    <name>apply(Fun, Args) -> term()</name>
-	    <fsummary>Clears counters, applies function and collects the profiling results.</fsummary>
-	    <type>
-		<v>Fun = fun()</v>
-		<v>Args = [term()]</v>
-	    </type>
-	    <desc>
-		<p> Clears the lock counters and then setups the instrumentation to save all destroyed locks.
-		    After setup the fun is called, passing the elements in <c>Args</c> as arguments.
-		    When the fun returns the statistics are immediately collected to the server. After the
-		    collection the instrumentation is returned to its previous behavior.
-		    The result of the applied fun is returned.
-		</p>
-	    </desc>
-	</func>
-	<func>
-	    <name>apply(Module, Function, Args) -> term()</name>
-	    <fsummary>Clears counters, applies function and collects the profiling results.</fsummary>
-	    <type>
-		<v>Module = atom()</v>
-		<v>Function = atom()</v>
-		<v>Args = [term()]</v>
-	    </type>
-	    <desc>
-		<p> Clears the lock counters and then setups the instrumentation to save all destroyed locks.
-		    After setup the function is called, passing the elements in <c>Args</c> as arguments.
-		    When the function returns the statistics are immediately collected to the server. After the
-		    collection the instrumentation is returned to its previous behavior.
-		    The result of the applied function is returned.
-		</p>
-	    </desc>
-	</func>
+    <func>
+      <name>swap_pid_keys() -> ok</name>
+      <fsummary>Swaps places on <c>Name</c> and <c>Id</c> space for ports and
+        processes.</fsummary>
+      <desc>
+        <p>Swaps places on <c>Name</c> and <c>Id</c> space for ports and
+          processes.</p>
+      </desc>
+    </func>
 
-	<func>
-	    <name>pid(Id, Serial) -> pid()</name>
-	    <fsummary>Same as <c>pid(node(), Id, Serial)</c>.</fsummary>
-	    <desc><p>Same as <c>pid(node(), Id, Serial)</c>.</p></desc>
-	</func>
-	<func>
-	    <name>pid(Node, Id, Serial) -> pid()</name>
-	    <fsummary>Creates a process id with creation 0.</fsummary>
-	    <type>
-		<v>Node = node()</v>
-		<v>Id = integer()</v>
-		<v>Serial = integer()</v>
-	    </type>
-	    <desc>
-		<p>Creates a process id with creation 0. Example:</p>
-	    </desc>
-	</func>
+    <func>
+      <name>load(Filename) -> ok</name>
+      <fsummary>Restores previously saved data to the server.</fsummary>
+      <type>
+        <v>Filename = filename()</v>
+      </type>
+      <desc>
+        <p>Restores previously saved data to the server.</p>
+      </desc>
+    </func>
 
-	<func>
-	    <name>port(Id) -> port()</name>
-	    <fsummary>Same as <c>port(node(), Id)</c>.</fsummary>
-	    <desc><p>Same as <c>port(node(), Id)</c>.</p></desc>
-	</func>
-	<func>
-	    <name>port(Node, Id) -> port()</name>
-	    <fsummary>Creates a port id with creation 0.</fsummary>
-	    <type>
-		<v>Node = node()</v>
-		<v>Id = integer()</v>
-	    </type>
-	    <desc><p>Creates a port id with creation 0.</p></desc>
-	</func>
+    <func>
+      <name>save(Filename) -> ok</name>
+      <fsummary>Saves the collected data to file.</fsummary>
+      <type>
+        <v>Filename = filename()</v>
+      </type>
+      <desc>
+        <p>Saves the collected data to file.</p>
+      </desc>
+    </func>
+  </funcs>
 
-    </funcs>
+  <section>
+  <title>Convenience Functions</title>
+    <p>The following functions are used for convenience.</p>
+  </section>
 
-    <section>
-	<title>Internal runtime lock counter controllers</title>
-	<p> The following functions control the behavior of the internal counters.  </p>
-    </section>
+  <funcs>
+    <func>
+      <name>apply(Fun) -> term()</name>
+      <fsummary>Same as <c>apply(Fun, [])</c>.</fsummary>
+      <desc>
+        <p>Same as
+          <seealso marker="#apply-2"><c>apply(Fun, [])</c></seealso>.</p>
+      </desc>
+    </func>
 
-    <funcs>
-	<func>
-	    <name>rt_collect() -> [lock_counter_data()]</name>
-	    <fsummary>Same as <c>rt_collect(node())</c>.</fsummary>
-	    <desc> <p>Same as <c>rt_collect(node())</c>.</p> </desc>
-	</func>
-	<func>
-	    <name>rt_collect(Node) -> [lock_counter_data()]</name>
-	    <fsummary>Returns a list of raw lock counter data.</fsummary>
-	    <type>
-		<v>Node = node()</v>
-	    </type>
-	    <desc> <p>Returns a list of raw lock counter data.</p> </desc>
-	</func>
+    <func>
+      <name>apply(Fun, Args) -> term()</name>
+      <fsummary>Clears counters, applies function, and collects the profiling
+        results.</fsummary>
+      <type>
+        <v>Fun = fun()</v>
+        <v>Args = [term()]</v>
+      </type>
+      <desc>
+        <p>Clears the lock counters and then sets the instrumentation to
+          save all destroyed locks. After setup, the fun is called, passing
+          the elements in <c>Args</c> as arguments. When the fun returns, the
+          statistics are immediately collected to the server. After the
+          collection, the instrumentation is returned to its previous
+          behavior. The result of the applied fun is returned.</p>
+      </desc>
+    </func>
 
-	<func>
-	    <name>rt_clear() -> ok</name>
-	    <fsummary>Same as <c>rt_clear(node())</c>.</fsummary>
-	    <desc> <p>Same as <c>rt_clear(node())</c>.</p> </desc>
-	</func>
-	<func>
-	    <name>rt_clear(Node) -> ok</name>
-	    <fsummary>Clears the internal counters.</fsummary>
-	    <type>
-		<v>Node = node()</v>
-	    </type>
-	    <desc> <p>Clear the internal counters. Same as <c>lcnt:clear(Node)</c>.</p></desc>
-	</func>
+    <func>
+      <name>apply(Module, Function, Args) -> term()</name>
+      <fsummary>Clears counters, applies function, and collects the profiling
+        results.</fsummary>
+      <type>
+        <v>Module = atom()</v>
+        <v>Function = atom()</v>
+        <v>Args = [term()]</v>
+      </type>
+      <desc>
+        <p>Clears the lock counters and then setups the instrumentation to
+          save all destroyed locks. After setup, the function is called,
+          passing the elements in <c>Args</c> as arguments. When the function
+          returns, the statistics are immediately collected to the server.
+          After the collection, the instrumentation is returned to its
+          previous behavior. The result of the applied function is returned.</p>
+      </desc>
+    </func>
 
-	<func>
-	    <name>rt_opt({Type, bool()}) -> bool()</name>
-	    <fsummary>Same as <c>rt_opt(node(), {Type, Opt})</c>.</fsummary>
-	    <desc> <p>Same as <c>rt_opt(node(), {Type, Opt})</c>.</p> </desc>
-	</func>
-	<func>
-	    <name>rt_opt(Node, {Type, bool()}) -> bool()</name>
-	    <fsummary>Changes the lock counter behavior and returns the previous behaviour.</fsummary>
-	    <type>
-		<v>Node = node()</v>
-		<v>Type = copy_save | process_locks</v>
-	    </type>
-	    <desc>
-		<p>Changes the lock counter behavior and returns the previous behaviour.</p>
-		<p>Option description:</p>
-		<taglist>
-		    <tag><c>{copy_save, bool()}</c></tag>
-		    <item>Enable statistics saving from destroyed locks by copying. This might consume a lot of memory.
-			<br/>Default: <c>false</c>
-		    </item>
+    <func>
+      <name>pid(Id, Serial) -> pid()</name>
+      <fsummary>Same as <c>pid(node(), Id, Serial)</c>.</fsummary>
+      <desc>
+        <p>Same as
+           <seealso marker="#pid-3"><c>pid(node(), Id, Serial)</c></seealso>.</p>
+      </desc>
+    </func>
 
-		    <tag><c>{process_locks, bool()}</c></tag>
-		    <item>Profile process locks.
-			<br/>Default: <c>true</c>
-		    </item>
-		</taglist>
-	    </desc>
-	</func>
-    </funcs>
+    <func>
+      <name>pid(Node, Id, Serial) -> pid()</name>
+      <fsummary>Creates a process id with creation 0.</fsummary>
+      <type>
+        <v>Node = node()</v>
+        <v>Id = integer()</v>
+        <v>Serial = integer()</v>
+      </type>
+      <desc>
+        <p>Creates a process id with creation 0.</p>
+      </desc>
+    </func>
 
-    <section>
-	<title>See Also</title>
-	<p> <seealso marker="lcnt_chapter">LCNT User's Guide</seealso></p>
-    </section>
+    <func>
+      <name>port(Id) -> port()</name>
+      <fsummary>Same as <c>port(node(), Id)</c>.</fsummary>
+      <desc>
+        <p>Same as
+          <seealso marker="#port/2"><c>port(node(), Id)</c></seealso>.</p>
+      </desc>
+    </func>
+
+    <func>
+      <name>port(Node, Id) -> port()</name>
+      <fsummary>Creates a port id with creation 0.</fsummary>
+      <type>
+        <v>Node = node()</v>
+        <v>Id = integer()</v>
+      </type>
+     <desc>
+       <p>Creates a port id with creation 0.</p>
+     </desc>
+    </func>
+  </funcs>
+
+  <section>
+  <title>Internal Runtime Lock Counter Controllers</title>
+    <p>The following functions control the behavior of the internal
+      counters.</p>
+  </section>
+
+  <funcs>
+    <func>
+      <name>rt_collect() -> [lock_counter_data()]</name>
+      <fsummary>Same as <c>rt_collect(node())</c>.</fsummary>
+      <desc>
+        <p>Same as
+          <seealso marker="#rt_collect-1"><c>rt_collect(node())</c></seealso>.</p>
+      </desc>
+    </func>
+
+    <func>
+      <name>rt_collect(Node) -> [lock_counter_data()]</name>
+      <fsummary>Returns a list of raw lock counter data.</fsummary>
+      <type>
+        <v>Node = node()</v>
+      </type>
+      <desc>
+        <p>Returns a list of raw lock counter data.</p>
+      </desc>
+    </func>
+
+    <func>
+      <name>rt_clear() -> ok</name>
+      <fsummary>Same as <c>rt_clear(node())</c>.</fsummary>
+      <desc>
+        <p>Same as <seealso marker="#rt_clear-1"><c>rt_clear(node())</c></seealso>.</p>
+      </desc>
+    </func>
+
+    <func>
+      <name>rt_clear(Node) -> ok</name>
+      <fsummary>Clears the internal counters.</fsummary>
+      <type>
+        <v>Node = node()</v>
+      </type>
+      <desc>
+        <p>Clears the internal counters. Same as
+          <seealso marker="#clear-1"><c>clear(Node)</c></seealso>.</p>
+      </desc>
+    </func>
+
+    <func>
+      <name>rt_opt({Type, bool()}) -> bool()</name>
+      <fsummary>Same as <c>rt_opt(node(), {Type, Opt})</c>.</fsummary>
+      <desc>
+        <p>Same as
+          <seealso marker="#rt_opt-2"><c>rt_opt(node(), {Type, Opt})</c></seealso>.</p>
+      </desc>
+    </func>
+
+    <func>
+      <name>rt_opt(Node, {Type, bool()}) -> bool()</name>
+      <fsummary>Changes the lock counter behavior and returns the previous
+        behavior.</fsummary>
+      <type>
+        <v>Node = node()</v>
+        <v>Type = copy_save | process_locks</v>
+      </type>
+      <desc>
+        <p>Changes the lock counter behavior and returns the previous
+          behavior.</p>
+        <p><em>Options:</em></p>
+        <taglist>
+          <tag><c>{copy_save, bool()}</c></tag>
+          <item><p>Enables statistics saving from destroyed locks by copying.
+            This can consume a lot of memory.</p>
+	    <p>Default: <c>false</c>.</p></item>
+          <tag><c>{process_locks, bool()}</c></tag>
+          <item><p>Profiles process locks.</p>
+            <p>Default: <c>true</c>.</p></item>
+        </taglist>
+      </desc>
+    </func>
+  </funcs>
 </erlref>
