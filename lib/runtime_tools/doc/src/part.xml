@@ -22,18 +22,14 @@
     
     </legalnotice>
 
-    <title>Runtime Tools User's Guide</title>
+    <title>Runtime_Tools User's Guide</title>
     <prepared>Lukas Larsson</prepared>
     <docno></docno>
     <date>2012-07-18</date>
     <rev></rev>
     <file>part.xml</file>
   </header>
-  
-  <description>
-      <p><em>Runtime Tools</em></p>
-  </description>
-
+  <description></description>
   <xi:include href="LTTng.xml"/>
   <xi:include href="DTRACE.xml"/>
   <xi:include href="SYSTEMTAP.xml"/>

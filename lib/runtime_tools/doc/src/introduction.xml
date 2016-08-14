@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE application SYSTEM "application.dtd">
+<!DOCTYPE chapter SYSTEM "chapter.dtd">
 
-<application xmlns:xi="http://www.w3.org/2001/XInclude">
+<chapter>
   <header>
     <copyright>
-      <year>1999</year><year>2016</year>
+      <year>2003</year>
+      <year>2016</year>
       <holder>Ericsson AB. All Rights Reserved.</holder>
     </copyright>
     <legalnotice>
@@ -22,18 +23,28 @@
     
     </legalnotice>
 
-    <title>Runtime_Tools Reference Manual</title>
-    <prepared>Patrik Nyblom</prepared>
+    <title>Introduction</title>
+    <prepared></prepared>
+    <responsible></responsible>
     <docno></docno>
-    <date>1999-05-27</date>
-    <rev>A</rev>
+    <approved></approved>
+    <checked></checked>
+    <date>2016-06-29</date>
+    <rev></rev>
+    <file>introduction.xml</file>
   </header>
-  <description></description>
-  <xi:include href="runtime_tools_app.xml"/>
-  <xi:include href="dbg.xml"/>
-  <xi:include href="dyntrace.xml"/>
-  <xi:include href="erts_alloc_config.xml"/>
-  <xi:include href="msacc.xml"/>
-  <xi:include href="system_information.xml"/>
-</application>
+
+  <section>
+    <title>Scope</title>
+    <p><em>Runtime_Tools</em> provides low footprint tracing/debugging
+      tools suitable for inclusion in a production system.</p>
+  </section>
+
+  <section>
+    <title>Prerequisites</title>
+    <p>It is assumed that the reader is familiar with the Erlang programming
+      language.</p> 
+  </section>
+</chapter>
+
 

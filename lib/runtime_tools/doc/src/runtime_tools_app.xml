@@ -32,26 +32,25 @@
     <checked></checked>
     <date>1999-05-27</date>
     <rev>PA1</rev>
-    <file>runtime_tools_app.sgml</file>
+    <file>runtime_tools_app.xml</file>
   </header>
   <app>runtime_tools</app>
-  <appsummary>The Runtime tools Application</appsummary>
+  <appsummary>Runtime_Tools application.</appsummary>
   <description>
-    <p>This chapter describes the Runtime_Tools application in OTP,
-      which provides low footprint tracing/debugging tools suitable
+    <p>The <c>Runtime_Tools</c> application
+      provides low footprint tracing/debugging tools suitable
       for inclusion in a production system.</p>
   </description>
 
   <section>
     <title>Configuration</title>
-    <p>There are currently no configuration parameters available for
-      this application.
-      </p>
+    <p>No configuration parameters are available for this application.</p>
   </section>
 
   <section>
-    <title>SEE ALSO</title>
-    <p>application(3)</p>
+    <title>See Also</title>
+    <p><seealso marker="kernel:application">
+      <c>kernel:application(3)</c></seealso></p>
   </section>
 </appref>
 

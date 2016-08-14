@@ -5,60 +5,61 @@ History
 -------
 
 The first implementation of DTrace probes for the Erlang virtual
-machine was presented at the [2008 Erlang User Conference] [1].  That
-work, based on the Erlang/OTP R12 release, was discontinued due to
-what appears to be miscommunication with the original developers.
+machine was presented at the [2008 Erlang User Conference] [1]. That
+work, based on the Erlang/OTP R12 release, was discontinued because
+of what appears to be miscommunication with the original developers.
 
-Several users have created Erlang port drivers, linked-in drivers, or
-NIFs that allow Erlang code to try to activate a probe,
-e.g. `foo_module:dtrace_probe("message goes here!")`.
+Many users have created Erlang port drivers, linked-in drivers, or
+NIFs that allow Erlang code to try to activate a probe, for
+example, `foo_module:dtrace_probe("message goes here!")`.
 
 Goals
 -----
 
 * Annotate as much of the Erlang VM as is practical.
-   * The initial goal is to trace file I/O operations.
+* The initial goal is to trace file I/O operations.
 * Support all platforms that implement DTrace: OS X, Solaris,
-  and (I hope) FreeBSD and NetBSD.
-* To the extent that it's practical, support SystemTap on Linux
-  via DTrace provider compatibility.
+  and (hopefully) FreeBSD and NetBSD.
+* To the extent practical, support SystemTap on Linux
+  through DTrace provider compatibility.
 * Allow Erlang code to supply annotations.
 
-Supported platforms
+Supported Platforms
 -------------------
 
 * OS X 10.6.x / Snow Leopard, OS X 10.7.x / Lion and probably newer versions.
-* Solaris 10.  I have done limited testing on Solaris 11 and
+* Solaris 10. We have done limited testing on Solaris 11 and
   OpenIndiana release 151a, and both appear to work.
 * FreeBSD 9.0 and 10.0.
-* Linux via SystemTap compatibility.  Please see
-  [$ERL_TOP/HOWTO/SYSTEMTAP.md][] for more details.
+* Linux through SystemTap compatibility. For details, see
+  [$ERL_TOP/HOWTO/SYSTEMTAP.md][].
 
-Just add the `--with-dynamic-trace=dtrace` option to your command when you 
-run the `configure` script. If you are using systemtap, the configure option 
-is `--with-dynamic-trace=systemtap`
+Just add option `--with-dynamic-trace=dtrace` to your command when you
+run the `configure` script. If you are using SystemTap, the configure option
+is `--with-dynamic-trace=systemtap`.
 
 Status
 ------
 
-As of R15B01, the dynamic trace code is included in the OTP source distribution,
-although it's considered experimental. The main development of the dtrace code 
-still happens outside of Ericsson, but there is no need to fetch a patched 
-version of the OTP source to get the basic funtionality.
+As from Erlang/OTP R15B01, the dynamic trace code is included in the OTP
+source distribution, although it is
+considered experimental. The main development of the Dtrace code
+still happens outside of Ericsson, but there is no need to fetch a patched
+version of the OTP source to get the basic functionality.
 
-Implementation summary
+Implementation Summary
 ----------------------
 
 So far, most effort has been focused on the `efile_drv.c` code,
 which implements most file I/O on behalf of the Erlang virtual
-machine.  This driver also presents a big challenge: its use of an I/O
-worker pool (enabled by using the `erl +A 8` flag, for example) makes
+machine. This driver also presents a big challenge: its use of an I/O
+worker pool (enabled by using flag `erl +A 8`, for example) makes
 it much more difficult to trace I/O activity because each of the
-following may be executed in a different Pthread:
+following can be executed in a different Pthread:
 
 * I/O initiation (Erlang code)
-* I/O proxy process handling, e.g. read/write when file is not opened
-  in `raw` mode, operations executed by the code & file server processes.
+* I/O proxy process handling, for example, read/write when file is not opened
+  in `raw` mode, operations executed by the code and file server processes.
   (Erlang code)
 * `efile_drv` command setup (C code)
 * `efile_drv` command execution (C code)
@@ -73,12 +74,12 @@ Example output from `lib/runtime_tools/examples/efile_drv.d` while executing
     async I/O worker tag={3,83} | RENAME (12) | efile_drv-int_return
     efile_drv return tag={3,83} user tag  | RENAME (12) | errno 2
 
-... where the following key can help decipher the output:
+The following key can help decipher the output:
 
 * `{3,83}` is the Erlang scheduler thread number (3) and operation
-  counter number (83) assigned to this I/O operation.  Together,
+  counter number (83) assigned to this I/O operation. Together,
   these two numbers form a unique ID for the I/O operation.
-* `12` is the command number for the rename operation.  See the
+* `12` is the command number for the rename operation. See the
   definition for `FILE_RENAME` in the source code file `efile_drv.c`
   or the `BEGIN` section of the D script `lib/runtime_tools/examples/efile_drv.d`.
 * `old-name` and `new-name` are the two string arguments for the
@@ -103,7 +104,7 @@ At the moment, the user tag comes from code like the following:
 
 This method of tagging I/O at the Erlang level is subject to change.
 
-Example DTrace probe specification
+Example DTrace Probe Specification
 ----------------------------------
 
     /**
@@ -264,7 +265,7 @@ Example DTrace probe specification
      */
     probe efile_drv__return(int, int, char *, int, int, int);
 
-Guide to efile_drv.c probe arguments
+Guide to efile_drv.c Probe Arguments
 ------------------------------------
 
     /* Driver op code: used by efile_drv-entry      arg3 */
