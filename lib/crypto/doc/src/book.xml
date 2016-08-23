@@ -22,17 +22,17 @@
     
     </legalnotice>
 
-    <title>crypto</title>
+    <title>Crypto</title>
     <prepared>Peter H&ouml;gfeldt</prepared>
     <docno></docno>
     <date>1999-01-21</date>
     <rev>A</rev>
-    <file>book.sgml</file>
+    <file>book.xml</file>
   </header>
   <insidecover>
     <include file="insidecover"></include>
   </insidecover>
-  <pagetext>crypto</pagetext>
+  <pagetext>Crypto</pagetext>
   <preamble>
     <contents level="2"></contents>
   </preamble>

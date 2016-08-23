@@ -25,32 +25,42 @@
     </legalnotice>
 
     <title>crypto</title>
-    <file>crypto_app.sgml</file>
+    <prepared></prepared>
+    <docno></docno>
+    <approved></approved>
+    <checked></checked>
+    <date></date>
+    <rev></rev>
+    <file>crypto_app.xml</file>
   </header>
   <app>crypto</app>
-  <appsummary>The Crypto Application</appsummary>
+  <appsummary>The Crypto application.</appsummary>
   <description>
-    <p>The purpose of the Crypto application is to provide an Erlang API
-    to cryptographic functions, see <seealso marker="crypto">crypto(3)</seealso>.
-    Note that the API is on a fairly low level and there are some
-    corresponding API functions available in <seealso marker="public_key:public_key">public_key(3)</seealso>,
-    on a higher abstraction level, that uses the crypto application in its implementation.
-    </p>
+    <p>The purpose of this application is to provide an Erlang API
+      to cryptographic functions, see
+      <seealso marker="crypto"><c>crypto(3)</c></seealso>.
+      Notice that the API is on a fairly low level.
+      Some corresponding API functions on a higher abstraction level
+      are available in
+      <seealso marker="public_key:public_key">
+      <c>public_key:public_key(3)</c></seealso>,
+      which uses the <c>Crypto</c> application in its implementation.</p>
   </description>
 
   <section>
-    <title>DEPENDENCIES</title>
+    <title>Dependencies</title>
+    <p>The <c>Crypto</c> implementation uses NIFs to interface the OpenSSLs
+      crypto library and requires OpenSSL package version 0.9.8 or higher.</p>
 
-    <p>The current crypto implementation uses nifs to interface OpenSSLs crypto library
-    and requires <em>OpenSSL</em> package version 0.9.8 or higher.</p>
-    <p>Source releases of OpenSSL can be downloaded from the <url href="http://www.openssl.org">OpenSSL</url> project home page,
-    or mirror sites listed there.
-    </p>
-    </section>
+    <p>Source releases of OpenSSL can be downloaded from the
+      <url href="http://www.openssl.org">OpenSSL</url> project home page
+      or mirror sites listed there.</p>
+  </section>
 
   <section>
-    <title>SEE ALSO</title>
-    <p>application(3)</p>
+    <title>See Also</title>
+    <p><seealso marker="kernel:application">
+      <c>kernel:application(3)</c></seealso></p>
   </section>
 </appref>
 

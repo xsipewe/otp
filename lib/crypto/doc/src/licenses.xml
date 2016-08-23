@@ -29,10 +29,9 @@
     <rev>A</rev>
     <file>licenses.xml</file>
   </header>
-  <p>    <marker id="licenses"></marker>
-This chapter contains in extenso versions
-    of the OpenSSL and SSLeay licenses.
-    </p>
+  <p><marker id="licenses"></marker>
+    This section contains unabridged versions
+    of the OpenSSL and SSLeay licenses.</p>
 
   <section>
     <title>OpenSSL License</title>
