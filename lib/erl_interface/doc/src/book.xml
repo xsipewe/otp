@@ -22,16 +22,16 @@
     
     </legalnotice>
 
-    <title>Erlang Interface</title>
+    <title>Erl_Interface</title>
     <prepared>Gordon Beaton</prepared>
     <docno></docno>
     <date>1998-11-30</date>
     <rev>1.2</rev>
-    <file>book.sgml</file>
+    <file>book.xml</file>
   </header>
   <insidecover>
   </insidecover>
-  <pagetext>Erlang Interface</pagetext>
+  <pagetext>Erl_Interface</pagetext>
   <preamble>
     <contents level="2"></contents>
   </preamble>
