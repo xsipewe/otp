@@ -26,46 +26,49 @@
     <prepared>Ingela Andin</prepared>
     <responsible></responsible>
     <docno></docno>
-    <date></date>
+    <date>2016-11-01</date>
     <rev></rev>
   </header>
   <module>os_mon_mib</module>
-  <modulesummary>Loading and Unloading of OTP-OS-MON-MIB</modulesummary>
+  <modulesummary>Loading and unloading of OTP-OS-MON-MIB.</modulesummary>
   <description>
-    <p>Functions for loading and unloading the OTP-OS-MON-MIB into/from
-      an SNMP agent. The instrumentation of the OTP-OS-MON-MIB uses
-      Mnesia, hence Mnesia must be started prior to loading
-      the OTP-OS-MON-MIB.</p>
+    <p>This module provides
+      functions for loading and unloading <c>OTP-OS-MON-MIB</c> into/from
+      an SNMP agent. The instrumentation of <c>OTP-OS-MON-MIB</c> uses the
+      Mnesia application, hence Mnesia must be started before loading
+      <c>OTP-OS-MON-MIB</c>.</p>
   </description>
+
   <funcs>
     <func>
       <name>load(Agent) -> ok | {error, Reason}</name>
-      <fsummary>Load the OTP-OS-MON-MIB</fsummary>
+      <fsummary>Load OTP-OS-MON-MIB.</fsummary>
       <type>
         <v>Agent = pid() | atom()</v>
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>Loads the OTP-OS-MON-MIB.</p>
+        <p>Loads <c>OTP-OS-MON-MIB</c>.</p>
       </desc>
     </func>
+
     <func>
       <name>unload(Agent) -> ok | {error, Reason}</name>
-      <fsummary>Unload the OTP-OS-MON-MIB</fsummary>
+      <fsummary>Unload OTP-OS-MON-MIB.</fsummary>
       <type>
-        <v>Agent = pid() | atom() </v>
+        <v>Agent = pid() | atom()</v>
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>Unloads the OTP-OS-MON-MIB.</p>
+        <p>Unloads <c>OTP-OS-MON-MIB</c>.</p>
       </desc>
     </func>
   </funcs>
 
   <section>
     <title>See Also</title>
-    <p><seealso marker="os_mon_app">os_mon(6)</seealso>,
-      <seealso marker="snmp:snmp">snmp(3)</seealso></p>
+    <p><seealso marker="os_mon_app"><c>os_mon(6)</c></seealso>,
+      <seealso marker="snmp:snmp"><c>snmp:snmp(3)</c></seealso></p>
   </section>
 </erlref>
 

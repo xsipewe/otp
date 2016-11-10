@@ -25,29 +25,29 @@
     <title>os_mon</title>
     <prepared></prepared>
     <docno></docno>
-    <date></date>
+    <date>2016-11-01</date>
     <rev></rev>
   </header>
   <app>os_mon</app>
-  <appsummary>OS Monitoring Application</appsummary>
+  <appsummary>OS monitoring application.</appsummary>
   <description>
     <p>The operating system monitor, OS_Mon, provides the following
       services:</p>
     <list type="bulleted">
-      <item><seealso marker="cpu_sup">cpu_sup</seealso>
+      <item><seealso marker="cpu_sup"><c>cpu_sup</c></seealso> -
        CPU load and utilization supervision (Unix)</item>
-      <item><seealso marker="disksup">disksup</seealso>
-       Disk supervision(Unix, Windows)</item>
-      <item><seealso marker="memsup">memsup</seealso>
+      <item><seealso marker="disksup"><c>disksup</c></seealso> -
+       Disk supervision (Unix, Windows)</item>
+      <item><seealso marker="memsup"><c>memsup</c></seealso> -
        Memory supervision (Unix, Windows, VxWorks)</item>
-      <item><seealso marker="os_sup">os_sup</seealso>
+      <item><seealso marker="os_sup"><c>os_sup</c></seealso> -
        Interface to OS system messages (Solaris, Windows)</item>
     </list>
-    <p>To simplify usage of OS_Mon on distributed Erlang systems, it is
+    <p>To simplify the usage of OS_Mon on distributed Erlang systems, it is
       not considered an error trying to use a service at a node where it
-      is not available (either because OS_Mon is not running, or because
-      the service is not available for that OS, or because the service
-      is not started). Instead, a warning message is issued via
+      is unavailable (because OS_Mon is not running, or
+      the service is unavailable for that OS, or the service
+      is not started). Instead, a warning message is issued through
       <c>error_logger</c> and a dummy value is returned, which one is
       specified in the man pages for the respective services.</p>
   </description>
@@ -61,67 +61,69 @@
     <taglist>
       <tag><c>start_cpu_sup = bool()</c></tag>
       <item>
-        <p>Specifies if <c>cpu_sup</c> should be started. Defaults to
+        <p>Specifies if <c>cpu_sup</c> is to be started. Defaults to
           <c>true</c>.</p>
       </item>
       <tag><c>start_disksup = bool()</c></tag>
       <item>
-        <p>Specifies if <c>disksup</c> should be started. Defaults to
+        <p>Specifies if <c>disksup</c> is to be started. Defaults to
           <c>true</c>.</p>
       </item>
       <tag><c>start_memsup = bool()</c></tag>
       <item>
-        <p>Specifies if <c>memsup</c> should be started. Defaults to
+        <p>Specifies if <c>memsup</c> is to be started. Defaults to
           <c>true</c>.</p>
       </item>
       <tag><c>start_os_sup = bool()</c></tag>
       <item>
-        <p>Specifies if <c>os_sup</c> should be started. Defaults to
+        <p>Specifies if <c>os_sup</c> is to be started. Defaults to
           <c>false</c>.</p>
       </item>
     </taglist>
-    <p>Configuration parameters effecting the different OS_Mon services
+    <p>Configuration parameters affecting the different OS_Mon services
       are described in the respective man pages.</p>
-    <p>See <seealso marker="kernel:config">config(4)</seealso> for
-      information about how to change the value of configuration
-      parameters.</p>
+    <p>For information about how to change the value of configuration
+      parameters, see <seealso marker="kernel:config">
+      <c>kernel:config(4)</c></seealso>.</p>
   </section>
 
   <section>
-    <title>SNMP MIBs</title>
-    <p>The following MIBs are defined in OS_Mon:</p>
+    <title>SNMP MIB</title>
+    <p>The following MIB is defined in OS_Mon:</p>
     <taglist>
       <tag>OTP-OS-MON-MIB</tag>
       <item>
-        <p>This MIB contains objects for instrumentation of disk,
-          memory and CPU usage of the nodes in the system.</p>
+        <p>Contains objects for instrumentation of disk,
+          memory, and CPU usage of the nodes in the system.</p>
       </item>
     </taglist>
-    <p>The MIB is stored in the <c>mibs</c> directory.  It is defined
+    <p>The MIB is stored in the <c>mibs</c> directory. It is defined
       in SNMPv2 SMI syntax. An SNMPv1 version of the MIB is delivered
       in the <c>mibs/v1</c> directory.</p>
     <p>The compiled MIB is located under <c>priv/mibs</c>, and
       the generated <c>.hrl</c> file under the <c>include</c> directory.
-      To compile a MIB that IMPORTS the <c>OTP-OS-MON-MIB</c>, give
+      To compile a MIB that <em>imports</em> the <c>OTP-OS-MON-MIB</c>, give
       the option <c>{il, ["os_mon/priv/mibs"]}</c> to the MIB compiler.</p>
-    <p>If the MIB should be used in a system, it should be loaded into
-      an agent with a call to <c>os_mon_mib:load(Agent)</c>, where
-      <c>Agent</c> is the pid or registered name of an SNMP agent. Use
-      <c>os_mon_mib:unload(Agent)</c> to unload the MIB.
-      The implementation of this MIB uses Mnesia to store a cache with
-      data needed, which implicates that Mnesia must be up and running.
-      The MIB also use functions defined for the <c>OTP-MIB</c>, thus
-      that MIB must be loaded as well.</p>
+    <p>If the MIB is to be used in a system, it is to be loaded into
+      an agent with a call to <seealso marker="os_mon_mib#load">
+      <c>os_mon_mib:load(Agent)</c></seealso>, where
+      <c>Agent</c> is the pid or registered name of an SNMP agent.
+      To unload the MIB, use <seealso marker="os_mon_mib#unload">
+      <c>os_mon_mib:unload(Agent)</c></seealso>.
+      The implementation of this MIB uses the Mnesia application to store a
+      cache with data needed, which means that Mnesia must be operational.
+      The MIB also uses functions defined for the <c>OTP-MIB</c>, thus
+      that MIB must also be loaded.</p>
   </section>
 
   <section>
     <title>See Also</title>
-    <p><seealso marker="cpu_sup">cpu_sup(3)</seealso>,
-      <seealso marker="disksup">disksup(3)</seealso>,
-      <seealso marker="memsup">memsup(3)</seealso>,
-      <seealso marker="os_sup">os_sup(3)</seealso>,
-      <seealso marker="nteventlog">nteventlog(3)</seealso>,
-      <seealso marker="snmp:snmp">snmp(3)</seealso>.</p>
+    <p><seealso marker="cpu_sup"><c>cpu_sup(3)</c></seealso>,
+      <seealso marker="disksup"><c>disksup(3)</c></seealso>,
+      <seealso marker="memsup"><c>memsup(3)</c></seealso>,
+      <seealso marker="nteventlog"><c>nteventlog(3)</c></seealso>,
+      <seealso marker="os_sup"><c>os_sup(3)</c></seealso>,
+      <seealso marker="snmp:snmp"><c>snmp:snmp(3)</c></seealso></p>
   </section>
 </appref>
 

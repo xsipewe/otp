@@ -25,13 +25,10 @@
     <title>OS_Mon Reference Manual</title>
     <prepared></prepared>
     <docno></docno>
-    <date></date>
+    <date>2016-11-01</date>
     <rev></rev>
   </header>
-  <description>
-    <p>The operating system monitor, OS_Mon, provides services for
-      monitoring CPU load, disk usage, memory usage and OS messages.</p>
-  </description>
+  <description></description>
   <xi:include href="os_mon_app.xml"/>
   <xi:include href="cpu_sup.xml"/>
   <xi:include href="disksup.xml"/>
