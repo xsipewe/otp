@@ -28,44 +28,63 @@
     <docno></docno>
     <approved>Micael Karlberg</approved>
     <checked></checked>
-    <date>2007-06-15</date>
+    <date>2016-12-14</date>
     <rev>%VSN%</rev>
     <file>megaco_encoder.xml</file>
   </header>
   <module>megaco_encoder</module>
-  <modulesummary>Megaco encoder behaviour.</modulesummary>
+  <modulesummary>Megaco encoder behavior.</modulesummary>
   <description>
-    <p>The following functions should be exported from a 
-      <c><![CDATA[megaco_encoder]]></c> callback module:</p>
-
+    <p>The functions in this module are to be exported from a
+      <c><![CDATA[megaco_encoder]]></c> callback module.</p>
   </description>
 
-  <section>
-    <title>DATA TYPES</title>
-    <code type="none"><![CDATA[
-megaco_message() = #'MegacoMessage{}'
-transaction() = {transactionRequest,     transaction_request()}      |
-                {transactionPending,     transaction_reply()}        |
-                {transactionReply,       transaction_pending()}      |
-                {transactionResponseAck, transaction_response_ack()} |
-                {segmentReply,           segment_reply()}
-transaction_request() = #'TransactionRequest'{}
-transaction_pending() = #'TransactionPending'{}
-transaction_reply() = #'TransactionReply'{}
-transaction_response_ack() = [transaction_ack()]
-transaction_ack() = #'TransactionAck'{}
-segment_reply() = #'SegmentReply'{}
-action_request() = #'ActionRequest'{}
-action_reply() = #'ActionReply'{}
-    ]]></code>
-
-    <marker id="encode_message"></marker>
-  </section>
+  <datatypes>
+    <datatype>
+      <name name="action_reply() = #'ActionReply'{}"/>
+    </datatype>
+    <datatype>
+      <name name="action_request() = #'ActionRequest'{}"/>
+    </datatype>
+    <datatype>
+      <name name="megaco_message() = #'MegacoMessage{}'"/>
+    </datatype>
+    <datatype>
+      <name name="transaction() =
+        {segmentReply, segment_reply()} |
+        {transactionPending, transaction_reply()} |
+        {transactionReply, transaction_pending()} |
+        {transactionRequest, transaction_request()} |
+        {transactionResponseAck, transaction_response_ack()}"/>
+    </datatype>
+    <datatype>
+      <name name="segment_reply() = #'SegmentReply'{}"/>
+    </datatype>
+    <datatype>
+      <name name="transaction_ack() = #'TransactionAck'{}"/>
+    </datatype>
+    <datatype>
+      <name name="transaction_pending() = #'TransactionPending'{}"/>
+    </datatype>
+    <datatype>
+      <name name="transaction_reply() = #'TransactionReply'{}"/>
+    </datatype>
+    <datatype>
+      <name name="transaction_request() = #'TransactionRequest'{}"/>
+    </datatype>
+    <datatype>
+      <name name="transaction_response_ack() = [transaction_ack()]"/>
+      <desc>
+      <marker id="encode_message"></marker>
+      </desc>
+    </datatype>
+  </datatypes>
 
   <funcs>
     <func>
-      <name>Module:encode_message(EncodingConfig, Version, Message) -> {ok, Bin} | Error</name>
-      <fsummary>Encode a megaco message.</fsummary>
+      <name>Module:encode_message(EncodingConfig, Version, Message)
+        -> {ok, Bin} | Error</name>
+      <fsummary>Encode a Megaco message.</fsummary>
       <type>
         <v>EncodingConfig = list()</v>
         <v>Version = integer()</v>
@@ -74,15 +93,15 @@ action_reply() = #'ActionReply'{}
         <v>Error = term()</v>
       </type>
       <desc>
-        <p>Encode a megaco message.</p>
-
+        <p>Encodes a Megaco message.</p>
 	<marker id="decode_message"></marker>
       </desc>
     </func>
 
     <func>
-      <name>Module:decode_message(EncodingConfig, Version, Bin) -> {ok, Message} | Error</name>
-      <fsummary>Decode a megaco message.</fsummary>
+      <name>Module:decode_message(EncodingConfig, Version, Bin)
+        -> {ok, Message} | Error</name>
+      <fsummary>Decode a Megaco message.</fsummary>
       <type>
         <v>EncodingConfig = list()</v>
         <v>Version = integer() | dynamic</v>
@@ -91,21 +110,21 @@ action_reply() = #'ActionReply'{}
         <v>Error = term()</v>
       </type>
       <desc>
-        <p>Decode a megaco message. </p>
-        <p>Note that if the Version argument is <c><![CDATA[dynamic]]></c>, the
-          decoder should try to figure out the actual version from the
-          message itself and then use the proper decoder, e.g. version 1.
-          <br></br>If on the other hand the Version argument is an integer, 
-          it means that this is the expected version of the message and 
-          the decoder for that version should be used.</p>
-
+        <p>Decodes a megaco message.</p>
+        <p>Notice that if argument <c>Version</c> is <c><![CDATA[dynamic]]></c>,
+          the decoder is to try to figure out the actual version from the
+          message itself and then use the proper decoder, for example,
+          version 1. If argument <c>Version</c> is an integer,
+          this is the expected version of the message and
+          the decoder for that version is to be used.</p>
 	<marker id="decode_mini_message"></marker>
       </desc>
     </func>
 
     <func>
-      <name>Module:decode_mini_message(EncodingConfig, Version, Bin) -> {ok, Message} | Error</name>
-      <fsummary>Perform a minimal decode of a megaco message.</fsummary>
+      <name>Module:decode_mini_message(EncodingConfig, Version, Bin)
+        -> {ok, Message} | Error</name>
+      <fsummary>Perform a minimal decode of a Megaco message.</fsummary>
       <type>
         <v>EncodingConfig = list()</v>
         <v>Version = integer() | dynamic</v>
@@ -114,23 +133,22 @@ action_reply() = #'ActionReply'{}
         <v>Error = term()</v>
       </type>
       <desc>
-        <p>Perform a minimal decode of a megaco message. </p>
-        <p>The purpose of this function is to do a minimal decode of
-          Megaco message. A successfull result is a <c><![CDATA['MegacoMessage']]></c> 
-          in which only version and mid has been initiated. This function 
-          is used by the megaco_messenger module when the 
-          <c><![CDATA[decode_message/3]]></c> function fails to figure out the mid 
-          (the actual sender) of the message.</p>
-        <p>Note again that a successfull decode only returns a
+        <p>Performs a minimal decode of a Megaco message.</p>
+        <p>A successfull result is a <c><![CDATA[MegacoMessage]]></c>
+          in which only the version and the MID have been initiated.
+          This function is used by the <c>megaco_messenger</c> module when the
+          <c><![CDATA[decode_message/3]]></c> function fails to figure out the
+          MID (the actual sender) of the message.</p>
+        <p>Notice that a successful decode only returns a
           partially initiated message.</p>
-
 	<marker id="encode_transaction"></marker>
       </desc>
     </func>
 
     <func>
-      <name>Module:encode_transaction(EncodingConfig, Version, Transaction) -> OK | Error</name>
-      <fsummary>Encode a megaco transaction.</fsummary>
+      <name>Module:encode_transaction(EncodingConfig, Version, Transaction)
+        -> OK | Error</name>
+      <fsummary>Encode a Megaco transaction.</fsummary>
       <type>
         <v>EncodingConfig = list()</v>
         <v>Version = integer()</v>
@@ -142,21 +160,20 @@ action_reply() = #'ActionReply'{}
         <v>OtherReason = term()</v>
       </type>
       <desc>
-        <p>Encode a megaco transaction. If this, for whatever reason, 
-          is not supported, the function should return the error reason 
-          <c>not_implemented</c>. </p>
-
-        <p>This functionality is used both when the transaction sender is 
-          used and for segmentation. So, for either of those to work, this 
-          function <em>must</em> be fully supported! </p>
-
+        <p>Encodes a Megaco transaction. If this, for whatever reason,
+          is not supported, the function is to return the error reason
+          <c>not_implemented</c>.</p>
+        <p>Notice that this functionality is used both when the transaction
+          sender is used and for segmentation. So, for either of those to work,
+          this function <em>must</em> be fully supported.</p>
 	<marker id="encode_action_requests"></marker>
       </desc>
     </func>
 
     <func>
-      <name>Module:encode_action_requests(EncodingConfig, Version, ARs) -> OK | Error</name>
-      <fsummary>Encode megaco action requests.</fsummary>
+      <name>Module:encode_action_requests(EncodingConfig, Version, ARs)
+        -> OK | Error</name>
+      <fsummary>Encode Megaco action requests.</fsummary>
       <type>
         <v>EncodingConfig = list()</v>
         <v>Version = integer()</v>
@@ -169,20 +186,21 @@ action_reply() = #'ActionReply'{}
         <v>OtherReason = term()</v>
       </type>
       <desc>
-        <p>Encode megaco action requests. This function is called when 
-          the user calls the function 
-          <seealso marker="megaco#encode_actions">encode_actions/3</seealso>.
+        <p>Encodes Megaco action requests. This function is called when
+          the user calls the function
+          <seealso marker="megaco#encode_actions">
+          <c>megaco:encode_actions/3</c></seealso>.
           If that function is never used or if the codec cannot support this
-          (the encoding of individual actions), then return with error reason 
-          <c>not_implemented</c>. </p>
-
+          (the encoding of individual actions), the function is to return
+          the error reason <c>not_implemented</c>.</p>
 	<marker id="encode_action_reply"></marker>
       </desc>
     </func>
 
     <func>
-      <name>Module:encode_action_reply(EncodingConfig, Version, AR) -> OK | Error</name>
-      <fsummary>Encode a megaco action reply.</fsummary>
+      <name>Module:encode_action_reply(EncodingConfig, Version, AR)
+        -> OK | Error</name>
+      <fsummary>Encode a Megaco action reply.</fsummary>
       <type>
         <v>EncodingConfig = list()</v>
         <v>Version = integer()</v>
@@ -194,16 +212,14 @@ action_reply() = #'ActionReply'{}
         <v>OtherReason = term()</v>
       </type>
       <desc>
-        <p>Encode a megaco action reply. If this, for whatever reason, 
-          is not supported, the function should return the error reason 
-          <c>not_implemented</c>. </p>
-
-        <p>This function is used when segmentation has been configured. 
-          So, for this to work, this function <em>must</em> be fully 
-          supported! </p>
+        <p>Encodes a Megaco action reply. If this, for whatever reason,
+          is not supported, the function is to return the error reason
+          <c>not_implemented</c>.</p>
+        <p>Notice that this function is used when segmentation has been
+          configured. So, for this to work, this function <em>must</em> be
+          fully supported.</p>
       </desc>
     </func>
-
   </funcs>
 
 </erlref>

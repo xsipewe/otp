@@ -28,18 +28,19 @@
     <docno></docno>
     <approved></approved>
     <checked></checked>
-    <date>2007-06-15</date>
+    <date>2016-12-15</date>
     <rev>%VSN%</rev>
     <file>megaco_codec_transform.xml</file>
   </header>
   <module>megaco_codec_transform</module>
   <modulesummary>Megaco message transformation utility.</modulesummary>
-
   <description>
-    <p>This module implements a simple megaco message transformation utility.</p>
-    <p><em>Note</em> that this module is <em>not</em> included in the
-       runtime part of the application.</p>
-
+    <p>This module implements a simple Megaco message transformation
+      utility.</p>
+    <note>
+      <p>This module is not included in the runtime part of
+        the application.</p>
+    </note>
     <marker id="export_messages"></marker>
   </description>
 
@@ -52,10 +53,9 @@
         <v>MessagePackage = atom()</v>
       </type>
       <desc>
-        <p>Export the messages in the <c>MessagePackage</c> (default 
-          is <c>time_test</c>). </p>
-        <p>The output produced by this function is a directory structure 
-          with the following structure: </p>
+        <p>Exports the messages in the <c>MessagePackage</c> (default
+          is <c>time_test</c>).</p>
+        <p>The output is a directory with the following structure:</p>
         <code type="none"><![CDATA[
 <message package>/pretty/<message-files>
                   compact/<message-files>
@@ -65,7 +65,6 @@
         ]]></code>
       </desc>
     </func>
-
   </funcs>
 
 </erlref>

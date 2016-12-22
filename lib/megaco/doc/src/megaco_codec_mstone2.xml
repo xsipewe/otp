@@ -28,18 +28,20 @@
     <docno></docno>
     <approved>Micael Karlberg</approved>
     <checked></checked>
-    <date>2009-05-27</date>
+    <date>2016-12-15</date>
     <rev>%VSN%</rev>
     <file>megaco_codec_mstone2.xml</file>
   </header>
   <module>megaco_codec_mstone2</module>
-  <modulesummary>This module implements a simple megaco codec-based performance tool.</modulesummary>
+  <modulesummary>A simple Megaco codec-based performance tool.</modulesummary>
   <description>
-    <p>This module implements the <em>mstone2</em> tool, 
-      a simple megaco codec-based performance tool.</p>
-    <p>The results, the mstone value(s), are written to stdout.</p>
-    <p><em>Note</em> that this module is <em>not</em> included in the runtime part of 
-      the application.</p>
+    <p>This module implements the <em>mstone2</em> tool,
+      a simple Megaco codec-based performance tool.</p>
+    <p>The results, the mstone values, are written to stdout.</p>
+    <note>
+      <p>This module is not included in the runtime part of
+        the application.</p>
+    </note>
   </description>
 
   <funcs>
@@ -52,15 +54,15 @@
         <v>message_package() = atom()</v>
       </type>
       <desc>
-        <p>This function starts the <em>mstone2</em> performance test with all codec configs. 
+        <p>Starts the <em>mstone2</em> performance test with all codec configs.
           Processes are created dynamically. Each process make <em>one</em> run
-          through their messages (decoding and encoding messages) and then exits. 
-          When one process exits, a new is created with the same codec config and set 
-          of messages. </p>
-        <p>The number of messages processed in total (for all processes) is the mstone value.</p>
+          through their messages (decoding and encoding messages) and then
+          exits. When one process exits, a new is created with the same codec
+          config and set of messages.</p>
+        <p>The number of messages processed in total (for all processes) is
+          the mstone value.</p>
       </desc>
     </func>
-
   </funcs>
 
 </erlref>

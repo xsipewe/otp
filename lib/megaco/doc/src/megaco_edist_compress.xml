@@ -28,40 +28,44 @@
     <docno></docno>
     <approved>Micael Karlberg</approved>
     <checked></checked>
-    <date>2007-06-15</date>
+    <date>2016-12-13</date>
     <rev>%VSN%</rev>
     <file>megaco_edist_compress.xml</file>
   </header>
   <module>megaco_edist_compress</module>
-  <modulesummary>Megaco erlang dist compress behaviour.</modulesummary>
+  <modulesummary>Megaco Erlang dist compress behavior.</modulesummary>
   <description>
-    <p>The following functions should be exported from a 
-      <c><![CDATA[megaco_edist_compress]]></c> callback module:</p>
+    <p>The functions in this module are to be exported from a
+      <c><![CDATA[megaco_edist_compress]]></c> callback module.</p>
   </description>
+
   <funcs>
     <func>
       <name>Module:encode(R, Version) -> T</name>
-      <fsummary>Encode (compress) a megaco component.</fsummary>
+      <fsummary>Encode (compress) a Megaco component.</fsummary>
       <type>
-        <v>R = megaco_message() | transaction() | action_reply() | action_request() | command_request()</v>
+        <v>R = megaco_message() | transaction() | action_reply()
+          | action_request() | command_request()</v>
         <v>Version = integer()</v>
         <v>T = term()</v>
       </type>
       <desc>
-        <p>Compress a megaco component. The erlang dist encoder makes no 
-          assumption on the how or even if the component is compressed. </p>
+        <p>Compresses a Megaco component. The Erlang dist encoder makes no
+          assumption on how or even if the component is compressed.</p>
       </desc>
     </func>
+
     <func>
       <name>Module:decode(T, Version) -> R</name>
-      <fsummary>Decode (decompress) a megaco component.</fsummary>
+      <fsummary>Decode (decompress) a Megaco component.</fsummary>
       <type>
         <v>T = term()</v>
         <v>Version = integer()</v>
-        <v>R = megaco_message() | transaction() | action_reply() | action_request() | command_request()</v>
+        <v>R = megaco_message() | transaction() | action_reply()
+          | action_request() | command_request()</v>
       </type>
       <desc>
-        <p>Decompress a megaco component. </p>
+        <p>Decompresses a Megaco component.</p>
       </desc>
     </func>
   </funcs>

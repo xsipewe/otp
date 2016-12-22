@@ -28,18 +28,20 @@
     <docno></docno>
     <approved>Micael Karlberg</approved>
     <checked></checked>
-    <date>2009-05-27</date>
+    <date>2016-12-15</date>
     <rev>%VSN%</rev>
     <file>megaco_codec_mstone1.xml</file>
   </header>
   <module>megaco_codec_mstone1</module>
-  <modulesummary>This module implements a simple megaco codec-based performance tool.</modulesummary>
+  <modulesummary>A simple Megaco codec-based performance tool.</modulesummary>
   <description>
-    <p>This module implements the <em>mstone1</em> tool, 
-      a simple megaco codec-based performance tool.</p>
-    <p>The results, the mstone value(s), are written to stdout.</p>
-    <p><em>Note</em> that this module is <em>not</em> included in the runtime part of 
-      the application.</p>
+    <p>This module implements the <em>mstone1</em> tool,
+      a simple Megaco codec-based performance tool.</p>
+    <p>The results, the mstone values, are written to stdout.</p>
+    <note>
+      <p>This module is not included in the runtime part of
+        the application.</p>
+    </note>
   </description>
 
   <funcs>
@@ -54,11 +56,12 @@
         <v>Factor() = integer() > 0</v>
       </type>
       <desc>
-        <p>This function starts the <em>mstone1</em> performance test with all codec configs. 
-          <c>Factor</c> (defaults to <c>1</c>) processes are started for every supported 
-          codec config. </p>
-        <p>Each process encodes and decodes their messages. 
-          The number of messages processed in total (for all processes) is the mstone value.</p>
+        <p>Starts the <em>mstone1</em> performance test with all codec configs.
+          <c>Factor</c> (defaults to <c>1</c>) processes are started for every
+          supported codec config.</p>
+        <p>Each process encodes and decodes their messages.
+          The number of messages processed in total (for all processes) is the
+          mstone value.</p>
       </desc>
     </func>
 
@@ -73,12 +76,15 @@
         <v>Factor() = integer() > 0</v>
       </type>
       <desc>
-        <p>This function starts the <em>mstone1</em> performance test with only the
-          flex codec configs (i.e. <c>pretty</c> and <c>compact</c> with <c>flex</c>). 
+        <p>Starts the <em>mstone1</em> performance test with only the
+          flex codec configs, that is <c>pretty</c> and <c>compact</c> with
+          <c>flex</c>.
           The same number of processes are started as when running the standard
-          test (using the <c>start/0,1</c> function).
-          Each process encodes and decodes their messages. 
-          The number of messages processed in total (for all processes) is the mstone value.</p>
+          test using the
+          <seealso marker="#start/0"><c>start/0,1</c></seealso> function.
+          Each process encodes and decodes their messages.
+          The number of messages processed in total (for all processes) is
+          the mstone value.</p>
       </desc>
     </func>
 
@@ -93,14 +99,19 @@
         <v>Factor() = integer() > 0</v>
       </type>
       <desc>
-        <p>This function starts the <em>mstone1</em> performance test with only the
-          driver using codec configs (i.e. <c>pretty</c> and <c>compact</c> 
-          with <c>flex</c>, and <c>ber</c> and <c>per</c> with <c>driver</c> 
-          and <c>erlang</c> with <c>compressed</c>). 
-          The same number of processes are started as when running the standard
-          test (using the <c>start/0,1</c> function).
-          Each process encodes and decodes their messages. 
-          The number of messages processed in total (for all processes) is the mstone value.</p>
+        <p>Starts the <em>mstone1</em> performance test with only the
+          driver using codec configs, that is:</p>
+        <list type="bulleted">
+          <item><c>pretty</c> and <c>compact</c> with <c>flex</c></item>
+          <item><c>ber</c> and <c>per</c> with <c>driver</c></item>
+          <item><c>erlang</c> with <c>compressed</c></item>
+        </list>
+        <p>The same number of processes are started as when running the
+          standard test using the
+          <seealso marker="#start/0"><c>start/0,1</c></seealso> function.
+          Each process encodes and decodes their messages.
+          The number of messages processed in total (for all processes) is
+          the mstone value.</p>
       </desc>
     </func>
 
@@ -115,17 +126,21 @@
         <v>Factor() = integer() > 0</v>
       </type>
       <desc>
-        <p>This function starts the <em>mstone1</em> performance test with codec configs
-          not using any drivers (i.e. <c>pretty</c> and <c>compact</c> without 
-          <c>flex</c>, <c>ber</c> and <c>per</c> without <c>driver</c> and 
-          <c>erlang</c> without <c>compressed</c>). 
-          The same number of processes are started as when running the standard
-          test (using the <c>start/0,1</c> function).
-          Each process encodes and decodes their messages. 
-          The number of messages processed in total (for all processes) is the mstone value.</p>
+        <p>Starts the <em>mstone1</em> performance test with codec configs
+          not using any drivers, that is:</p>
+        <list type="bulleted">
+          <item><c>pretty</c> and <c>compact</c> without <c>flex</c></item>
+          <item><c>ber</c> and <c>per</c> without <c>driver</c></item>
+          <item><c>erlang</c> without <c>compressed</c></item>
+        </list>
+        <p>The same number of processes are started as when running the
+          standard test (using the
+          <seealso marker="#start/0"><c>start/0,1</c></seealso> function.
+          Each process encodes and decodes their messages.
+          The number of messages processed in total (for all processes) is
+          the mstone value.</p>
       </desc>
     </func>
-
   </funcs>
 
 </erlref>

@@ -25,13 +25,11 @@
     <title>Megaco/H.248 Reference Manual</title>
     <prepared>Lars Thors&eacute;n, H&aring;kan Mattsson, Micael Karlberg</prepared>
     <docno></docno>
-    <date>2007-06-15</date>
+    <date>2016-12-09</date>
     <rev>%VSN%</rev>
     <file>ref_man.xml</file>
   </header>
   <description>
-    <p>The Megaco application is a framework for building
-      applications on top of the Megaco/H.248 protocol. </p>
   </description>
   <xi:include href="megaco.xml"/>
   <xi:include href="megaco_edist_compress.xml"/>

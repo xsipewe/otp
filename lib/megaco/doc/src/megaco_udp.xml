@@ -28,16 +28,18 @@
     <docno></docno>
     <approved>Lars Thors&eacute;n</approved>
     <checked></checked>
-    <date>2007-06-15</date>
+    <date>2016-12-14</date>
     <rev>%VSN%</rev>
     <file>megaco_udp.xml</file>
   </header>
   <module>megaco_udp</module>
-  <modulesummary>Interface module to UDP transport protocol for Megaco/H.248.</modulesummary>
+  <modulesummary>Interface module to UDP transport protocol for Megaco/H.248.
+  </modulesummary>
   <description>
     <p>This module contains the public interface to the UDP/IP version
       transport protocol for Megaco/H.248.</p>
   </description>
+
   <funcs>
     <func>
       <name>start_transport() -> {ok, TransportRef}</name>
@@ -46,32 +48,38 @@
         <v>TransportRef = pid()</v>
       </type>
       <desc>
-        <p>This function is used for starting the UDP/IP transport service.
-          Use exit(TransportRef, Reason) to stop the transport service.</p>
+        <p>Starts the UDP/IP transport service. To stop the transport service,
+          use <c>exit(TransportRef, Reason)</c>.</p>
       </desc>
     </func>
+
     <func>
-      <name>open(TransportRef, OptionList) ->  {ok, Handle, ControlPid} |  {error, Reason}</name>
+      <name>open(TransportRef, OptionList) -> {ok, Handle, ControlPid}
+        | {error, Reason}</name>
       <fsummary></fsummary>
       <type>
         <v>TransportRef = pid() | regname()</v>
         <v>OptionList = [option()]</v>
-        <v>option() = {port, integer()} |{options, list()} |{receive_handle, receive_handle()} |{module, atom()}</v>
+        <v>option() = {port, integer()} |{options, list()}
+          | {receive_handle, receive_handle()} |{module, atom()}</v>
         <v>Handle = socket_handle()</v>
         <v>receive_handle() = term()</v>
         <v>ControlPid = pid()</v>
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>This function is used to open an UDP/IP socket.</p>
-        <p>The <c><![CDATA[module]]></c> option makes it possible for the user to provide
-          their own callback module. The functions <c><![CDATA[receive_message/4]]></c> or
-          <c><![CDATA[process_received_message/4]]></c> of this module is called when a new 
-          message is received (which one depends on the size of the message; 
+        <p>Opens a UDP/IP socket.</p>
+        <p>A user can provide an own callback module using option
+          <c><![CDATA[module]]></c>. The function
+          <c><![CDATA[receive_message/4]]></c> or
+          <c><![CDATA[process_received_message/4]]></c> of this
+          module is called when a new
+          message is received (which one depends on the message size:
           small - receive_message, large - process_received_message). 
-          Default value is <em>megaco</em>.</p>
+          Defaults to <c>megaco</c>.</p>
       </desc>
     </func>
+
     <func>
       <name>close(Handle, Msg) -> ok</name>
       <fsummary></fsummary>
@@ -80,9 +88,10 @@
         <v>Msg</v>
       </type>
       <desc>
-        <p>This function is used for closing an active UDP socket.</p>
+        <p>Closes an active UDP socket.</p>
       </desc>
     </func>
+
     <func>
       <name>socket(Handle) -> Socket</name>
       <fsummary></fsummary>
@@ -91,11 +100,13 @@
         <v>Socket = inet_socket()</v>
       </type>
       <desc>
-        <p>This function is used to convert a socket_handle() to
-          a inet_socket(). inet_socket() is a plain socket,
-          see the inet module for more info.</p>
+        <p>Converts a <c>socket_handle()</c> to an <c>inet_socket()</c>.</p>
+        <p><c>inet_socket()</c> is a plain socket. For more information, see
+          the <seealso marker="kernel:inet"><c>kernel:inet</c></seealso>
+          module.</p>
       </desc>
     </func>
+
     <func>
       <name>create_send_handle(Handle, Host, Port) -> send_handle()</name>
       <fsummary></fsummary>
@@ -105,10 +116,12 @@
         <v>Port = integer()</v>
       </type>
       <desc>
-        <p>Creates a send handle from a transport handle.  The send
-          handle is intended to be used by megaco_udp:send_message/2.</p>
+        <p>Creates a send handle from a transport handle. The send
+          handle is intended to be used by
+          <seealso marker="#send_message/2"><c>send_message/2</c></seealso>.</p>
       </desc>
     </func>
+
     <func>
       <name>send_message(SendHandle, Msg) -> ok</name>
       <fsummary></fsummary>
@@ -118,12 +131,15 @@
       </type>
       <desc>
         <p>Sends a message on a socket. The send handle is obtained by
-          megaco_udp:create_send_handle/3. Increments the NumOutMessages
-          and NumOutOctets counters if message successfully sent. In case
-          of a failure to send, the NumErrors counter is <em>not</em>
-          incremented. This is done elsewhere in the megaco app.</p>
+          <seealso marker="#create_send_handle/3">
+          <c>create_send_handle/3</c></seealso>.
+          Increments counters <c>NumOutMessages</c>
+          and <c>NumOutOctets</c> if the message is successfully sent. In case
+          of a failure to send, counter <c>NumErrors</c> is <em>not</em>
+          incremented. This is done elsewhere in the Megaco application.</p>
       </desc>
     </func>
+
     <func>
       <name>block(Handle) -> ok</name>
       <fsummary></fsummary>
@@ -131,9 +147,10 @@
         <v>Handle = socket_handle()</v>
       </type>
       <desc>
-        <p>Stop receiving incoming messages on the socket.</p>
+        <p>Stops receiving incoming messages on the socket.</p>
       </desc>
     </func>
+
     <func>
       <name>unblock(Handle) -> ok</name>
       <fsummary></fsummary>
@@ -141,10 +158,11 @@
         <v>Handle = socket_handle()</v>
       </type>
       <desc>
-        <p>Starting to receive incoming messages from the socket again.</p>
+        <p>Starts to receive incoming messages from the socket again.</p>
         <marker id="upgrade_receive_handle"></marker>
       </desc>
     </func>
+
     <func>
       <name>upgrade_receive_handle(ControlPid, NewHandle) -> ok</name>
       <fsummary></fsummary>
@@ -154,15 +172,18 @@
         <v>receive_handle() = term()</v>
       </type>
       <desc>
-        <p>Update the receive handle of the control process (e.g. after
-          having changed protocol version).</p>
+        <p>Updates the receive handle of the control process, for example,
+          after having changed protocol version.</p>
         <marker id="stats"></marker>
       </desc>
     </func>
+
     <func>
       <name>get_stats() -> {ok, TotalStats} | {error, Reason}</name>
-      <name>get_stats(SendHandle) -> {ok, SendHandleStats} | {error, Reason}</name>
-      <name>get_stats(SendHandle, Counter) -> {ok, CounterStats} | {error, Reason}</name>
+      <name>get_stats(SendHandle) -> {ok, SendHandleStats} | {error, Reason}
+      </name>
+      <name>get_stats(SendHandle, Counter) -> {ok, CounterStats}
+        | {error, Reason}</name>
       <fsummary></fsummary>
       <type>
         <v>TotalStats = [total_stats()]</v>
@@ -172,13 +193,16 @@
         <v>Counter = udp_stats_counter()</v>
         <v>CounterStats = integer()</v>
         <v>stats() = {udp_stats_counter(), integer()}</v>
-        <v>tcp_stats_counter() = medGwyGatewayNumInMessages |  medGwyGatewayNumInOctets | medGwyGatewayNumOutMessages | medGwyGatewayNumOutOctets | medGwyGatewayNumErrors</v>
+        <v>tcp_stats_counter() = medGwyGatewayNumInMessages
+          | medGwyGatewayNumInOctets | medGwyGatewayNumOutMessages
+          | medGwyGatewayNumOutOctets | medGwyGatewayNumErrors</v>
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>Retreive the UDP related (SNMP) statistics counters.</p>
+        <p>Retreives the UDP-related (SNMP) statistics counters.</p>
       </desc>
     </func>
+
     <func>
       <name>reset_stats() -> void()</name>
       <name>reset_stats(SendHandle) -> void()</name>
@@ -187,7 +211,7 @@
         <v>SendHandle = send_handle()</v>
       </type>
       <desc>
-        <p>Reset all TCP related (SNMP) statistics counters.</p>
+        <p>Resets all TCP-related (SNMP) statistics counters.</p>
       </desc>
     </func>
   </funcs>

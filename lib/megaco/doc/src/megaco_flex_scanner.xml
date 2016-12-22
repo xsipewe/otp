@@ -28,47 +28,43 @@
     <docno></docno>
     <approved>Micael Karlberg</approved>
     <checked></checked>
-    <date>2009-05-04</date>
+    <date>2016-12-14</date>
     <rev>%VSN%</rev>
     <file>megaco_flex_scanner.xml</file>
   </header>
   <module>megaco_flex_scanner</module>
-  <modulesummary>Interface module to the flex scanner linked in driver.</modulesummary>
+  <modulesummary>Interface module to the flex scanner linked-in driver.
+  </modulesummary>
   <description>
-    <p>This module contains the public interface to the flex scanner 
-      linked in driver. The flex scanner performs the scanning phase
+    <p>This module contains the public interface to the flex scanner
+      linked-in driver. The flex scanner performs the scanning phase
       of text message decoding.</p>
-
-    <p>The flex scanner is written using a tool called <em>flex</em>. 
-      In order to be able to compile the flex scanner driver, this
-      tool has to be available. </p>
-
-    <p>By default the flex scanner reports line-number of an error.
-      But it can be built without line-number reporting. Instead
-      token number is used. This will speed up the scanning some
+    <p>The flex scanner is written using a tool called <em>flex</em>.
+      To be able to compile the flex scanner driver, this
+      tool must be available.</p>
+    <p>By default the flex scanner reports the line number of an error,
+      but it can be built without line-number reporting. Instead
+      token number can be used. This speeds up the scanning some
       5-10%. Use <c><![CDATA[--disable-megaco-flex-scanner-lineno]]></c> when
       configuring the application.</p>
-
-    <p>The scanner will, by default, be built as a reentrant scanner <em>if</em> the 
-      flex utility supports this (it depends on the version of flex). 
-      It is possible to explicitly disable this even when flex support this.
+    <p>By default is the scanner built as a reentrant scanner <em>if</em> the
+      flex utility supports this (it depends on the flex version).
+      This can explicitly be disabled even when flex support this.
       Use <c><![CDATA[--disable-megaco-reentrant-flex-scanner]]></c> when
       configuring the application.</p>
-
   </description>
 
-  <section>
-    <title>DATA TYPES</title>
-    <code type="none"><![CDATA[
-
-megaco_ports() = term()
-megaco_version() = integer() >= 1
- 
-    ]]></code>
-
-    <marker id="start"></marker>
-  </section>
-
+  <datatypes>
+    <datatype>
+      <name name="megaco_ports() = term()"/>
+    </datatype>
+    <datatype>
+      <name name="megaco_version() = integer() >= 1"/>
+      <desc>
+      <marker id="start"></marker>
+      </desc>
+    </datatype>
+  </datatypes>
 
   <funcs>
     <func>
@@ -79,16 +75,13 @@ megaco_version() = integer() >= 1
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>This function is used to start the flex scanner. 
-          It locates the library and loads the linked in driver.</p>
-
-        <p>On a single core system or if it's a non-reentrant scanner,
-          a single port is created. On a multi-core system with a reentrant 
-          scanner, several ports will be created (one for each scheduler). </p>
-
-        <p>Note that the process that calls this function <em>must</em> 
-          be permanent. If it dies, the port(s) will exit and the driver unload.</p>
-
+        <p>Starts the flex scanner.
+          It locates the library and loads the linked-in driver.</p>
+        <p>On a single core system or if it is a non-reentrant scanner,
+          a single port is created. On a multi-core system with a reentrant
+          scanner, several ports are created (one for each scheduler).</p>
+        <p>Notice that the process that calls this function <em>must</em>
+          be permanent. If it dies, the ports exit and the driver unloads.</p>
         <marker id="stop"></marker>
       </desc>
     </func>
@@ -100,9 +93,7 @@ megaco_version() = integer() >= 1
         <v>PortOrPorts = megaco_ports()</v>
       </type>
       <desc>
-        <p>This function is used to stop the flex scanner. It also
-          unloads the driver.</p>
-
+        <p>Stops the flex scanner. It also unloads the driver.</p>
         <marker id="is_reentrant_enabled"></marker>
       </desc>
     </func>
@@ -114,8 +105,7 @@ megaco_version() = integer() >= 1
         <v>Boolean = boolean()</v>
       </type>
       <desc>
-        <p>Is the flex scanner reentrant or not.</p>
-
+        <p>Specifies whether the flex scanner is reentrant or not.</p>
         <marker id="is_scanner_port"></marker>
       </desc>
     </func>
@@ -129,15 +119,15 @@ megaco_version() = integer() >= 1
         <v>Boolean = boolean()</v>
       </type>
       <desc>
-        <p>Checks if a port is a flex scanner port or not (useful when
-          if a port exits). </p>
-
+        <p>Checks if a port is a flex scanner port or not (useful
+          if a port exits).</p>
         <marker id="scan"></marker>
       </desc>
     </func>
 
     <func>
-      <name>scan(Binary, PortOrPorts) -> {ok, Tokens, Version, LatestLine} | {error, Reason, LatestLine} </name>
+      <name>scan(Binary, PortOrPorts) -> {ok, Tokens, Version, LatestLine}
+        | {error, Reason, LatestLine}</name>
       <fsummary></fsummary>
       <type>
         <v>Binary = binary()</v>
@@ -148,10 +138,10 @@ megaco_version() = integer() >= 1
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>Scans a megaco message and generates a token list to be passed on the parser. </p>
+        <p>Scans a Megaco message and generates a token list to be passed
+          on the parser.</p>
       </desc>
     </func>
-
   </funcs>
 
 </erlref>

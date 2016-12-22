@@ -22,13 +22,13 @@
 
     </legalnotice>
 
-    <title>Running the stack</title>
+    <title>Running the Stack</title>
     <prepared>H&aring;kan Mattsson</prepared>
     <responsible>H&aring;kan Mattsson</responsible>
     <docno></docno>
     <approved>H&aring;kan Mattsson</approved>
     <checked></checked>
-    <date>2007-06-15</date>
+    <date>2016-12-12</date>
     <rev>%VSN%</rev>
     <file>megaco_run.xml</file>
   </header>
@@ -36,114 +36,134 @@
   <section>
     <marker id="starting"></marker>
     <title>Starting</title>
-    <p>A user may have a number of "virtual" connections to other
-      users. An MG is connected to at most one MGC, while an MGC may
-      be connected to any number of MG's. For each connection the user
-      selects a transport service, an encoding scheme and a user
+    <p>A user can have a number of "virtual" connections to other
+      users. An MG is connected to at most one MGC, while an MGC can
+      be connected to any number of MGs. For each connection the user
+      selects a transport service, an encoding scheme, and a user
       callback module.</p>
-    <p>An MGC must initiate its transport service in order to listen
-      to MG's trying to connect. How the actual transport is initiated
-      is outside the scope of this application. However a send handle
-      (typically a socket id or host and port) must be provided from
-      the transport service in order to enable us to send the message
+    <p>An MGC must initiate its transport service to listen
+      to MGs trying to connect. How the actual transport is initiated
+      is outside the scope of this application. However, a send handle
+      (typically a socket ID, or host and port) must be provided from
+      the transport service to enable us to send the message
       to the correct destination. We do however not assume anything
       about this, from our point of view, opaque handle. Hopefully it
-      is rather small since it will passed around the system between
-      processes rather frequently.</p>
-    <p>A user may either be statically configured in a .config file
-      according to the application concept of Erlang/OTP or
-      dynamically started with the configuration settings as arguments
-      to megaco:start_user/2. These configuration settings may be
-      updated later on with megaco:update_conn_info/2.</p>
-    <p>The function megaco:connect/4 is used to tell the Megaco
-      application about which control process it should supervise,
-      which MID the remote user has, which callback module it should
-      use to send messages etc. When this "virtual" connection is
-      established the user may use megaco:call/3 and megaco:cast/3 in
-      order to send messages to the other side. Then it is up to the
+      is small, as it will pass around the system between
+      processes frequently.</p>
+    <p>A user can either be statically configured in a config file
+      according to the application concept of Erlang/OTP, or
+      dynamically started with the configuration settings as arguments to
+      <seealso marker="megaco#start_user/2">
+      <c>megaco:start_user/2</c></seealso>.
+      These configuration settings can be updated later with
+      <seealso marker="megaco#update_conn_info/3">
+      <c>megaco#update_conn_info/3</c></seealso>.</p>
+    <p>The <seealso marker="megaco#connect/4">
+      <c>megaco#connect/4</c></seealso> function is used to tell the Megaco
+      application about which control process it is to supervise,
+      which Message Identifier (MID) the remote user has, which callback
+      module it is to
+      use to send messages, and so on. When this "virtual" connection is
+      established, the user can use
+      <seealso marker="megaco#call/3">
+      <c>megaco#call/3</c></seealso> and
+      <seealso marker="megaco#cast/3">
+      <c>megaco#cast/3</c></seealso>
+      to send messages to the other side. It is then up to the
       MG to send its first Service Change Request message after
-      applying some clever algorithm in order to fight the problem
+      applying some clever algorithm to fight the problem
       with startup avalanche (as discussed in the RFC).</p>
-    <p>The originating user will wait for a reply or a timeout
-      (defined by the request_timer). When it receives the reply this
-      will optionally be acknowledged (regulated by auto_ack), and
-      forwarded to the user.  If an interim pending reply is received,
-      the long_request_timer will be used instead of the usual
-      request_timer, in order to enable avoidance of spurious re-sends
+    <p>The originating user waits for a reply or a time-out
+      (defined by the <c>request_timer</c>). When it receives the reply,
+      this is optionally acknowledged (regulated by <c>auto_ack</c>), and
+      forwarded to the user. If an interim pending reply is received,
+      the <c>long_request_timer</c> is used instead of the usual
+      <c>request_timer</c> to avoid spurious resends
       of the request.</p>
     <p>On the destination side the transport service waits for
       messages. Each message is forwarded to the Megaco application
-      via the megaco:receive_message/4 callback function. The
-      transport service may or may not provide means for blocking and
+      through the <seealso marker="megaco#receive_message/4">
+      <c>megaco:receive_message/4</c></seealso> callback function. The
+      transport service either provides or does not provide
+      means for blocking and
       unblocking the reception of the incoming messages.</p>
-    <p></p>
-    <p>If a message is received before the "virtual" connection has
-      been established, the connection will be setup automatically. An
-      MGC may be real open minded and dynamically decide which
-      encoding and transport service to use depending on how the
+    <p>If a message is received before the "virtual" connection is
+      established, the connection is set up automatically. An
+      MGC can be real open-minded and dynamically decide which
+      encoding and transport service to use, depending on how the
       transport layer contact is performed. For IP transports two
       ports are standardized, one for textual encoding and one for
-      binary encoding. If for example an UDP packet was received on
-      the text port it would be possible to decide encoding and
-      transport on the fly.</p>
+      binary encoding. If, for example, an UDP packet is received on
+      the text port, it can be possible to decide encoding and
+      transport on-the-fly.</p>
     <p>After decoding a message various user callback functions are
-      invoked in order to allow the user to act properly.  See the
-      megaco_user module for more info about the callback
-      arguments.</p>
+      invoked to allow the user to act properly. For more information
+      about the callback arguments, see the
+      <seealso marker="megaco_user"><c>megaco_user</c></seealso>
+      module.</p>
     <p>When the user has processed a transaction request in its
       callback function, the Megaco application assembles a
-      transaction reply, encodes it using the selected encoding module
+      transaction reply, encodes it using the selected encoding module,
       and sends the message back by invoking the callback
       function:</p>
     <list type="bulleted">
-      <item>
-        <p>SendMod:send_message(SendHandle, ErlangBinary)</p>
+      <item><c>SendMod:send_message(SendHandle, ErlangBinary)</c>
       </item>
     </list>
-    <p>Re-send of messages, handling pending transactions,
-      acknowledgements etc. is handled automatically by the Megaco
-      application but the user is free to override the default
-      behaviour by the various configuration possibilities. See
-      megaco:update_user_info/2 and megaco:update_conn_info/2 about
-      the possibilities.</p>
-    <p>When connections gets broken (that is explicitly by
-      megaco:disconnect/2 or when its controlling process dies) a user
-      callback function is invoked in order to allow the user to
+    <p>Resend of messages, handling pending transactions,
+      acknowledgements, and so on, is handled automatically by the Megaco
+      application, but the user is free to override the default
+      behavior by the various configuration possibilities, see
+      <seealso marker="megaco#update_user_info/2">
+      <c>megaco#update_user_info/2</c></seealso> and
+      <seealso marker="megaco#update_conn_info/2">
+      <c>megaco#update_conn_info/2</c></seealso>.</p>
+    <p>When connections gets broken (that is, explicitly by
+      <seealso marker="megaco#disconnect/2">
+      <c>megaco:disconnect/2</c></seealso>
+      or when its controlling process dies), a user
+      callback function is invoked to allow the user to
       re-establish the connection. The internal state of kept
-      messages, re-send timers etc. is not affected by this. A few
-      re-sends will of course fail while the connection is down, but
-      the automatic re-send algorithm does not bother about this and
-      eventually when the connection is up and running the messages
-      will be delivered if the timeouts are set to be long enough. The
-      user has the option of explicitly invoking megaco:cancel/2 to
-      cancel all messages for a connection.</p>
+      messages, resend timers, and so on, is not affected by this. A few
+      resends do of course fail while the connection is down, but
+      the automatic resend algorithm does not bother about this.
+      Eventually when the connection is up and running, the messages
+      are delivered if the time-outs are set to be long enough. The
+      user has the option of explicitly invoking
+      <seealso marker="megaco#cancel/2">
+      <c>megaco:cancel/2</c></seealso>
+      to cancel all messages for a connection.</p>
   </section>
 
   <section>
     <marker id="mgc_startup_call_flow"></marker>
-    <title>MGC startup call flow</title>
-    <p>In order to prepare the MGC for the reception of the initial
-      message, hopefully a Service Change Request, the following needs
-      to be done:</p>
+    <title>Media Gateway Controller Startup Call Flow</title>
+    <p>To prepare the MGC for the reception of the initial
+      message, hopefully a Service Change Request, the following must
+      be done:</p>
     <list type="bulleted">
       <item>
         <p>Start the Megaco application.</p>
       </item>
       <item>
-        <p>Start the MGC user. This may either be done explicitly
-          with megaco:start_user/2 or implicitly by providing the -megaco
+        <p>Start the MGC user. This can either be done explicitly with
+          <seealso marker="megaco#start_user/2">
+          <c>megaco:start_user/2</c></seealso>
+          or implicitly by providing the -megaco
           users configuration parameter.</p>
       </item>
       <item>
         <p>Initiate the transport service and provide it with a
-          receive handle obtained from megaco:user_info/2.</p>
+          receive handle obtained from
+          <seealso marker="megaco#user_info/2">
+          <c>megaco:user_info/2</c></seealso>.</p>
       </item>
     </list>
-    <p>When the initial message arrives the transport service
-      forwards it to the protocol engine which automatically
-      sets up the connection and invokes UserMod:handle_connect/2
-      before it invokes UserMod:handle_trans_request/3 with
-      the Service Change Request like this:</p>
+    <p>When the initial message arrives, the transport service
+      forwards it to the protocol engine, which automatically
+      sets up the connection and invokes <c>UserMod:handle_connect/2</c>
+      before it invokes <c>UserMod:handle_trans_request/3</c> with
+      the Service Change Request as follows:</p>
     <image file="MGC_startup_call_flow.gif">
       <icaption>MGC Startup Call Flow</icaption>
     </image>
@@ -151,105 +171,125 @@
 
   <section>
     <marker id="mg_startup_call_flow"></marker>
-    <title>MG startup call flow</title>
-    <p>In order to prepare the MG for the sending of the initial
-      message, hopefully a Service Change Request, the following needs
-      to be done:</p>
+    <title>Media Gateway Startup Call Flow</title>
+    <p>To prepare the MG for the sending of the initial
+      message, hopefully a Service Change Request, the following must
+      be done:</p>
     <list type="bulleted">
       <item>
         <p>Start the Megaco application.</p>
       </item>
       <item>
-        <p>Start the MG user. This may either be done explicitly
-          with megaco:start_user/2 or implicitly by providing the -megaco
+        <p>Start the MG user. This can either be done explicitly with
+          <seealso marker="megaco#start_user/2">
+          <c>megaco:start_user/2</c></seealso>
+          or implicitly by providing the -megaco
           users configuration parameter.</p>
       </item>
       <item>
         <p>Initiate the transport service and provide it with a
-          receive handle obtained from megaco:user_info/2.</p>
+          receive handle obtained from
+          <seealso marker="megaco#user_info/2">
+          <c>megaco:user_info/2</c></seealso>.</p>
       </item>
       <item>
-        <p>Setup a connection to the MGC with megaco:connect/4 and
-          provide it with a receive handle obtained from
-          megaco:user_info/2.</p>
+        <p>Set up a connection to the MGC with
+          <seealso marker="megaco#connect/4">
+          <c>megaco:connect/4</c></seealso>
+          and provide it with a receive handle obtained from
+          <seealso marker="megaco#user_info/2">
+          <c>megaco:user_info/2</c></seealso>.</p>
       </item>
     </list>
-    <p>If the MG has been provisioned with the MID of the MGC it can
-      be given as the RemoteMid parameter to megaco:connect/4 and the
-      call flow will look like this:</p>
+    <p>If the MG has been provisioned with the MID of
+      the MGC, it can be specified as parameter <c>RemoteMid</c> to
+      <seealso marker="megaco#connect/4">
+      <c>megaco:connect/4</c></seealso>
+      and the call flow looks as follows:</p>
     <image file="MG_startup_call_flow.gif">
       <icaption>MG Startup Call Flow</icaption>
     </image>
-    <p>If the MG cannot be provisioned with the MID of the MGC, the
-      MG can use the atom 'preliminary_mid' as the RemoteMid parameter
-      to megaco:connect/4 and the call flow will look like this:</p>
+    <p>If the MG cannot be provisioned with the MID of the MGC,
+      the MG can use the atom <c>preliminary_mid</c> as parameter
+      <c>RemoteMid</c> to
+      <seealso marker="megaco#connect/4">
+      <c>megaco:connect/4</c></seealso>
+      and the call flow looks as follows:</p>
     <image file="MG-startup_flow_noMID.gif">
-      <icaption>MG Startup Call Flow (no MID)</icaption>
+      <icaption>MG Startup Call Flow (No MID)</icaption>
     </image>
   </section>
 
   <section>
     <marker id="config_megaco"></marker>
-    <title>Configuring the Megaco stack</title>
+    <title>Configuring the Megaco Stack</title>
     <p>There are three kinds of configuration:</p>
     <list type="bulleted">
       <item>
-        <p>User info - Information related to megaco users. Read/Write. </p>
-        <p>A User is an entity identified by a MID, e.g. a MGC or a MG. </p>
-        <p>This information can be retrieved using 
-          <seealso marker="megaco#user_info">megaco:user_info</seealso>. </p>
+        <p>User information - Related to Megaco users. Read/Write.</p>
+        <p>A user is an entity identified by a MID, for example, an MGC
+          or an MG.</p>
+        <p>This information can be retrieved using
+          <seealso marker="megaco#user_info">
+          <c>megaco:user_info</c></seealso>.</p>
       </item>
       <item>
-        <p>Connection info - Information regarding connections. Read/Write.</p>
-        <p>This information can be retrieved using 
-          <seealso marker="megaco#conn_info">megaco:conn_info</seealso>. </p>
+        <p>Connection information - Regarding connections. Read/Write.</p>
+        <p>This information can be retrieved using
+          <seealso marker="megaco#conn_info">
+          <c>megaco:conn_info</c></seealso>.</p>
       </item>
       <item>
-        <p>System info - System wide information. Read only.</p>
-        <p>This information can be retrieved using 
-          <seealso marker="megaco#system_info">megaco:system_info</seealso>. </p>
+        <p>System information - System-wide information. Read only.</p>
+        <p>This information can be retrieved using
+          <seealso marker="megaco#system_info">
+          <c>megaco:system_info</c></seealso>.</p>
       </item>
     </list>
   </section>
 
   <section>
     <marker id="initial_config"></marker>
-    <title>Initial configuration</title>
-    <p>The initial configuration of the Megaco should be defined in the
-      Erlang system configuration file. The following configured parameters
+    <title>Initial Configuration</title>
+    <p>The initial configuration of Megaco is to be defined in the
+      Erlang system configuration file. The following configuration parameters
       are defined for the Megaco application:</p>
     <list type="bulleted">
       <item>
         <p><c><![CDATA[users = [{Mid, [user_config()]}].]]></c></p>
-        <p>Each user is represented by a tuple with the Mid of the user and a
-          list of config parameters (each parameter is in turn a tuple:
+        <p>Each user is represented by a tuple with the MID of the user and a
+          list of configuration parameters (each parameter is in turn a tuple:
           <c><![CDATA[{Item, Value}]]></c>).</p>
       </item>
       <item>
-        <p><c><![CDATA[scanner = flex | {Module, Function, Arguments, Modules}]]></c></p>
+        <p><c><![CDATA[scanner = flex
+          | {Module, Function, Arguments, Modules}]]></c></p>
 <!--
-  For future use
-        <p><c><![CDATA[scanner = flex | {flex, Opts} | {Module, Function, Arguments, Modules}]]></c></p>
+        For future use:
+        <p><c><![CDATA[scanner = flex | {flex, Opts}
+          | {Module, Function, Arguments, Modules}]]></c></p>
 -->
         <list type="bulleted">
           <item>
-            <p><c><![CDATA[flex]]></c> will result in the start of the flex scanner with default 
-              options.</p>
+            <p><c><![CDATA[flex]]></c> results in the start of the flex
+              scanner with default options.</p>
           </item>
 <!--
-  For future use
+          For future use:
           <item>
-            <p><c><![CDATA[{flex, Opts}]]></c> will result in the start of the flex scanner with the 
-              specified options. <c>Opts</c> is two-tuple list where the only allowed option is
-              <c>{smp, boolean()}</c>, with default value being <c>false</c> and the value of 
-              <c>true</c> resulting in a start of an smp-optimized scanner. </p>
+            <p><c><![CDATA[{flex, Opts}]]></c> results in the start of the
+              flex scanner with the specified options. <c>Opts</c> is a
+              two-tuple list, where the only allowed option is
+              <c>{smp, boolean()}</c>, with default value <c>false</c>
+              and the value of
+              <c>true</c> resulting in a start of an smp-optimized scanner.</p>
           </item>
 -->
           <item>
             <p>The MFA alternative makes it possible for Megaco to start and
-              supervise a scanner written by the user (see 
-            <c><![CDATA[supervisor:start_child]]></c> for an explanation of the 
-              parameters).</p>
+              supervise a scanner written by the user. For a description of
+              the parameters, see section
+              <c><![CDATA[supervisor:start_child]]></c>.</p>
           </item>
         </list>
       </item>
@@ -260,113 +300,132 @@
 
   <section>
     <marker id="changing_config"></marker>
-    <title>Changing the configuration</title>
+    <title>Changing the Configuration</title>
     <p>The configuration can be changed during runtime. This is done with
-      the functions <seealso marker="megaco#update_user_info">megaco:update_user_info</seealso> and 
-      <seealso marker="megaco#update_conn_info">megaco:update_conn_info</seealso></p>
+      the functions <seealso marker="megaco#update_user_info">
+      <c>megaco:update_user_info</c></seealso> and
+      <seealso marker="megaco#update_conn_info">
+      <c>megaco:update_conn_info</c></seealso>.</p>
   </section>
 
   <section>
     <marker id="transaction_sender"></marker>
-    <title>The transaction sender</title>
-    <p>The transaction sender is a process (one per connection), which handle
-      all transaction sending, if so configured (see 
-      <seealso marker="megaco#user_info">megaco:user_info</seealso> and 
-      <seealso marker="megaco#conn_info">megaco:conn_info</seealso>).</p>
-    <p>The purpose of the transaction sender is to accumulate transactions 
-      for a more efficient message sending. The transactions that are 
-      accumulated are transaction request and transaction ack. For 
-      transaction ack's the benefit is quite large, since the transactions 
-      are small and it is possible to have ranges (which means that 
-      transaction acks for transactions 1, 2, 3 and 4 can be sent as a 
-      range 1-4 in one transaction ack, instead of four separate 
-      transactions). </p>
-    <p>There are a number of configuration parameter's that control the 
-      operation of the transaction sender. In principle, a message with 
-      everything stored (ack's and request's) is sent from the process 
-      when:</p>
+    <title>The Transaction Sender</title>
+    <p>The transaction sender is a process (one per connection), which handles
+      all transaction sending, if so configured (see
+      <seealso marker="megaco#user_info">
+      <c>megaco:user_info</c></seealso> and
+      <seealso marker="megaco#conn_info">
+      <c>megaco:conn_info</c></seealso>).</p>
+    <p>The purpose of the transaction sender is to accumulate transactions
+      for a more efficient message sending. The transactions that are
+      accumulated are transaction request and transaction acknowledgement.
+      For transaction acknowledgements the benefit is quite large, as the
+      transactions are small and it is possible to have ranges (that is,
+      transaction acknowledgements for transactions 1, 2, 3, and 4 can
+      be sent as a range 1-4 in one transaction acknowledgement
+      instead of four separate transactions).</p>
+    <p>A number of configuration parameters control the
+      operation of the transaction sender. In principle, a message with
+      everything stored (acknowledgements and requests) is sent from the
+      process in the following situations:</p>
     <list type="bulleted">
       <item>
-        <p>When <c><![CDATA[trans_timer]]></c> expires.</p>
+        <p>When <c><![CDATA[trans_timer]]></c> expires</p>
       </item>
       <item>
-        <p>When <c><![CDATA[trans_ack_maxcount]]></c> number of ack's has been 
-          received.</p>
+        <p>When <c><![CDATA[trans_ack_maxcount]]></c> number of
+          acknowledgements has been received</p>
       </item>
       <item>
-        <p>When <c><![CDATA[trans_req_maxcount]]></c> number of requests's has 
-          been received.</p>
+        <p>When <c><![CDATA[trans_req_maxcount]]></c> number of requestss has
+          been received</p>
       </item>
       <item>
-        <p>When the size of all received requests exceeds 
-          <c><![CDATA[trans_req_maxsize]]></c>.</p>
+        <p>When the size of all received requests exceeds
+          <c><![CDATA[trans_req_maxsize]]></c></p>
       </item>
       <item>
-        <p>When a reply transaction is sent.</p>
+        <p>When a reply transaction is sent</p>
       </item>
       <item>
-        <p>When a pending transaction is sent.</p>
+        <p>When a pending transaction is sent</p>
       </item>
     </list>
-    <p>When something is to be sent, everything is packed into one message,  
-      unless the trigger was a reply transaction and the added size of the 
-      reply and all the requests is greater then 
-      <c><![CDATA[trans_req_maxsize]]></c>, in which case the stored 
-      transactions are sent first in a separate message and the reply in 
+    <p>When something is to be sent, everything is packed into one message, 
+      unless the trigger was a reply transaction and the added size of the
+      reply and all the requests is greater than
+      <c><![CDATA[trans_req_maxsize]]></c>, in which case the stored
+      transactions are sent first in a separate message and the reply in
       another message.</p>
-    <p>When the transaction sender receives a request which is already 
-      "in storage" (indicated by the transaction id) it is assumed to 
-      be a resend and everything stored is sent. This could happen if 
-      the values of the <c><![CDATA[trans_timer]]></c> and the
-      <c><![CDATA[request_timer]]></c> is not properly chosen.</p>
+    <p>When the transaction sender receives a request that is already
+      "in storage" (indicated by the transaction ID), it is assumed to
+      be a resend and everything stored is sent. This can occur if
+      the values of <c><![CDATA[trans_timer]]></c> and
+      <c><![CDATA[request_timer]]></c> are not chosen properly.</p>
   </section>
 
   <section>
     <marker id="segment_reply"></marker>
-    <title>Segmentation of transaction replies</title>
-    <p>In version 3 of the megaco standard the Segmentation package was
-      introduced. Simply, this package defines a procedure to segment 
-      megaco messages (transaction replies) when using a transport that 
-      does not automatically do this (e.g. UDP). See also
-      <seealso marker="megaco_encode#handling_versions">version3</seealso>.</p>
-    <p>Although it would be both pointless and counterproductive to use
-      segmentation on a transport that already does this (e.g. TCP), the 
-      megaco application does not check this. Instead, it is up to the 
-      user to configure this properly. </p>
+    <title>Segmentation of Transaction Replies</title>
+    <p>In version 3 of the Megaco standard the segmentation package was
+      introduced. Simply, this package defines a procedure to segment
+      Megaco messages (transaction replies) when using a transport that
+      does not automatically do this (such as UDP). See also section
+      <seealso marker="megaco_encode#handling_versions">
+      Handling Megaco Versions</seealso>.</p>
+    <p>Although it would be both pointless and counter-productive to use
+      segmentation on a transport that already does this (such as TCP), the
+      Megaco application does not check this. Instead, it is up to the
+      user to configure this properly.</p>
     <list type="bulleted">
       <item>
-        <p>Receiving segmented messages: </p>
-        <p>This is handled automatically by the megaco application. 
-          There is however one thing that need to be configured by the user, 
-          the 
-          <seealso marker="megaco#user_info">segment_recv_timer</seealso>
-          option. </p>
-        <p>Note that the segments are delivered to the user differently 
+        <p>Receiving segmented messages:</p>
+        <p>This is handled automatically by the Megaco application.
+          However, the user must configure option
+          <seealso marker="megaco#user_info">
+          <c>segment_recv_timer</c>c></seealso> (described in
+          <seealso marker="megaco#user_info/1">
+          <c>megaco:user_info</c></seealso>.</p>
+        <p>Notice that the segments are delivered to the user differently
           depending on which function is used to issue the original request.
-          When issuing the request using the 
-          <seealso marker="megaco#cast">megaco:cast</seealso> function,
-          the segments are delivered to the user via the 
-          <seealso marker="megaco_user#trans_reply">handle_trans_reply</seealso>
-          callback function one at a time, as they arrive. But this obviously
-          doe not work for the 
-          <seealso marker="megaco#call">megaco:call</seealso> function. 
+          When issuing the request using the
+          <seealso marker="megaco#cast"><c>megaco:cast</c></seealso> function,
+          the segments are delivered to the user through the
+          <seealso marker="megaco_user#trans_reply">
+          <c>handle_trans_reply</c></seealso> callback function
+          (in <c>megaco:megaco_user</c>) one at a time, as they arrive.
+          However, this clearly does not work for the
+          <seealso marker="megaco#call"><c>megaco:call</c></seealso> function.
           In this case, the segments are accumulated and then delivered
           all at once as the function returns.</p>
       </item>
       <item>
-        <p>Sending segmented messages: </p>
-        <p>This is also handled automatically by the megaco application. 
-          First of all, segmentation is only attempted if so configured, see 
-          the <seealso marker="megaco#user_info">segment_send</seealso> option.
-          Secondly, megaco relies on the ability of the used codec to
-          encode action replies, which is the smallest component the
-          megaco application handles when segmenting. Thirdly, the 
-          reply will be segmented only if the sum of the size of the
-          action replies (plus an arbitrary message header size) are greater
-          then the specified max message size (see the 
-          <seealso marker="megaco#user_info">max_pdu_size</seealso> option).
-          Finally, if segmentation is decided, then each action reply
-          will make up its own (segment) message.</p>
+        <p>Sending segmented messages:</p>
+        <p>This is also handled automatically by the Megaco application
+          as follows:</p>
+        <list type="bulleted">
+          <item><p>First, segmentation is only attempted if so configured,
+            see option
+            <seealso marker="megaco#user_info"><c>segment_send</c></seealso>
+            (in <seealso marker="megaco#user_info/1">
+            <c>megaco:user_info</c></seealso>.</p>
+          </item>
+          <item><p>Megaco relies on the ability of the used codec to
+            encode action replies, which is the smallest component the
+            Megaco application handles when segmenting.</p>
+          </item>
+          <item><p>The reply is segmented only if the sum of the size of the
+            action replies (plus an arbitrary message header size) are greater
+            than the specified maximum message size (see option
+            <seealso marker="megaco#user_info">max_pdu_size</seealso> in
+            <seealso marker="megaco#user_info/1">
+            <c>megaco:user_info</c></seealso>.)</p>
+          </item>
+          <item><p>Finally, if segmentation is decided, each action reply
+            make up its own (segment) message.</p>
+          </item>
+        </list>
       </item>
     </list>
   </section>

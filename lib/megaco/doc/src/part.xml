@@ -22,16 +22,14 @@
     
     </legalnotice>
 
-    <title>Megaco/H.248 Users Guide</title>
+    <title>Megaco/H.248 User's Guide</title>
     <prepared>Lars Thors&eacute;n, H&aring;kan Mattsson, Micael Karlberg</prepared>
     <docno></docno>
-    <date>2007-06-15</date>
+    <date>2016-12-09</date>
     <rev>%VSN%</rev>
     <file>part.xml</file>
   </header>
   <description>
-    <p>The Megaco application is a framework for building
-      applications on top of the Megaco/H.248 protocol. </p>
   </description>
   <xi:include href="megaco_intro.xml"/>
   <xi:include href="megaco_architecture.xml"/>
