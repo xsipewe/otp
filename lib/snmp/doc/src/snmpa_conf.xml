@@ -28,84 +28,112 @@
     <docno></docno>
     <approved></approved>
     <checked></checked>
-    <date></date>
+    <date>2016-11-21</date>
     <rev></rev>
     <file>snmpa_conf.xml</file>
   </header>
   <module>snmpa_conf</module>
-  <modulesummary>Utility functions for handling the agent config files.</modulesummary>
+  <modulesummary>Utility functions for handling the agent config files.
+  </modulesummary>
   <description>
-    <p>The module <c>snmpa_conf</c> contains various utility functions to 
-      used for manipulating (write/append/read) the config files of the
+    <p>This module contains utility functions
+      for manipulating (write/append/read) the config files of the
       SNMP agent. </p>
-
     <marker id="types"></marker>
   </description>
 
-  <section>
-    <title>DATA TYPES</title>
-    <code type="none"><![CDATA[
-transportDomain() = transportDomainUdpIpv4 | transportDomainUdpIpv6
-
-transportAddress() =
-    transportAddressIPv4() | transportAddressIPv6()
-
-transportAddressWithPort() =
-    transportAddressIPv4WithPort() | transportAddressIPv6WithPort()
-
-transportAddressWithoutPort() =
-    transportAddressIPv4WithoutPort() | transportAddressIPv6WithoutPort()
-
-transportAddressIPv4() =
-    transportAddressIPv4WithPort() | transportAddressIPv4WithoutPort()
-transportAddressIPv4WithPort =
-    {transportAddressIPv4WithoutPort(), inet:port_number()} |
-    [byte() x 4, byte() x 2]
-transportAddressIPv4WithoutPort =
-    inet:ip4_address() | [byte() x 4]
-
-transportAddressIPv6() =
-    transportAddressIPv6WithPort() | transportAddressIPv6WithoutPort()
-transportAddressIPv6WithPort =
-    {transportAddressIPv6WithoutPort(), inet:port_number()} |
-    [word() x 8, inet:port_number()] |
-    [word() x 8, byte() x 2] |
-    {byte() x 16, byte() x 2]
-transportAddressIPv6WithoutPort =
-    inet:ip6_address() | [word() x 8] | [byte() x 16]
-
-transportAddressMask() =
-    [] | transportAddressWithPort()
-
-byte() = 0..255
-word() = 0..65535
-    ]]></code>
-    <p>For <c>inet:ip4_address()</c>, <c>inet:ip6_address()</c>
-    and <c>inet:port_number()</c>, see also
-    <seealso marker="kernel:inet#type-ip_address">
-    <c>inet:ip_address()</c></seealso></p>
-
-    <marker id="agent_entry"></marker>
-  </section>
-
-
+  <datatypes>
+    <datatype>
+      <name name="transportDomain() = transportDomainUdpIpv4
+        | transportDomainUdpIpv6"/>
+    </datatype>
+    <datatype>
+      <name name="transportAddress() = transportAddressIPv4()
+        | transportAddressIPv6()"/>
+    </datatype>
+    <datatype>
+      <name name="transportAddressWithPort() =
+        transportAddressIPv4WithPort() | transportAddressIPv6WithPort()"/>
+    </datatype>
+    <datatype>
+      <name name="transportAddressWithoutPort() =
+        transportAddressIPv4WithoutPort() | transportAddressIPv6WithoutPort()"/>
+    </datatype>
+    <datatype>
+      <name name="transportAddressIPv4() =
+        transportAddressIPv4WithPort() | transportAddressIPv4WithoutPort()"/>
+    </datatype>
+    <datatype>
+      <name name="transportAddressIPv4WithPort =
+        {transportAddressIPv4WithoutPort(), inet:port_number()}
+        | [byte() x 4, byte() x 2]"/>
+      <desc>
+        <p>For <c>inet:port_number()</c>, see also
+          <seealso marker="kernel:inet#type-ip_address">
+          <c>inet:ip_address()</c></seealso> in Kernel.</p>
+      </desc>
+    </datatype>
+    <datatype>
+      <name name="transportAddressIPv4WithoutPort =
+        inet:ip4_address() | [byte() x 4]"/>
+      <desc>
+        <p>For <c>inet:ip4_address()</c>, see also
+          <seealso marker="kernel:inet#type-ip_address">
+          <c>inet:ip_address()</c></seealso> in Kernel.</p>
+      </desc>
+    </datatype>
+    <datatype>
+      <name name="transportAddressIPv6() =
+        transportAddressIPv6WithPort() | transportAddressIPv6WithoutPort()"/>
+    </datatype>
+    <datatype>
+      <name name="transportAddressIPv6WithPort =
+        {transportAddressIPv6WithoutPort(), inet:port_number()}
+        | [word() x 8, inet:port_number()] | [word() x 8, byte() x 2]
+        | {byte() x 16, byte() x 2]"/>
+      <desc>
+        <p>For <c>inet:port_number()</c>, see also
+          <seealso marker="kernel:inet#type-ip_address">
+          <c>inet:ip_address()</c></seealso> in Kernel.</p>
+      </desc>
+    </datatype>
+    <datatype>
+      <name name="transportAddressIPv6WithoutPort =
+        inet:ip6_address() | [word() x 8] | [byte() x 16]"/>
+      <desc>
+        <p>For <c>inet:ip6_address()</c>, see also
+          <seealso marker="kernel:inet#type-ip_address">
+          <c>inet:ip_address()</c></seealso> in Kernel.</p>
+        <marker id="agent_entry"></marker>
+      </desc>
+    </datatype>
+    <datatype>
+      <name name="transportAddressMask() = [] | transportAddressWithPort()"/>
+    </datatype>
+    <datatype>
+      <name name="byte() = 0..255"/>
+    </datatype>
+    <datatype>
+      <name name="word() = 0..65535"/>
+    </datatype>
+  </datatypes>
 
   <funcs>
     <func>
       <name>agent_entry(Tag, Val) -> agent_entry()</name>
-      <fsummary>Create an agent entry</fsummary>
+      <fsummary>Create an agent entry.</fsummary>
       <type>
-        <v>Tag = intAgentTransports | intAgentUDPPort | intAgentMaxPacketSize | snmpEngineMaxMessageSize | snmpEngineID</v>
+        <v>Tag = intAgentTransports | intAgentUDPPort | intAgentMaxPacketSize
+          | snmpEngineMaxMessageSize | snmpEngineID</v>
         <v>Val = term()</v>
         <v>agent_entry() = term()</v>
       </type>
       <desc>
-        <p>Create an entry for the agent config file, <c>agent.conf</c>. </p>
-        <p>The type of <c>Val</c> depends on the value of <c>Tag</c>, 
-          see 
-          <seealso marker="snmp_agent_config_files#agent_information">Agent Information</seealso> 
-          for more info. </p>
-
+        <p>Creates an entry for the agent config file, <c>agent.conf</c>. </p>
+        <p>The type of <c>Val</c> depends on the value of <c>Tag</c>.
+          For more information, see section
+          <seealso marker="snmp_agent_config_files#agent_information">
+          Agent Information</seealso> in the User's Guide.</p>
         <marker id="write_agent_config"></marker>
       </desc>
     </func>
@@ -113,80 +141,77 @@ word() = 0..65535
     <func>
       <name>write_agent_config(Dir, Conf) -> ok</name>
       <name>write_agent_config(Dir, Hdr, Conf) -> ok</name>
-      <fsummary>Write the agent config to the config file</fsummary>
+      <fsummary>Write the agent config to the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Hdr = string()</v>
         <v>Conf = [agent_entry()]</v>
       </type>
       <desc>
-        <p>Write the agent config to the agent config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p>Writes the agent config to the agent config file. </p>
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p><c>Hdr</c> is an optional file header (note that this text is
-          written to the file as is). </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#agent_information">Agent Information</seealso> 
-          for more info. </p>
-
+        <p><c>Hdr</c> is an optional file header (notice that this text is
+          written to the file "as is"). </p>
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#agent_information">
+          Agent Information</seealso> in the User's Guide.</p>
         <marker id="append_agent_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>append_agent_config(Dir, Conf) -> ok</name>
-      <fsummary>Append the agent config to the config file</fsummary>
+      <fsummary>Append the agent config to the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [agent_entry()]</v>
       </type>
       <desc>
-        <p>Append the config to the current agent config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p>Appends the config to the current agent config file. </p>
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#agent_information">Agent Information</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#agent_information">
+          Agent Information</seealso> in the User's Guide.</p>
         <marker id="read_agent_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>read_agent_config(Dir) -> Conf</name>
-      <fsummary>Read the agent config from the config file</fsummary>
+      <fsummary>Read the agent config from the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [agent_entry()]</v>
       </type>
       <desc>
-        <p>Read the current agent config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p>Reads the current agent config file. </p>
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#agent_information">Agent Information</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#agent_information">
+          Agent Information</seealso> in the User's Guide.</p>
         <marker id="standard_entry"></marker>
       </desc>
     </func>
 
     <func>
       <name>standard_entry(Tag, Val) -> standard_entry()</name>
-      <fsummary>Create an standard entry</fsummary>
+      <fsummary>Create a standard entry.</fsummary>
       <type>
-        <v>Tag = sysDescr | sysObjectID | sysContact | sysName | sysLocation | sysServices | snmpEnableAuthenTraps</v>
+        <v>Tag = sysDescr | sysObjectID | sysContact | sysName | sysLocation
+          | sysServices | snmpEnableAuthenTraps</v>
         <v>Val = term()</v>
         <v>standard_entry() = term()</v>
       </type>
       <desc>
-        <p>Create an entry for the agent standard config file, 
+        <p>Creates an entry for the agent standard config file,
           <c>standard.conf</c>. </p>
-        <p>The type of <c>Val</c> depends on the value of <c>Tag</c>, 
-          see 
-          <seealso marker="snmp_agent_config_files#system_information">System Information</seealso> 
-          for more info. </p>
-
+        <p>The type of <c>Val</c> depends on the value of <c>Tag</c>.
+          For more information, see section
+          <seealso marker="snmp_agent_config_files#system_information">
+          System Information</seealso> in the User's Guide.</p>
         <marker id="write_standard_config"></marker>
       </desc>
     </func>
@@ -194,80 +219,76 @@ word() = 0..65535
     <func>
       <name>write_standard_config(Dir, Conf) -> ok</name>
       <name>write_standard_config(Dir, Hdr, Conf) -> ok</name>
-      <fsummary>Write the agent standard config to the config file</fsummary>
+      <fsummary>Write the agent standard config to the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Hdr = string()</v>
         <v>Conf = [standard_entry()]</v>
       </type>
       <desc>
-        <p>Write the agent standard config to the agent standard 
+        <p>Writes the agent standard config to the agent standard
           config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p><c>Hdr</c> is an optional file header (note that this text is
-          written to the file as is). </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#system_information">System Information</seealso> 
-          for more info. </p>
-
+        <p><c>Hdr</c> is an optional file header (notice that this text is
+          written to the file "as is"). </p>
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#system_information">
+          System Information</seealso> in the User's Guide.</p>
         <marker id="append_standard_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>append_standard_config(Dir, Conf) -> ok</name>
-      <fsummary>Append the agent standard config to the config file</fsummary>
+      <fsummary>Append the agent standard config to the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [standard_entry()]</v>
       </type>
       <desc>
-        <p>Append the standard config to the current agent standard 
+        <p>Appends the standard config to the current agent standard
           config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#system_information">System Information</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#system_information">
+          System Information</seealso> in the User's Guide.</p>
         <marker id="read_standard_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>read_standard_config(Dir) -> Conf</name>
-      <fsummary>Read the agent standard config from the config file</fsummary>
+      <fsummary>Read the agent standard config from the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [standard_entry()]</v>
       </type>
       <desc>
-        <p>Read the current agent standard config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p>Reads the current agent standard config file. </p>
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#system_information">System Information</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#system_information">
+          System Information</seealso> in the User's Guide.</p>
         <marker id="context_entry"></marker>
       </desc>
     </func>
 
     <func>
       <name>context_entry(Context) -> context_entry()</name>
-      <fsummary>Create an context entry</fsummary>
+      <fsummary>Create a context entry.</fsummary>
       <type>
         <v>Context = string()</v>
         <v>context_entry() = term()</v>
       </type>
       <desc>
-        <p>Create an entry for the agent context config file, 
+        <p>Creates an entry for the agent context config file,
           <c>context.conf</c>. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#context">Contexts</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#context">
+          Contexts</seealso> in the User's Guide.</p>
         <marker id="write_context_config"></marker>
       </desc>
     </func>
@@ -275,70 +296,68 @@ word() = 0..65535
     <func>
       <name>write_context_config(Dir, Conf) -> ok</name>
       <name>write_context_config(Dir, Hdr, Conf) -> ok</name>
-      <fsummary>Write the agent context(s) to the config file</fsummary>
+      <fsummary>Write the agent context(s) to the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Hdr = string()</v>
         <v>Conf = [context_entry()]</v>
       </type>
       <desc>
-        <p>Write the agent context config to the agent context 
+        <p>Writes the agent context config to the agent context
           config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p><c>Hdr</c> is an optional file header (note that this text is
-          written to the file as is). </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#context">Contexts</seealso> 
-          for more info. </p>
-
+        <p><c>Hdr</c> is an optional file header (notice that this text is
+          written to the file "as is"). </p>
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#context">
+          Contexts</seealso> in the User's Guide.</p>
         <marker id="append_context_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>append_context_config(Dir, Conf) -> ok</name>
-      <fsummary>Append the agent context(s) to the config file</fsummary>
+      <fsummary>Append the agent context(s) to the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [context_entry()]</v>
       </type>
       <desc>
-        <p>Append the context config to the current agent context 
+        <p>Appends the context config to the current agent context
           config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#context">Contexts</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#context">
+          Contexts</seealso> in the User's Guide.</p>
         <marker id="read_context_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>read_context_config(Dir) -> Conf</name>
-      <fsummary>Read the agent context config from the config file</fsummary>
+      <fsummary>Read the agent context config from the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [context_entry()]</v>
       </type>
       <desc>
-        <p>Read the current agent context config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p>Reads the current agent context config file. </p>
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#context">Contexts</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#context">
+          Contexts</seealso> in the User's Guide.</p>
         <marker id="community_entry"></marker>
       </desc>
     </func>
 
     <func>
       <name>community_entry(CommunityIndex) -> community_entry()</name>
-      <name>community_entry(CommunityIndex, CommunityName, SecName, ContextName, TransportTag) -> community_entry()</name>
-      <fsummary>Create an community entry</fsummary>
+      <name>community_entry(CommunityIndex, CommunityName, SecName,
+        ContextName, TransportTag) -> community_entry()</name>
+      <fsummary>Create a community entry.</fsummary>
       <type>
         <v>CommunityIndex = string()</v>
         <v>CommunityName = string()</v>
@@ -348,17 +367,18 @@ word() = 0..65535
         <v>community_entry() = term()</v>
       </type>
       <desc>
-        <p>Create an entry for the agent community config file, 
+        <p>Creates an entry for the agent community config file,
           <c>community.conf</c>. </p>
         <p><c>CommunityIndex</c> must be a <em>non-empty</em> string. </p>
         <p><c>community_entry("public")</c> translates to the following call:
-          <c>community_entry(CommunityIndex, CommunityIndex, "initial", "", "")</c>. </p>
+          <c>community_entry(CommunityIndex, CommunityIndex, "initial",
+          "", "")</c>. </p>
         <p><c>community_entry("all-rights")</c> translates to the following 
-          call: <c>community_entry(CommunityIndex, CommunityIndex, CommunityIndex, "", "")</c>. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#community">Community</seealso> 
-          for more info. </p>
-
+          call: <c>community_entry(CommunityIndex, CommunityIndex,
+          CommunityIndex, "", "")</c>. </p>
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#community">
+          Communities</seealso> in the User's Guide.</p>
         <marker id="write_community_config"></marker>
       </desc>
     </func>
@@ -366,99 +386,105 @@ word() = 0..65535
     <func>
       <name>write_community_config(Dir, Conf) -> ok</name>
       <name>write_community_config(Dir, Hdr, Conf) -> ok</name>
-      <fsummary>Write the agent community config to the config file</fsummary>
+      <fsummary>Write the agent community config to the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Hdr = string()</v>
         <v>Conf = [community_entry()]</v>
       </type>
       <desc>
-        <p>Write the agent community config to the agent community 
+        <p>Writes the agent community config to the agent community
           config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p><c>Hdr</c> is an optional file header (note that this text is
-          written to the file as is). </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#community">Community</seealso> 
-          for more info. </p>
-
+        <p><c>Hdr</c> is an optional file header (notice that this text is
+          written to the file "as is"). </p>
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#community">
+          Communities</seealso> in the User's Guide.</p>
         <marker id="append_community_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>append_community_config(Dir, Conf) -> ok</name>
-      <fsummary>Append the agent community config to the config file</fsummary>
+      <fsummary>Append the agent community config to the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [community_entry()]</v>
       </type>
       <desc>
-        <p>Append the community config to the current agent community 
+        <p>Appends the community config to the current agent community
           config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#community">Community</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#community">
+          Communities</seealso> in the User's Guide.</p>
         <marker id="read_community_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>read_community_config(Dir) -> Conf</name>
-      <fsummary>Read the agent community config from the config file</fsummary>
+      <fsummary>Read the agent community config from the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [community_entry()]</v>
       </type>
       <desc>
-        <p>Read the current agent community config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p>Reads the current agent community config file. </p>
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#community">Communities</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#community">
+          Communities</seealso> in the User's Guide.</p>
         <marker id="target_addr_entry"></marker>
       </desc>
     </func>
 
     <func>
-      <name>target_addr_entry(Name, Domain, Addr, TagList, ParamsName, EngineId) -> target_addr_entry()</name>
-      <name>target_addr_entry(Name, Domain, Addr, TagList, ParamsName, EngineId, TMask) -> target_addr_entry()</name>
-      <name>target_addr_entry(Name, Domain, Addr, TagList, ParamsName, EngineId, TMask, MaxMessageSize) -> target_addr_entry()</name>
-      <name>target_addr_entry(Name, Domain, Addr, Timeout, RetryCount, TagList, ParamsName, EngineId, TMask, MaxMessageSize) -> target_addr_entry()</name>
-      <fsummary>Create an target_addr entry</fsummary>
+      <name>target_addr_entry(Name, Domain, Addr, TagList, ParamsName,
+        EngineId) -> target_addr_entry()</name>
+      <name>target_addr_entry(Name, Domain, Addr, TagList, ParamsName,
+        EngineId, TMask) -> target_addr_entry()</name>
+      <name>target_addr_entry(Name, Domain, Addr, TagList, ParamsName,
+        EngineId, TMask, MaxMessageSize) -> target_addr_entry()</name>
+      <name>target_addr_entry(Name, Domain, Addr, Timeout, RetryCount,
+        TagList, ParamsName, EngineId, TMask, MaxMessageSize) ->
+        target_addr_entry()</name>
+      <fsummary>Create a target_addr entry.</fsummary>
       <type>
         <v>Name = string()</v>
         <v>Domain = transportDomain()</v>
-        <v>Ip = transportAddress() (depends on Domain)</v>
+        <v>Ip = transportAddress()</v>
+        <d>Depends on <c>Domain</c>.</d>
         <v>Timeout = integer()</v>
         <v>RetryCount = integer()</v>
         <v>TagList = string()</v>
         <v>ParamsName = string()</v>
         <v>EngineId = string()</v>
-        <v>TMask = transportAddressMask() (depends on Domain)</v>
+        <v>TMask = transportAddressMask()</v>
+        <d>Depends on <c>Domain</c>.</d>
         <v>MaxMessageSize = integer()</v>
         <v>target_addr_entry() = term()</v>
       </type>
       <desc>
-        <p>Create an entry for the agent target_addr config file, 
+        <p>Creates an entry for the agent <c>target_addr</c> config file,
           <c>target_addr.conf</c>. </p>
         <p><c>Name</c> must be a <em>non-empty</em> string. </p>
         <p><c>target_addr_entry/6</c> translates to the following call:
-          <c>target_addr_entry(Name, Domain, Addr, TagList, ParamsName, EngineId, [])</c>. </p>
+          <c>target_addr_entry(Name, Domain, Addr, TagList, ParamsName,
+          EngineId, [])</c>.</p>
         <p><c>target_addr_entry/7</c> translates to the following call:
-          <c>target_addr_entry(Name, Domain, Addr, TagList, ParamsName, EngineId, TMask, 2048)</c>. </p>
+          <c>target_addr_entry(Name, Domain, Addr, TagList, ParamsName,
+          EngineId, TMask, 2048)</c>.</p>
         <p><c>target_addr_entry/8</c> translates to the following call:
-          <c>target_addr_entry(Name, Domain, Addr, 1500, 3, TagList, ParamsName, EngineId, TMask, MaxMessageSize)</c>. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#target_addr">Target Address Definitions</seealso> 
-          for more info. </p>
-
+          <c>target_addr_entry(Name, Domain, Addr, 1500, 3, TagList,
+          ParamsName, EngineId, TMask, MaxMessageSize)</c>.</p>
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#target_addr">
+          Target Address Definitions</seealso> in the User's Guide.</p>
         <marker id="write_target_addr_config"></marker>
       </desc>
     </func>
@@ -466,71 +492,73 @@ word() = 0..65535
     <func>
       <name>write_target_addr_config(Dir, Conf) -> ok</name>
       <name>write_target_addr_config(Dir, Hdr, Conf) -> ok</name>
-      <fsummary>Write the agent target_addr config to the config file</fsummary>
+      <fsummary>Write the agent target_addr config to the config file.
+      </fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Hdr = string()</v>
         <v>Conf = [target_addr_entry()]</v>
       </type>
       <desc>
-        <p>Write the agent target_addr config to the agent target_addr 
+        <p>Writes the agent <c>target_addr</c> config to the agent target_addr
           config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p><c>Hdr</c> is an optional file header (note that this text is
-          written to the file as is). </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#target_addr">Target Address Definitions</seealso> 
-          for more info. </p>
-
+        <p><c>Hdr</c> is an optional file header (notice that this text is
+          written to the file "as is"). </p>
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#target_addr">
+          Target Address Definitions</seealso> in the User's Guide.</p>
         <marker id="append_target_addr_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>append_target_addr_config(Dir, Conf) -> ok</name>
-      <fsummary>Append the agent target_addr config to the config file</fsummary>
+      <fsummary>Append the agent target_addr config to the config file.
+      </fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [target_addr_entry()]</v>
       </type>
       <desc>
-        <p>Append the target_addr config to the current agent target_addr 
+        <p>Appends the target_addr config to the current agent
+          <c>target_addr</c> config file. </p>
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
-          config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#target_addr">Target Address Definitions</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#target_addr">
+          Target Address Definitions</seealso> in the User's Guide.</p>
         <marker id="read_target_addr_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>read_target_addr_config(Dir) -> Conf</name>
-      <fsummary>Read the agent target_addr config from the config file</fsummary>
+      <fsummary>Read the agent target_addr config from the config file.
+      </fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [target_addr_entry()]</v>
       </type>
       <desc>
-        <p>Read the current agent target_addr config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p>Reads the current agent <c>target_addr</c> config file. </p>
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#target_addr">Target Address Definitions</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#target_addr">
+          Target Address Definitions</seealso> in the User's Guide.</p>
         <marker id="target_params_entry"></marker>
       </desc>
     </func>
 
     <func>
       <name>target_params_entry(Name, Vsn) -> target_params_entry()</name>
-      <name>target_params_entry(Name, Vsn, SecName, SecLevel) -> target_params_entry()</name>
-      <name>target_params_entry(Name, MPModel, SecModel, SecName, SecLevel) -> target_params_entry()</name>
-      <fsummary>Create an target_params entry</fsummary>
+      <name>target_params_entry(Name, Vsn, SecName, SecLevel) ->
+        target_params_entry()</name>
+      <name>target_params_entry(Name, MPModel, SecModel, SecName, SecLevel) ->
+        target_params_entry()</name>
+      <fsummary>Create a target_params entry.</fsummary>
       <type>
         <v>Name = string()</v>
         <v>Vsn = v1 | v2 | v3</v>
@@ -541,24 +569,24 @@ word() = 0..65535
         <v>target_params_entry() = term()</v>
       </type>
       <desc>
-        <p>Create an entry for the agent target_params config file, 
+        <p>Creates an entry for the agent <c>target_params</c> config file,
           <c>target_params.conf</c>. </p>
         <p><c>Name</c> must be a <em>non-empty</em> string. </p>
-        <p><c>Vsn</c> translates into <c>MPModel</c> and <c>SecModel</c> as follows:</p>
+        <p><c>Vsn</c> translates into <c>MPModel</c> and <c>SecModel</c>
+          as follows:</p>
         <pre>
 \011  Vsn = v1 => MPModel = v1,  SecModel = v1
 \011  Vsn = v2 => MPModel = v2c, SecModel = v2c
-\011  Vsn = v3 => MPModel = v3,  SecModel = usm
-        </pre>
+\011  Vsn = v3 => MPModel = v3,  SecModel = usm</pre>
         <p><c>target_params_entry/2</c> translates to the following call:
           <c>target_params_entry(Name, Vsn, "initial", noAuthNoPriv)</c>. </p>
-        <p><c>target_params_entry/4</c> translates to the following
-          call: <c>target_params_entry(Name, MPModel, SecModel, SecName, SecLevel)</c> where <c>MPModel</c> and
-          <c>SecModel</c> is mapped from <c>Vsn</c>, see above. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#target_params">Target Parameters Definitions</seealso> 
-          for more info. </p>
-
+        <p><c>target_params_entry/4</c> translates to the following call:
+          <c>target_params_entry(Name, MPModel, SecModel, SecName,
+          SecLevel)</c>, where <c>MPModel</c> and
+          <c>SecModel</c> are mapped from <c>Vsn</c>, see above.</p>
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#target_params">
+          Target Parameters Definitions</seealso> in the User's Guide.</p>
         <marker id="write_target_params_config"></marker>
       </desc>
     </func>
@@ -566,72 +594,75 @@ word() = 0..65535
     <func>
       <name>write_target_params_config(Dir, Conf) -> ok</name>
       <name>write_target_params_config(Dir, Hdr, Conf) -> ok</name>
-      <fsummary>Write the agent target_params config to the config file</fsummary>
+      <fsummary>Write the agent target_params config to the config file.
+      </fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Hdr = string()</v>
         <v>Conf = [target_params_entry()]</v>
       </type>
       <desc>
-        <p>Write the agent target_params config to the agent target_params 
+        <p>Writes the agent <c>target_params</c> config to the agent
+          <c>target_params</c> config file.</p>
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
-          config file. </p>
-        <p><c>Hdr</c> is an optional file header (note that this text is
-          written to the file as is). </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#target_params">Target Parameters Definitions</seealso> 
-          for more info. </p>
-
+        <p><c>Hdr</c> is an optional file header (notice that this text is
+          written to the file "as is"). </p>
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#target_params">
+          Target Parameters Definitions</seealso> in the User's Guide.</p>
         <marker id="append_target_params_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>append_target_params_config(Dir, Conf) -> ok</name>
-      <fsummary>Append the agent target_params config to the config file</fsummary>
+      <fsummary>Append the agent target_params config to the config file.
+      </fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [target_params_entry()]</v>
       </type>
       <desc>
-        <p>Append the target_params config to the current agent target_params 
+        <p>Appends the <c>target_params</c> config to the current agent
+          <c>target_params</c> config file.</p>
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
-          config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#target_params">Target Parameters Definitions</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#target_params">
+          Target Parameters Definitions</seealso> in the User's Guide.</p>
         <marker id="read_target_params_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>read_target_params_config(Dir) -> Conf</name>
-      <fsummary>Read the agent target_params config from the config file</fsummary>
+      <fsummary>Read the agent target_params config from the config file.
+      </fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [target_params_entry()]</v>
       </type>
       <desc>
-        <p>Read the current agent target_params config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p>Read the current agent <c>target_params</c> config file.</p>
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#target_params">Target Parameters Definitions</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#target_params">
+          Target Parameters Definitions</seealso> in the User's Guide.</p>
         <marker id="vacm_entry"></marker>
       </desc>
     </func>
 
     <func>
-      <name>vacm_s2g_entry(SecModel, SecName, GroupName) -> vacm_s2g_entry()</name>
-      <name>vacm_acc_entry(GroupName, Prefix, SecModel, SecLevel, Match, ReadView, WriteView, NotifyView) -> vacm_acc_entry()</name>
+      <name>vacm_s2g_entry(SecModel, SecName, GroupName) -> vacm_s2g_entry()
+      </name>
+      <name>vacm_acc_entry(GroupName, Prefix, SecModel, SecLevel, Match,
+        ReadView, WriteView, NotifyView) -> vacm_acc_entry()</name>
       <name>vacm_vtf_entry(ViewIndex, ViewSubtree) -> vacm_vtf_entry()</name>
-      <name>vacm_vtf_entry(ViewIndex, ViewSubtree, ViewStatus, ViewMask) -> vacm_vtf_entry()</name>
-      <fsummary>Create an vacm entry</fsummary>
+      <name>vacm_vtf_entry(ViewIndex, ViewSubtree, ViewStatus, ViewMask) ->
+        vacm_vtf_entry()</name>
+      <fsummary>Create a VACM entry.</fsummary>
       <type>
         <v>SecModel = v1 | v2c | usm</v>
         <v>SecName = string()</v>
@@ -652,14 +683,13 @@ word() = 0..65535
         <v>vacm_vtf_entry() = term()</v>
       </type>
       <desc>
-        <p>Create an entry for the agent vacm config file, 
+        <p>Creates an entry for the agent VACM config file,
           <c>vacm.conf</c>. </p>
         <p><c>vacm_vtf_entry/2</c> translates to the following call:
           <c>vacm_vtf_entry(ViewIndex, ViewSubtree, included, null)</c>. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#vacm">MIB Views for VACM</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#vacm">
+          MIB Views for VACM</seealso> in the User's Guide.</p>
         <marker id="write_vacm_config"></marker>
       </desc>
     </func>
@@ -667,80 +697,82 @@ word() = 0..65535
     <func>
       <name>write_vacm_config(Dir, Conf) -> ok</name>
       <name>write_vacm_config(Dir, Hdr, Conf) -> ok</name>
-      <fsummary>Write the agent vacm config to the config file</fsummary>
+      <fsummary>Write the agent VACM config to the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Hdr = string()</v>
         <v>Conf = [vacm_entry()]</v>
-        <v>vacm_entry() = vacm_sg2_entry() | vacm_acc_entry() | vacm_vtf_entry()</v>
+        <v>vacm_entry() = vacm_sg2_entry() | vacm_acc_entry()
+          | vacm_vtf_entry()</v>
       </type>
       <desc>
-        <p>Write the agent vacm config to the agent vacm 
+        <p>Writes the agent VACM config to the agent VACM
           config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p><c>Hdr</c> is an optional file header (note that this text is
-          written to the file as is). </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#vacm">MIB Views for VACM</seealso> 
-          for more info. </p>
-
+        <p><c>Hdr</c> is an optional file header (notice that this text is
+          written to the file "as is"). </p>
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#vacm">
+          MIB Views for VACM</seealso> in the User's Guide.</p>
         <marker id="append_vacm_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>append_vacm_config(Dir, Conf) -> ok</name>
-      <fsummary>Append the agent vacm config to the config file</fsummary>
+      <fsummary>Append the agent VACM config to the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [vacm_entry()]</v>
       </type>
       <desc>
-        <p>Append the vacm config to the current agent vacm 
+        <p>Appends the VACM config to the current agent VACM
           config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#vacm">MIB Views for VACM</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#vacm">
+          MIB Views for VACM</seealso> in the User's Guide.</p>
         <marker id="read_vacm_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>read_vacm_config(Dir) -> Conf</name>
-      <fsummary>Read the agent vacm config from the config file</fsummary>
+      <fsummary>Read the agent VACM config from the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [vacm_entry()]</v>
       </type>
       <desc>
-        <p>Read the current agent vacm config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p>Read the current agent VACM config file. </p>
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#vacm">MIB Views for VACM</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#vacm">
+          MIB Views for VACM</seealso> in the User's Guide.</p>
         <marker id="usm_entry"></marker>
       </desc>
     </func>
 
     <func>
       <name>usm_entry(EngineId) -> usm_entry()</name>
-      <name>usm_entry(EngineID, UserName, SecName, Clone, AuthP, AuthKeyC, OwnAuthKeyC, PrivP, PrivKeyC, OwnPrivKeyC, Public, AuthKey, PrivKey) -> usm_entry()</name>
-      <fsummary>Create an usm entry</fsummary>
+      <name>usm_entry(EngineID, UserName, SecName, Clone, AuthP, AuthKeyC,
+        OwnAuthKeyC, PrivP, PrivKeyC, OwnPrivKeyC, Public, AuthKey, PrivKey) ->
+         usm_entry()</name>
+      <fsummary>Create an USM entry.</fsummary>
       <type>
         <v>EngineId = string()</v>
         <v>UserName = string()</v>
         <v>SecName = string()</v>
         <v>Clone = zeroDotZero | [integer()]</v>
-        <v>AuthP = usmNoAuthProtocol | usmHMACMD5AuthProtocol, | usmHMACSHAAuthProtocol</v>
+        <v>AuthP = usmNoAuthProtocol | usmHMACMD5AuthProtocol
+          | usmHMACSHAAuthProtocol</v>
         <v>AuthKeyC = string()</v>
         <v>OwnAuthKeyC = string()</v>
-        <v>PrivP = usmNoPrivProtocol | usmDESPrivProtocol | usmAesCfb128Protocol</v>
+        <v>PrivP = usmNoPrivProtocol | usmDESPrivProtocol
+          | usmAesCfb128Protocol</v>
         <v>PrivKeyC = string()</v>
         <v>OwnPrivKeyC = string()</v>
         <v>Public = string()</v>
@@ -749,14 +781,14 @@ word() = 0..65535
         <v>usm_entry() = term()</v>
       </type>
       <desc>
-        <p>Create an entry for the agent vacm config file, 
+        <p>Creates an entry for the agent VACM config file,
           <c>vacm.conf</c>. </p>
         <p><c>usm_entry/1</c> translates to the following call:
-          <c>usm_entry("initial", "initial", zeroDotZero, usmNoAuthProtocol, "", "", usmNoPrivProtocol, "", "", "", "", "")</c>. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#usm">Security data for USM</seealso> 
-          for more info. </p>
-
+          <c>usm_entry("initial", "initial", zeroDotZero, usmNoAuthProtocol,
+          "", "", usmNoPrivProtocol, "", "", "", "", "")</c>.</p>
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#usm">
+          Security Data for USM</seealso> in the User's Guide.</p>
         <marker id="write_usm_config"></marker>
       </desc>
     </func>
@@ -764,68 +796,66 @@ word() = 0..65535
     <func>
       <name>write_usm_config(Dir, Conf) -> ok</name>
       <name>write_usm_config(Dir, Hdr, Conf) -> ok</name>
-      <fsummary>Write the agent usm config to the config file</fsummary>
+      <fsummary>Write the agent USM config to the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Hdr = string()</v>
         <v>Conf = [usm_entry()]</v>
       </type>
       <desc>
-        <p>Write the agent usm config to the agent usm 
+        <p>Writes the agent USM config to the agent USM
           config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p><c>Hdr</c> is an optional file header (note that this text is
-          written to the file as is). </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#usm">Security data for USM</seealso> 
-          for more info. </p>
-
+        <p><c>Hdr</c> is an optional file header (notice that this text is
+          written to the file "as is"). </p>
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#usm">
+          Security data for USM</seealso> in the User's Guide.</p>
         <marker id="append_usm_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>append_usm_config(Dir, Conf) -> ok</name>
-      <fsummary>Append the agent usm config to the config file</fsummary>
+      <fsummary>Append the agent USM config to the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [usm_entry()]</v>
       </type>
       <desc>
-        <p>Append the usm config to the current agent vacm 
+        <p>Appends the USM config to the current agent VACM
           config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#usm">Security data for USM</seealso> 
-          for more info. </p>
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#usm">
+          Security data for USM</seealso> in the User's Guide.</p>
         <marker id="read_usm_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>read_usm_config(Dir) -> Conf</name>
-      <fsummary>Read the agent usm config from the config file</fsummary>
+      <fsummary>Read the agent USM config from the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [usm_entry()]</v>
       </type>
       <desc>
-        <p>Read the current agent usm config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p>Reads the current agent USM config file. </p>
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#usm">Security data for USM</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#usm">
+          Security data for USM</seealso> in the User's Guide.</p>
         <marker id="notify_entry"></marker>
       </desc>
     </func>
 
     <func>
       <name>notify_entry(Name, Tag, Type) -> notify_entry()</name>
-      <fsummary>Create an notify entry</fsummary>
+      <fsummary>Create a notify entry.</fsummary>
       <type>
         <v>Name = string()</v>
         <v>Tag = string()</v>
@@ -833,13 +863,12 @@ word() = 0..65535
         <v>community_entry() = term()</v>
       </type>
       <desc>
-        <p>Create an entry for the agent notify config file, 
+        <p>Creates an entry for the agent notify config file,
           <c>notify.conf</c>. </p>
         <p><c>Name</c> must be a <em>non-empty</em> string. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#notify">Notify Definitions</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#notify">
+          Notify Definitions</seealso> in the User's Guide.</p>
         <marker id="write_notify_config"></marker>
       </desc>
     </func>
@@ -847,61 +876,59 @@ word() = 0..65535
     <func>
       <name>write_notify_config(Dir, Conf) -> ok</name>
       <name>write_notify_config(Dir, Hdr, Conf) -> ok</name>
-      <fsummary>Write the agent notify config to the config file</fsummary>
+      <fsummary>Write the agent notify config to the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Hdr = string()</v>
         <v>Conf = [notify_entry()]</v>
       </type>
       <desc>
-        <p>Write the agent notify config to the agent notify 
+        <p>Writes the agent notify config to the agent notify
           config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p><c>Hdr</c> is an optional file header (note that this text is
-          written to the file as is). </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#notify">Notify Definitions</seealso> 
-          for more info. </p>
-
+        <p><c>Hdr</c> is an optional file header (notice that this text is
+          written to the file "as is"). </p>
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#notify">
+          Notify Definitions</seealso> in the User's Guide.</p>
         <marker id="append_notify_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>append_notify_config(Dir, Conf) -> ok</name>
-      <fsummary>Append the agent notify config to the config file</fsummary>
+      <fsummary>Append the agent notify config to the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [notify_entry()]</v>
       </type>
       <desc>
-        <p>Append the notify config to the current agent notify 
+        <p>Appends the notify config to the current agent notify
           config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#notify">Notify Definitions</seealso> 
-          for more info. </p>
-
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#notify">
+          Notify Definitions</seealso> in the User's Guide.</p>
         <marker id="read_notify_config"></marker>
       </desc>
     </func>
 
     <func>
       <name>read_notify_config(Dir) -> Conf</name>
-      <fsummary>Read the agent notify config from the config file</fsummary>
+      <fsummary>Read the agent notify config from the config file.</fsummary>
       <type>
         <v>Dir = string()</v>
         <v>Conf = [community_entry()]</v>
       </type>
       <desc>
-        <p>Read the current agent notify config file. </p>
-        <p><c>Dir</c> is the path to the directory where to store the 
+        <p>Reads the current agent notify config file. </p>
+        <p><c>Dir</c> is the path to the directory where to store the
           config file. </p>
-        <p>See 
-          <seealso marker="snmp_agent_config_files#notify">Notify Definitions</seealso> 
-          for more info. </p>
+        <p>For more information, see section
+          <seealso marker="snmp_agent_config_files#notify">
+          Notify Definitions</seealso> in the User's Guide.</p>
         <marker id="end"></marker>
       </desc>
     </func>

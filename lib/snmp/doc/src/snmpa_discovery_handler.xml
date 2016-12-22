@@ -28,31 +28,25 @@
     <docno></docno>
     <approved></approved>
     <checked></checked>
-    <date></date>
+    <date>2016-12-15</date>
     <rev></rev>
     <file>snmpa_discovery_handler.xml</file>
   </header>
   <module>snmpa_discovery_handler</module>
-  <modulesummary>Behaviour module for the SNMP agent discovery handler.</modulesummary>
+  <modulesummary>Behavior module for the SNMP agent discovery handler.
+  </modulesummary>
   <description>
-    <p>This module defines the behaviour of the agent discovery
-      handler. A <c>snmpa_discovery_handler</c> compliant module 
-      must export the following functions: </p>
-    <list type="bulleted">
-      <item>
-        <p><seealso marker="#stage1_finish">stage1_finish/2</seealso></p>
-      </item>
-    </list>
-    <p>The semantics of them and their exact signatures are explained
-      below. </p>
-
-     <marker id="stage1_finish"></marker>
+    <p>This module defines the behavior of the agent discovery handler.</p>
+    <p>The function in this module must be exported from an
+      <c>snmpa_discovery_handler</c>-compliant module.</p>
   </description>
 
   <funcs>
     <func>
-      <name>stage1_finish(TargetName, ManagerEngineID, ExtraInfo) -> ignore | {ok, usm_entry() | [usm_entry()]} | {ok, usm_entry() | [usm_entry()], NewExtraInfo}</name>
-      <fsummary>Discovery stage 1 finish</fsummary>
+      <name>stage1_finish(TargetName, ManagerEngineID, ExtraInfo) ->
+        ignore | {ok, usm_entry() | [usm_entry()]} | {ok, usm_entry()
+        | [usm_entry()], NewExtraInfo}</name>
+      <fsummary>Discovery stage 1 finish.</fsummary>
       <type>
         <v>TargetName = string()</v>
         <v>ManagerEngineID = string()</v>
@@ -61,58 +55,47 @@
         <v>NewExtraInfo = term()</v>
       </type>
       <desc>
-        <p>This function is called at the end of stage 1 of the 
-          discovery process. It should return either the atom 
-          <c>ignore</c> or <c>{ok, usm_entry() | [usm_entry()]}</c>. See 
-          <seealso marker="snmp_agent_config_files#usm">usm_entry()</seealso>
-          and 
-          <seealso marker="snmpa_conf#usm_entry">usm_entry/13</seealso>
-          for more info. </p>
-
-        <p>If the function returns <c>ignore</c>, then it is assumed that 
-          either: </p>
-        
+        <p>This function is called at the end of stage 1 of the
+          discovery process. It is to return the atom
+          <c>ignore</c> or <c>{ok, usm_entry() | [usm_entry()]}</c>.
+          For more information, see section
+          <seealso marker="snmp_agent_config_files#usm">
+          Security Data for USM</seealso> in the User's Manual and
+          <seealso marker="snmpa_conf#usm_entry">
+          <c>snmpa_conf:usm_entry/13</c></seealso>.</p>
+        <p>If the function returns <c>ignore</c>, it is assumed that
+          one of the following applies:</p>
         <list type="bulleted">
-          <item>The caller (of the discovery function) will make the 
-             needed updates later. </item>
-          <item>The callback function itself did the updates. </item>
+          <item>The caller (of the discovery function) will make the
+             needed updates later.</item>
+          <item>The callback function itself did the updates.</item>
         </list>
-
-        <p>In either case, the agent will do nothing, but return
-          the retrieved ManagerEngineID (see 
-          <seealso marker="snmpa#discovery">discovery</seealso>
-          for more info) and possible continue with stage 2 of 
-          the discovery process. </p>
-
-        <p>The <c>ExtraInfo</c> argument is passed on from the 
-          <seealso marker="snmpa#discovery">discovery</seealso>
-          function. </p>
-
-        <p>This function may return an updated <c>NewExtraInfo</c> 
-          that will be used in subsequent calls to the callback 
-          functions. Intended for future use. </p>
-
-        <p>The purpose of this function is to generate the usm-
-          related security data needed for usm processing in the 
-          agent. Specifically, updating the usmUserTable. </p>
-
+        <p>In either case, the agent does nothing, but returns
+          the retrieved <c>ManagerEngineID</c> (for more information, see
+          <seealso marker="snmpa#discovery">
+          <c>snmpa:discovery</c></seealso>) and possible continue
+          with stage 2 of the discovery process.</p>
+        <p>Argument <c>ExtraInfo</c> is passed on from the
+          <seealso marker="snmpa#discovery">
+          <c>snmpa:discovery</c></seealso> function.</p>
+        <p>This function can return an updated <c>NewExtraInfo</c>
+          that is used in the following calls to the callback
+          functions. Intended for future use.</p>
+        <p>The purpose of this function is to generate the USM-
+          related security data needed for USM processing in the
+          agent. Specifically, updating the <c>usmUserTable</c>.</p>
         <p>When an <c>usm_entry()</c> tuple (or a list of such
-          tuples) is returned, this data is then added to the 
-          <c>usmUserTable</c> by the (master-) agent. </p>
-
-        <p>When an <c>usm_entry()</c> tuple (or a list of such
-          tuples) is returned, this data is then added to the 
-          <c>usmUserTable</c> by the (master-) agent. </p>
-
-        <note><p>Note that the function does not check if this entry 
+          tuples) is returned, this data is added to the
+          <c>usmUserTable</c> by the (master-)agent. </p>
+        <p>When a <c>usm_entry()</c> tuple (or a list of such
+          tuples) is returned, this data is added to the
+          <c>usmUserTable</c> by the (master-)agent. </p>
+        <note><p>This function does not check if this entry
           already exists. </p></note>
-
-        <note><p>Note that this function is executed in the context of 
+        <note><p>This function is executed in the context of
           the master-agent process. </p></note>
-
       </desc>
     </func>
-
   </funcs>
   
 </erlref>

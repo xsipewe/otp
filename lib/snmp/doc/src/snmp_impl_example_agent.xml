@@ -28,20 +28,20 @@
     <docno></docno>
     <approved></approved>
     <checked></checked>
-    <date></date>
+    <date>2016-11-17</date>
     <rev></rev>
     <file>snmp_impl_example_agent.xml</file>
   </header>
-  <p>This <em>Implementation Example</em> section describes how an
-    MIB can be implemented with the SNMP Development Toolkit. </p>
-  <p>The example shown can be found in the toolkit distribution. </p>
+  <p>This section describes how a
+    MIB can be implemented with the SNMP development toolkit.</p>
+  <p>The example shown can be found in the toolkit distribution.</p>
   <p>The agent is configured with the configuration tool, using
-    default suggestions for everything but the manager node. </p>
+    default suggestions for everything but the manager node.</p>
 
   <section>
     <title>MIB</title>
-    <p>The MIB used in this example is called EX1-MIB. It contains two
-      objects, a variable with a name and a table with friends.
+    <p>The MIB in this example is called EX1-MIB. It contains two
+      objects: a variable with a name and a table with friends.
       </p>
     <code type="none">
 EX1-MIB DEFINITIONS ::= BEGIN
@@ -126,8 +126,7 @@ EX1-MIB DEFINITIONS ::= BEGIN
                           "This trap is sent when something happens to
          the friend specified by fIndex."
               ::= 1
-END
-    </code>
+END</code>
   </section>
 
   <section>
@@ -135,7 +134,7 @@ END
     <p>Without writing any instrumentation functions, we can compile
       the MIB and use the default implementation of it. Recall that MIBs
       imported by "EX1-MIB.mib" must be present and compiled in the
-      current directory ("./STANDARD-MIB.bin","./RFC1213-MIB.bin") when
+      current directory ("./STANDARD-MIB.bin", "./RFC1213-MIB.bin") when
       compiling.
       </p>
     <pre>
@@ -147,8 +146,7 @@ No accessfunction for 'friendsTable', using default.
 No accessfunction for 'myName', using default.
 {ok, "EX1-MIB.bin"}
 3> <input>snmpa:load_mibs(snmp_master_agent, ["EX1-MIB"]).</input>
-ok
-    </pre>
+ok</pre>
     <p>This MIB is now loaded into the agent, and a manager can ask
       questions. As an example of this, we start another Erlang system
       and the simple Erlang manager in the toolkit:
@@ -193,22 +191,22 @@ ok
 ok
 * Got PDU:
 [fStatus,0] = 1    
-9> 
-    </pre>
+9></pre>
   </section>
 
   <section>
     <title>Manual Implementation</title>
     <p>The following example shows a "manual" implementation of the
-      EX1-MIB in Erlang.  In this example, the values of the objects are
-      stored in an Erlang server.  The server has a 2-tuple as loop
+      EX1-MIB in Erlang. In this example, the values of the objects are
+      stored in an Erlang server. The server has a 2-tuple as loop
       data, where the first element is the value of variable
       <c>myName</c>, and the second is a sorted list of rows in the
-      table <c>friendsTable</c>.  Each row is a 4-tuple.
+      table <c>friendsTable</c>. Each row is a 4-tuple.
       </p>
     <note>
-      <p>There are more efficient ways to create tables manually, i.e.
-        to use the module <c>snmp_index</c>.</p>
+      <p>There are more efficient ways to create tables manually, that is,
+        to use the module <seealso marker="snmp_index">
+        <c>snmp_index</c></seealso>.</p>
     </note>
 
     <section>
@@ -432,18 +430,17 @@ merge_rows(Row, []) ->
     <section>
       <title>Association File</title>
       <p>The association file <c>EX1-MIB.funcs</c> for the real
-        implementation looks as follows:
+        implementation is as follows:
         </p>
       <code type="none">
 {myName, {ex1, my_name, []}}.
-{friendsTable, {ex1, friends_table, []}}.
-      </code>
+{friendsTable, {ex1, friends_table, []}}.</code>
     </section>
 
     <section>
       <title>Transcript</title>
       <p>To use the real implementation, we must recompile the MIB and
-        load it into the agent.
+        load it into the agent:
         </p>
       <pre>
 1> <input>application:start(snmp).</input>
@@ -456,23 +453,22 @@ ok
 &lt;0.115.0&gt;
 %% Now all requests operates on this "real" implementation.
 %% The output from the manager requests will *look* exactly the
-%% same as for the default implementation.
-      </pre>
+%% same as for the default implementation.</pre>
     </section>
 
     <section>
       <title>Trap Sending</title>
-      <p>How to send a trap by sending the
-        <c>fTrap</c> from the master agent is shown in this section. 
-        The master agent has the MIB <c>EX1-MIB</c> loaded, where the 
-        trap is defined. This trap specifies that two variables should 
-        be sent along with the trap, <c>myName</c> and <c>fIndex</c>. 
-        <c>fIndex</c> is a table column, so we must provide its value 
-        and the index for the row in the call to <c>snmpa:send_trap/4</c>. 
-        In the example below, we assume that the row in question is 
+      <p>This section shows how to send a trap by sending the
+        <c>fTrap</c> from the master agent.
+        The master agent has the MIB <c>EX1-MIB</c> loaded, where the
+        trap is defined. This trap specifies that two variables are to
+        be sent along with the trap, <c>myName</c> and <c>fIndex</c>.
+        <c>fIndex</c> is a table column, so we must provide its value
+        and the index for the row in the call to <c>snmpa:send_trap/4</c>.
+        In the example, we assume that the row in question is
         indexed by 2 (the row with <c>fIndex</c> 2).
         </p>
-      <p>we use a simple Erlang SNMP manager, which can receive traps.
+      <p>A simple Erlang SNMP manager that can receive traps is used.
         </p>
       <pre>
 [MANAGER]
@@ -503,8 +499,7 @@ Received a trap:
     TimeStamp: 69649
 [myName,0] = "Martin"    
 [fIndex,2] = 2    
-2>
-      </pre>
+2></pre>
     </section>
   </section>
 </chapter>

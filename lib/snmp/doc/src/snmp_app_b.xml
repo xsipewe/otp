@@ -28,7 +28,7 @@
     <docno></docno>
     <approved></approved>
     <checked></checked>
-    <date></date>
+    <date>2016-11-17</date>
     <rev></rev>
     <file>snmp_app_b.xml</file>
   </header>
@@ -37,7 +37,7 @@
     <title>Appendix B</title>
 
     <section>
-      <title>RowStatus (from RFC1903)</title>
+      <title>RowStatus (from RFC 1903)</title>
       <pre>
 RowStatus ::= TEXTUAL-CONVENTION
     STATUS       current
@@ -504,8 +504,7 @@ value         |              |      see 1|          ->C|          ->D
                      createAndGo(4),
                      createAndWait(5),
                      destroy(6)
-                 }
-      </pre>
+                 }</pre>
     </section>
   </section>
 </chapter>

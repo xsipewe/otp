@@ -28,59 +28,54 @@
     <docno></docno>
     <approved></approved>
     <checked></checked>
-    <date></date>
+    <date>2016-12-15</date>
     <rev></rev>
     <file>snmpa_error_report.xml</file>
   </header>
   <module>snmpa_error_report</module>
-  <modulesummary>Behaviour module for reporting SNMP agent errors</modulesummary>
+  <modulesummary>Behavior module for reporting SNMP agent errors.
+  </modulesummary>
   <description>
     <marker id="desc"></marker>
-    <p>This module defines the behaviour of the agent error reporting.
-      A <c>snmpa_error_report</c> compliant module 
-      must export the following functions: </p>
-    <list type="bulleted">
-      <item>
-        <p>config_err/2</p>
-      </item>
-      <item>
-        <p>user_err/2</p>
-      </item>
-    </list>
-    <p>The semantics of them and their exact signatures are explained
-      below. </p>
+    <p>This module defines the behavior of the agent error reporting.</p>
+    <p>The functions in this module must be exported from an
+      <c>snmpa_error_report</c>-compliant module.</p>
   </description>
+
   <funcs>
     <func>
       <name>config_err(Format, Args) -> void()</name>
-      <fsummary>Called if a configuration error occurs</fsummary>
+      <fsummary>Called if a configuration error occurs.</fsummary>
       <type>
         <v>Format = string()</v>
         <v>Args = list()</v>
       </type>
       <desc>
         <p>The function is called if an error occurs during the
-          configuration phase, for example if a syntax error is found in
+          configuration phase, for example, if a syntax error is found in
           a configuration file.
           </p>
         <p><c>Format</c> and <c>Args</c> are as in
-          <c>io:format(Format, Args)</c>.</p>
+          <seealso marker="stdlib:io#format/1">
+          <c>io:format(Format, Args)</c></seealso> in STDLIB.</p>
       </desc>
     </func>
+
     <func>
       <name>user_err(Format, Args) -> void()</name>
-      <fsummary>Called if a user related error occurs</fsummary>
+      <fsummary>Called if a user-related error occurs.</fsummary>
       <type>
         <v>Format = string()</v>
         <v>Args = list()</v>
       </type>
       <desc>
-        <p>The function is called if a user related error occurs at
-          run-time, for example if a user defined instrumentation
+        <p>The function is called if a user-related error occurs at
+          runtime, for example, if a user-defined instrumentation
           function returns erroneous.
           </p>
         <p><c>Format</c> and <c>Args</c> are as in
-          <c>io:format(Format, Args)</c>.</p>
+          <seealso marker="stdlib:io#format/1">
+          <c>io:format(Format, Args)</c></seealso> in STDLIB.</p>
       </desc>
     </func>
   </funcs>

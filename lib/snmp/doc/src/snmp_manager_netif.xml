@@ -28,34 +28,34 @@
     <docno></docno>
     <approved></approved>
     <checked></checked>
-    <date></date>
+    <date>2016-11-18</date>
     <rev></rev>
     <file>snmp_manager_netif.xml</file>
   </header>
   <p></p>
   <image file="snmp_manager_netif_1.gif">
-    <icaption>The Purpose of Manager Net if</icaption>
+    <icaption>Purpose of Manager Net if</icaption>
   </image>
 
   <p>The Network Interface (Net if) process delivers SNMP PDUs to the
-  manager server, and receives SNMP PDUs from the manager server. 
-  The most common behaviour of a Net if process is that is receives 
-  request PDU from the manager server, encodes the PDU into bytes
-  and transmits the bytes onto the network to an agent. When the 
-  reply from the agent is received by the Net if process, which it
-  decodes into an SNMP PDU, which it sends to the manager server. </p>
+  manager server and receives SNMP PDUs from the manager server.
+  The most common behavior of a Net if process is that is receives
+  request PDU from the manager server, encodes the PDU into bytes,
+  and transmits the bytes onto the network to an agent. When the
+  reply from the agent is received by the Net if process that
+  decodes it into an SNMP PDU, which is sent to the manager server.</p>
 
-  <p>However, that simple behaviour can be modified in numerous
+  <p>However, that simple behavior can be modified in several
   ways. For example, the Net if process can apply some kind of
-  encrypting/decrypting scheme on the bytes. </p>
+  encrypting/decrypting scheme on the bytes.</p>
 
-  <p>The snmp application provides two different modules, 
-  <c>snmpm_net_if</c> (the default) and <c>snmpm_net_if_mt</c>, 
-  both uses UDP as the transport protocol i.e the transport domains
-  <c>transportDomainUdpIpv4</c> and/or <c>transportDomainUdpIpv6</c>.
+  <p>The SNMP application provides two modules,
+  <c>snmpm_net_if</c> (the default) and <c>snmpm_net_if_mt</c>.
+  Both use UDP as the transport protocol, that is, the transport domains
+  <c>transportDomainUdpIpv4</c> or <c>transportDomainUdpIpv6</c>, or both.
   The difference between the two modules is that the latter is
-  "multi-threaded",  i.e. for each message/request a new process
-  is created that processes the message/request and then exits. </p>
+  "multi-threaded", that is, for each message/request a new process
+  is created that processes the message/request and then exits.</p>
 
   <p>It is also possible to write your own Net if process and
   this section describes how to do that.</p>
@@ -63,88 +63,91 @@
   <section>
     <marker id="mandatory_functions"></marker>
     <title>Mandatory Functions</title>
-    <p>A Net if process must implement the SNMP manager 
-    <seealso marker="snmpm_network_interface">network interface behaviour</seealso>. </p>
+    <p>A Net if process must implement the SNMP manager
+      network interface behavior, see
+      <seealso marker="snmpm_network_interface">
+      <c>snmpm_network_interface</c></seealso>.</p>
   </section>
 
   <section>
     <title>Messages</title>
-    <p>The section <em>Messages</em> describes mandatory messages, which
-      Net if must send to the manager server process.     
+    <p>This section describes mandatory messages, which
+      Net if must send to the manager server process.
       </p>
-    <p>In this section a <c>Domain</c> field is the transport domain i.e
-    one of <c>transportDomainUdpIpv4</c> or <c>transportDomainUdpIpv6</c>,
+    <p>In this section, a <c>Domain</c> field is the transport domain, that
+    is, <c>transportDomainUdpIpv4</c> or <c>transportDomainUdpIpv6</c>,
     and an <c>Addr</c> field is an
-    <c>{</c><seealso marker="kernel:inet#type-ip_address"><c>IpAddr</c></seealso><c>,IpPort}</c> tuple.</p>
+    <c>{</c><seealso marker="kernel:inet#type-ip_address">
+    <c>IpAddr</c></seealso><c>,IpPort}</c> tuple.</p>
 
     <p>Net if must send the following message when it receives an
-      SNMP PDU from the network that is aimed for the MasterAgent:
+      SNMP PDU from the network that is aimed for the master agent:
       </p>
     <pre>
-Server ! {snmp_pdu, Pdu, Domain, Addr}
-    </pre>
+Server ! {snmp_pdu, Pdu, Domain, Addr}</pre>
     <list type="bulleted">
       <item>
         <p><c>Pdu</c> is an SNMP PDU record, as defined in
           <c>snmp_types.hrl</c>, with the SNMP request.</p>
       </item>
       <item>
-        <p><c>Domain</c> is the source transport domain. </p>
+        <p><c>Domain</c> is the source transport domain.</p>
       </item>
       <item>
-        <p><c>Addr</c> is the source address. </p>
+        <p><c>Addr</c> is the source address.</p>
       </item>
     </list>
     <pre>
-Server ! {snmp_trap, Trap, Domain, Addr}
-    </pre>
+Server ! {snmp_trap, Trap, Domain, Addr}</pre>
     <list type="bulleted">
       <item>
-        <p><c>Trap</c> is either an SNMP pdu record or an trappdu record, 
+        <p><c>Trap</c> is an SNMP PDU record or an trap PDU record,
           as defined in <c>snmp_types.hrl</c>, with the SNMP request.</p>
       </item>
       <item>
-        <p><c>Domain</c> is the source transport domain. </p>
+        <p><c>Domain</c> is the source transport domain.</p>
       </item>
       <item>
-        <p><c>Addr</c> is the source address. </p>
+        <p><c>Addr</c> is the source address.</p>
       </item>
     </list>
     <pre>
-Server ! {snmp_inform, Ref, Pdu, PduMS, Domain, Addr}
-    </pre>
+Server ! {snmp_inform, Ref, Pdu, PduMS, Domain, Addr}</pre>
     <list type="bulleted">
       <item>
         <p><c>Ref</c> is either the atom <c>ignore</c> or something
-          that can be used to identify the inform-request (e.g. request-id).
+          that can be used to identify the inform-request (for example,
+          request-id).
           <c>ignore</c> is used if the response (acknowledgment) to the
-          inform-request has already been sent (this means that the server 
-          will not make the call to the 
-          <seealso marker="snmpm_network_interface#inform_response">inform_response</seealso> 
-          function). See the 
-          <seealso marker="snmp_app">inform request behaviour</seealso> 
-          configuration option for more info.</p>
+          inform-request has already been sent (this means that the server
+          will not make the call to the function
+          <seealso marker="snmpm_network_interface#inform_response">
+          <c>snmpm_network_interface#inform_response</c></seealso>.
+          For more information, see the
+          <seealso marker="snmp_app">inform request behavior</seealso>
+          configuration option.</p>
       </item>
       <item>
         <p><c>Pdu</c> is an SNMP PDU record, as defined in
           <c>snmp_types.hrl</c>, with the SNMP request.</p>
       </item>
       <item>
-        <p><c>Domain</c> is the source transport domain. </p>
+        <p><c>Domain</c> is the source transport domain.</p>
       </item>
       <item>
-        <p><c>Addr</c> is the source address. </p>
+        <p><c>Addr</c> is the source address.</p>
       </item>
     </list>
     <pre>
-Server ! {snmp_report, Data, Domain, Addr}
-    </pre>
+Server ! {snmp_report, Data, Domain, Addr}</pre>
     <list type="bulleted">
       <item>
-        <p><c>Data</c> is either <c>{ok, Pdu}</c> or 
-          <c>{error, ReqId, ReasonInfo, Pdu}</c>. Which one is used depends 
-          on the return value from the MPD 
-          <seealso marker="snmpm_mpd#process_msg">process_msg</seealso> function. If the MsgData is <c>ok</c>, 
+        <p><c>Data</c> is <c>{ok, Pdu}</c> or
+          <c>{error, ReqId, ReasonInfo, Pdu}</c>. Which one is used depends
+          on the return value from function
+          <seealso marker="snmpm_mpd#process_msg">
+          <c>snmpm_mpd:process_msg</c></seealso>.
+          If <c>MsgData</c> is <c>ok</c>,
           the first is used, and if it is <c>{error, ReqId, Reason}</c>
           the latter is used.</p>
       </item>
@@ -159,24 +162,24 @@ Server ! {snmp_report, Data, Domain, Addr}
         <p><c>ReasonInfo</c> is a term().</p>
       </item>
       <item>
-        <p><c>Domain</c> is the source transport domain. </p>
+        <p><c>Domain</c> is the source transport domain.</p>
       </item>
       <item>
-        <p><c>Addr</c> is the source address. </p>
+        <p><c>Addr</c> is the source address.</p>
       </item>
     </list>
 
     <section>
       <title>Notes</title>
-      <p>Since the Net if process is responsible for encoding and
-        decoding of SNMP messages, it must also update the relevant
-        counters in the SNMP group in MIB-II.  It can use the functions
-        in the module <c>snmpm_mpd</c> for this purpose (refer to the 
-        Reference Manual, section <c>snmp</c>, module <c>snmpm_mpd</c>
-        for more details).
+      <p>As the Net if process is responsible for encoding and
+        decoding SNMP messages, it must also update the relevant
+        counters in the SNMP group in MIB-II. For this, it can use the
+        functions in the <seealso marker="snmpm_mpd">
+        <c>snmpm_mpd</c></seealso> module.
         </p>
       <p>There are also some useful functions for encoding and
-        decoding of SNMP messages in the module <c>snmp_pdus</c>.
+        decoding of SNMP messages in the
+        <seealso marker="snmp_pdus"><c>snmp_pdus</c></seealso> module.
         </p>
     </section>
   </section>

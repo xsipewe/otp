@@ -28,16 +28,16 @@
     <docno></docno>
     <approved></approved>
     <checked></checked>
-    <date></date>
+    <date>2016-11-24</date>
     <rev></rev>
     <file>snmpc.xml</file>
   </header>
   <module>snmpc</module>
-  <modulesummary>Interface Functions to the SNMP toolkit MIB compiler</modulesummary>
+  <modulesummary>Interface functions to the SNMP toolkit MIB compiler.
+  </modulesummary>
   <description>
-    <p>The module <c>snmpc</c> contains interface functions to the 
+    <p>This module contains interface functions to the
       SNMP toolkit MIB compiler.</p>
-
     <marker id="compile"></marker>
   </description>
 
@@ -45,14 +45,14 @@
     <func>
       <name>compile(File)</name>
       <name>compile(File, Options) -> {ok, BinFileName} | {error, Reason}</name>
-      <fsummary>Compile the specified MIB</fsummary>
+      <fsummary>Compile the specified MIB.</fsummary>
       <type>
         <v>File = string()</v>
         <v>Options = [opt()]</v>
-        <v>opt() = db() | relaxed_row_name_assign_check() | deprecated() | 
-	description() | reference() | group_check() |  i() | il() | 
-	imports() | module() | module_identity() | module_compliance() | 
-	agent_capabilities() | outdir() |  no_defs() | verbosity() | 
+        <v>opt() = db() | relaxed_row_name_assign_check() | deprecated() |
+	description() | reference() | group_check() |  i() | il() |
+	imports() | module() | module_identity() | module_compliance() |
+	agent_capabilities() | outdir() |  no_defs() | verbosity() |
 	warnings() | warnings_as_errors()</v>
         <v>db() = {db, volatile|persistent|mnesia}</v>
         <v>deprecated() = {deprecated, bool()}</v>
@@ -77,167 +77,161 @@
       </type>
       <desc>
         <marker id="compiler_opts"></marker>
-        <p>Compiles the specified MIB file <c><![CDATA[<File>.mib]]></c>.  The
-          compiled file <c>BinFileName</c> is called 
+        <p>Compiles the specified MIB file <c><![CDATA[<File>.mib]]></c>. The
+          compiled file <c>BinFileName</c> is called
           <c><![CDATA[<File>.bin]]></c>. </p>
-        <list type="bulleted">
+        <p>Options:</p>
+        <taglist>
+          <tag><c>db</c></tag>
           <item>
-	    <p>The option <c>db</c> specifies which database should
-	      be used for the default instrumentation. </p>
-	    <p>Default is <c>volatile</c>. </p>
+            <p>Specifies which database to use
+              for the default instrumentation.</p>
+	    <p>Defaults to <c>volatile</c>.</p>
           </item>
-
+          <tag><c>deprecated</c></tag>
           <item>
-	    <p>The option <c>deprecated</c> specifies if a deprecated 
-              definition should be kept or not. If the option is 
-              false the MIB compiler will ignore all deprecated
-              definitions. </p>
-	    <p>Default is <c>true</c>. </p>
+            <p>Specifies if a deprecated
+              definition is to be kept. If the option is
+              <c>false</c>, the MIB compiler ignores all deprecated
+              definitions.</p>
+	    <p>Defaults to <c>true</c>.</p>
           </item>
-
+          <tag><c>relaxed_row_name_assign_check</c></tag>
           <item>
-	    <p>The option <c>relaxed_row_name_assign_check</c>, if present,
-	      specifies that the row name assign check shall not be done 
-	      strictly according to the SMI (which allows only the value 1). 
-              With this option, all values greater than zero is allowed 
-	      (>= 1). This means that the error will be converted to a 
-              warning. </p>
-	    <p>By default it is not included, but if this option is present 
-	      it will be. </p>
+            <p>If present, specifies that the row name assign check is not done
+	      strictly according to the SMI (which allows only the value 1).
+              With this option, all values &gt;=1 are allowed.
+              This means that the error is converted to a warning.</p>
+	    <p>By default it is not included, but it is if this option is
+              present.</p>
           </item>
-
+          <tag><c>description</c></tag>
           <item>
-	    <p>The option <c>description</c> specifies if the text
-              of the DESCRIPTION field will be included or not. </p>
-	    <p>By default it is not included, but if this option is 
-	      present it will be. </p>
+            <p>Specifies if the text
+              of the DESCRIPTION field is to be included.</p>
+	    <p>By default it is not included, but it is if this option is
+	      present.</p>
           </item>
-
+          <tag><c>reference</c></tag>
           <item>
-	    <p>The option <c>reference</c> specifies if the text
-              of the REFERENCE field, when found in a table definition, 
-              will be included or not. </p>
-	    <p>By default it is not included, but if this option is present 
-	      it will be. The reference text will be placed in the allocList 
-	      field of the mib-entry record (#me{}) for the table. </p>
+            <p>Specifies if the text
+              of the REFERENCE field, when found in a table definition,
+              is to be included.</p>
+	    <p>By default it is not included, but it is if this option is
+              present. The reference text is placed in the <c>allocList</c>
+	      field of the MIB entry record (<c>#me{}</c>) for the table.</p>
           </item>
-
+          <tag><c>group_check</c></tag>
           <item>
-	    <p>The option <c>group_check</c> specifies whether the
-	      mib compiler should check the OBJECT-GROUP macro and
-              the NOTIFICATION-GROUP macro for correctness or not.  </p>
-	    <p>Default is <c>true</c>. </p>
+            <p>Specifies if the
+	      MIB compiler is to check the OBJECT-GROUP macro and
+              the NOTIFICATION-GROUP macro for correctness.</p>
+	    <p>Defaults to <c>true</c>.</p>
           </item>
-
+          <tag><c>i</c></tag>
           <item>
-	    <p>The option <c>i</c> specifies the path to search for
-	      imported (compiled) MIB files. The directories should be
-              strings with a trailing directory delimiter. </p>
-	    <p>Default is <c>["./"]</c>. </p>
+            <p>Specifies the path to search for
+	      imported (compiled) MIB files. The directories are to be
+              strings with a trailing directory delimiter.</p>
+	    <p>Defaults to <c>["./"]</c>.</p>
           </item>
-
+          <tag><c>il</c> (include_lib)</tag>
           <item>
-	    <p>The option <c>il</c> (include_lib) also specifies a
-              list of directories to search for imported MIBs. It
+            <p>Also specifies a
+              list of directories to search for imported MIBs. This option
               assumes that the first element in the directory name
               corresponds to an OTP application. The compiler will find
               the current installed version. For example, the value
               ["snmp/mibs/"] will be replaced by ["snmp-3.1.1/mibs/"]
-              (or what the current version may be in the system). The
-              current directory and the 
+              (or what the current version is in the system). The
+              current directory and the
 	      <c><![CDATA[<snmp-home>/priv/mibs/]]></c>
-              are always listed last in the include path. </p>
+              are always listed last in the include path.</p>
           </item>
-
+          <tag><c>imports</c></tag>
           <item>
-	    <p>The option <c>imports</c>, if present, specifies that 
-              the IMPORT statement of the MIB shall be included in the 
-	      compiled mib. </p>
+            <p>If present, specifies that
+              the IMPORT statement of the MIB is to be included in the
+	      compiled MIB.</p>
           </item>
-
+          <tag><c>module</c></tag>
           <item>
-	    <p>The option <c>module</c>, if present, specifies the
-              name of a module which implements all instrumentation
-              functions for the MIB.  </p>
-	    <p>The name of all instrumentation
+            <p>If present, specifies the
+              name of a module that implements all instrumentation
+              functions for the MIB. The name of all instrumentation
               functions must be the same as the corresponding managed
-              object it implements. </p>
+              object it implements.</p>
           </item>
-
+          <tag><c>module_identity</c></tag>
           <item>
-	    <p>The option <c>module_identity</c>, if present, specifies 
-              that the info part of the MODULE-IDENTITY statement of the MIB 
-              shall be included in the compiled mib. </p>
+            <p>If present, specifies that the information
+              part of the MODULE-IDENTITY statement of the MIB
+              is to be included in the compiled MIB.</p>
           </item>
-
+          <tag><c>module_compliance</c></tag>
           <item>
-	    <p>The option <c>module_compliance</c>, if present, specifies 
-              that the MODULE-COMPLIANCE statement of the MIB shall be included 
-              (with a mib-entry record) in the compiled mib. The mib-entry record 
-	      of the module-compliance will contain <c>reference</c> and <c>module</c> 
-	      part(s) this info in the <c>assocList</c> field). </p>
+            <p>If present, specifies that the MODULE-COMPLIANCE statement of
+              the MIB is to be included (with a MIB entry record) in the
+              compiled MIB. The MIB entry record of the module-compliance
+              will contain <c>reference</c> and <c>module</c>
+	      parts in the <c>assocList</c> field.</p>
           </item>
-
+          <tag><c>agent_capabilities</c></tag>
           <item>
-	    <p>The option <c>agent_capabilities</c>, if present, specifies 
-              that the AGENT-CAPABILITIES statement of the MIB shall be included 
-              (with a mib-entry record) in the compiled mib. The mib-entry record 
-	      of the agent-capabilitie will contain <c>reference</c> and <c>modules</c> 
-	      part(s) this info in the <c>assocList</c> field). </p>
+            <p>If present, specifies that the AGENT-CAPABILITIES statement of
+              the MIB is to be included (with a MIB entry record) in the
+              compiled MIB. The MIB entry record of the agent-capabilitie
+              will contain <c>reference</c> and <c>modules</c>
+	      parts in the <c>assocList</c> field).</p>
           </item>
-
+          <tag><c>no_defs</c></tag>
           <item>
-	    <p>The option <c>no_defs</c>, if present, specifies 
+            <p>If present, specifies
               that if a managed object does not have an instrumentation
-              function, the default instrumentation function should NOT
-              be used, instead this is reported as an error, and the
+              function, the default instrumentation function is <em>not</em>
+              to be used, instead this is reported as an error and the
               compilation aborts. </p>
           </item>
-
+          <tag><c>verbosity</c></tag>
           <item>
-	    <p>The option <c>verbosity</c> specifies the verbosity of
-	      the SNMP mib compiler. I.e. if warning, info, log, debug 
-              and trace messages shall be shown. </p>
-	    <p>Default is <c>silence</c>. </p>
-            <p>Note that if the option <c>warnings</c> is <c>true</c> and the 
-              option <c>verbosity</c> is <c>silence</c>, warning messages will
-              still be shown. </p>
+            <p>Specifies the verbosity of
+	      the SNMP MIB compiler, that is, if warning, info, log, debug,
+              and trace messages are to be shown.</p>
+	    <p>Defaults to <c>silence</c>. </p>
+            <p>Notice that if option <c>warnings</c> is <c>true</c> and
+              option <c>verbosity</c> is <c>silence</c>, warning messages
+              are still to be shown.</p>
           </item>
-
+          <tag><c>warnings</c></tag>
           <item>
-	    <p>The option <c>warnings</c> specifies whether warning
-	    messages should be shown. </p>
-	    <p>Default is <c>true</c>. </p>
+            <p>Specifies if warning messages are to be shown.</p>
+	    <p>Defaults to <c>true</c>.</p>
           </item>
-
-	  <item>
-	    <p>The option <c>warnings_as_errors</c>, if present, specifies 
-	    whether warnings should be treated as errors.</p>
-	  </item>
-
-        </list>
-	
-        <p>The MIB compiler understands both SMIv1 and SMIv2 MIBs.  It
+          <tag><c>warnings_as_errors</c></tag>
+          <item>
+            <p>If present, specifies if warnings are to be treated as
+              errors.</p>
+          </item>
+        </taglist>
+        <p>The MIB compiler understands both SMIv1 and SMIv2 MIBs. It
           uses the <c>MODULE-IDENTITY</c> statement to determine if the MIB is
-          version 1 or 2.
-          </p>
-        <p>The MIB compiler can be invoked from the OS command line by
-          using the command <c>erlc</c>.  <c>erlc</c> recognizes the
-          extension <c>.mib</c>, and invokes the SNMP MIB compiler for
-          files with that extension. The options <c>db</c>, 
+          version 1 or 2.</p>
+        <p>The MIB compiler can be invoked from the OS command line by using
+          command <c>erlc</c>. <c>erlc</c> recognizes the
+          extension <c>.mib</c> and invokes the SNMP MIB compiler for
+          files with that extension. The options <c>db</c>,
           <c>group_check</c>, <c>deprecated</c>, <c>description</c>,
-          <c>verbosity</c>, <c>imports</c> and <c>module_identity</c>
-          have to be specified to <c>erlc</c> using the syntax 
-          <c>+term</c>.  See <c>erlc(1)</c> for details.
-          </p>
-
+          <c>verbosity</c>, <c>imports</c>, and <c>module_identity</c>
+          must be specified to <c>erlc</c> using the syntax
+          <c>+term</c>. For details, see
+          <seealso marker="erts:erlc"><c>erts:erlc(1)</c></seealso>.</p>
 	  <marker id="is_consistent"></marker>
       </desc>
     </func>
 
     <func>
       <name>is_consistent(Mibs) -> ok | {error, Reason}</name>
-      <fsummary>Check for OID conflicts between MIBs</fsummary>
+      <fsummary>Check for OID conflicts between MIBs.</fsummary>
       <type>
         <v>Mibs = [MibName]</v>
         <v>MibName = string()</v>
@@ -246,26 +240,26 @@
         <p>Checks for multiple usage of object identifiers and traps
           between MIBs.
           </p>
-
 	  <marker id="mib_to_hrl"></marker>
       </desc>
     </func>
 
     <func>
       <name>mib_to_hrl(MibName) -> ok | {error, Reason}</name>
-      <fsummary>Generate constants for the objects in the MIB</fsummary>
+      <fsummary>Generate constants for the objects in the MIB.</fsummary>
       <type>
         <v>MibName = string()</v>
       </type>
       <desc>
-        <p>Generates a <c>.hrl</c> file with definitions of Erlang
+        <p>Generates an <c>.hrl</c> file with definitions of Erlang
           constants for the objects in the MIB. The <c>.hrl</c> file is
-          called <c><![CDATA[<MibName>.hrl]]></c>. The MIB must be compiled, and
-          present in the current directory.
+          called <c><![CDATA[<MibName>.hrl]]></c>. The MIB must be compiled,
+          and be present in the current directory.
           </p>
         <p>The <c>mib_to_hrl</c> generator can be invoked from the OS
-          command line by using the command <c>erlc</c>.  <c>erlc</c>
-          recognizes the extension <c>.bin</c>, and invokes this function
+          command line by using command
+          <seealso marker="erts:erlc"><c>erlc</c></seealso>. <c>erlc</c>
+          recognizes the extension <c>.bin</c> and invokes this function
           for files with that extension.
           </p>
       </desc>
@@ -274,8 +268,7 @@
 
   <section>
     <title>See Also</title>
-    <p>erlc(1)
-      </p>
+    <p><seealso marker="erts:erlc"><c>erts:erlc(1)</c></seealso></p>
   </section>
   
 </erlref>

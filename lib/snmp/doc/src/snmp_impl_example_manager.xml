@@ -28,20 +28,18 @@
     <docno></docno>
     <approved></approved>
     <checked></checked>
-    <date></date>
+    <date>2016-11-17</date>
     <rev></rev>
     <file>snmp_impl_example_manager.xml</file>
   </header>
-  <p>This <em>Implementation Example</em> section describes 
-    how a simple manager can be implemented with the 
-    SNMP Development Toolkit. </p>
-  <p>The example shown, <em>ex2</em>, can be found in the toolkit 
-    distribution. </p>
-  <p>This example has two functions: </p>
+  <p>This section describes how a simple manager can be implemented with the
+    SNMP development toolkit.</p>
+  <p>The example, <em>ex2</em>, can be found in the toolkit distribution
+    and has two functions:</p>
   <list type="bulleted">
     <item>
-      <p>A simple example of how to use the manager component of 
-        the SNMP Development Toolkit.</p>
+      <p>A simple example of how to use the manager component of
+        the SNMP development toolkit.</p>
     </item>
     <item>
       <p>A simple example of how to write agent test cases, using the new
@@ -50,46 +48,30 @@
   </list>
 
   <section>
-    <title>The example manager</title>
-    <p>The example manager, <c>snmp_ex2_manager</c>, is a simple example of 
-      how to implement an snmp manager using the manager component of the
-      SNMP Development Toolkit.</p>
+    <title>Example Manager</title>
+    <p>The example manager, <c>snmp_ex2_manager</c>, is a simple example of
+      how to implement an SNMP manager using the manager component of the
+      SNMP development toolkit.</p>
     <p>The module exports the following functions:</p>
     <list type="bulleted">
-      <item>
-        <p>start_link/0, start_link/1</p>
-      </item>
-      <item>
-        <p>stop/0</p>
-      </item>
-      <item>
-        <p>agent/2, agent/3</p>
-      </item>
-      <item>
-        <p>sync_get/2, sync_get/3</p>
-      </item>
-      <item>
-        <p>sync_get_next/2, sync_get_next/3</p>
-      </item>
-      <item>
-        <p>sync_get_bulk/4, sync_get_bulk/5</p>
-      </item>
-      <item>
-        <p>sync_set/2, sync_set/3</p>
-      </item>
-      <item>
-        <p>oid_to_name/1</p>
-      </item>
+      <item><c>start_link/0</c>, <c>start_link/1</c></item>
+      <item><c>stop/0</c></item>
+      <item><c>agent/2</c>, <c>agent/3</c></item>
+      <item><c>sync_get/2</c>, <c>sync_get/3</c></item>
+      <item><c>sync_get_next/2</c>, <c>sync_get_next/3</c></item>
+      <item><c>sync_get_bulk/4</c>, <c>sync_get_bulk/5</c></item>
+      <item><c>sync_set/2</c>, <c>sync_set/3</c></item>
+      <item><c>oid_to_name/1</c></item>
     </list>
-    <p>This module is also used by the test module described in the 
+    <p>This module is also used by the test module described in the
       next section.</p>
   </section>
 
   <section>
-    <title>A simple standard test</title>
-    <p>This simple standard test, <c>snmp_ex2_simple_standard_test</c>,
-      a module which, using the <c>snmp_ex2_manager</c> described in the
-      previous section, implements a simple agent test utility. </p>
+    <title>A Simple Standard Test</title>
+    <p>The simple standard test, <c>snmp_ex2_simple_standard_test</c>, is
+      a module that (using the <c>snmp_ex2_manager</c> described in the
+      previous section) implements a simple agent test utility.</p>
   </section>
 </chapter>
 

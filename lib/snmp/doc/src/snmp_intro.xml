@@ -22,48 +22,46 @@
     
     </legalnotice>
 
-    <title>SNMP Introduction</title>
+    <title>Introduction</title>
     <prepared></prepared>
     <responsible></responsible>
     <docno></docno>
     <approved></approved>
     <checked></checked>
-    <date></date>
+    <date>2016-11-28</date>
     <rev></rev>
     <file>snmp_intro.xml</file>
   </header>
-  <p>The SNMP development toolkit contains the following parts:
+  <p>The Simple Network Management Protocol (SNMP) development toolkit
+    contains the following parts:
     </p>
   <list type="bulleted">
-    <item>An Extensible multi-lingual SNMP agent, which understands SNMPv1
-     (RFC1157), SNMPv2c (RFC1901, 1905, 1906 and 1907), SNMPv3
-     (RFC2271, 2272, 2273, 2274 and 2275), or any combination of
-     these protocols.
+    <item><p>An extensible multilingual SNMP agent, which understands SNMPv1,
+      SNMPv2c, SNMPv3, or any combination of these protocols</p>
     </item>
-    <item>A multi-lingual SNMP manager.
+    <item><p>A multilingual SNMP manager</p>
     </item>
-    <item>A MIB compiler, which understands SMIv1 (RFC1155, 1212, and
-     1215) and SMIv2 (RFC1902, 1903, and 1904).
+    <item><p>A MIB compiler, which understands SMIv1 and SMIv2</p>
     </item>
   </list>
   <p>The SNMP development tool provides an environment for
-    rapid agent/manager prototyping and construction. With the 
-    following information provided, this tool is used to set up a 
-    running multi-lingual SNMP agent/manager:
+    rapid agent/manager prototyping and construction. With the
+    following information provided, this tool is used to set up a
+    running multilingual SNMP agent/manager:
     </p>
   <list type="bulleted">
-    <item>a description of a Management Information Base (MIB) in
-     Abstract Syntax Notation One (ASN.1)
+    <item><p>A description of a Management Information Base (MIB) in
+     Abstract Syntax Notation One (ASN.1)</p>
     </item>
-    <item>instrumentation functions for the managed objects in the MIB,
-     written in Erlang.
+    <item><p>Instrumentation functions for the managed objects in the MIB,
+     written in Erlang</p>
     </item>
   </list>
-  <p>The advantage of using an extensible (agent/manager) toolkit is to 
-    remove details such as type-checking, access rights, Protocol Data Unit
+  <p>The advantage of using an extensible (agent/manager) toolkit is to
+    remove details such as type checking, access rights, Protocol Data Unit
     (PDU), encoding, decoding, and trap distribution from the
-    programmer, who only has to write the instrumentation functions,
-    which implement the MIBs. The <c>get-next</c> function only
+    programmer, who only has to write the instrumentation functions
+    that implement the MIBs. The <c>get-next</c> function only
     has to be implemented for tables, and not for every variable in
     the global naming tree. This information can be deduced from the
     ASN.1 file.
@@ -71,32 +69,28 @@
 
   <section>
     <title>Scope and Purpose</title>
-    <p>This manual describes the SNMP development tool,
-      as a component of the Erlang/Open Telecom Platform development
-      environment. It is assumed that the reader is familiar with the
-      Erlang Development Environment, which is described in a separate
-      User's Guide.</p>
+    <p>This manual describes the SNMP development tool
+      as a component of the Erlang/OTP development
+      environment.</p>
   </section>
 
   <section>
     <title>Prerequisites</title>
-    <p>The following prerequisites
-      is required for understanding the material in the SNMP
-      User's Guide:
+    <p>It is assumed that the reader is familiar with the following:
       </p>
     <list type="bulleted">
-      <item>the basics of the Simple Network Management Protocol
-       version 1 (SNMPv1)
+      <item>Basics of SNMP version 1 (SNMPv1)
       </item>
-      <item>the basics of the community-based Simple Network
-       Management Protocol version 2 (SNMPv2c)
+      <item>Basics of the community-based SNMP version 2 (SNMPv2c)
       </item>
-      <item>the basics of the Simple Network Management Protocol
-       version 3 (SNMPv3)
+      <item>Basics of SNMP version 3 (SNMPv3)
       </item>
-      <item>the knowledge of defining MIBs using SMIv1 and SMIv2
+      <item>How to define MIBs using SMIv1 and SMIv2
       </item>
-      <item>familiarity with the Erlang system and Erlang programming
+      <item>The Erlang programming language
+      </item>
+      <item>The Erlang Development Environment,
+        which is described in a separate User's Guide
       </item>
     </list>
     <p>The tool requires Erlang release 4.7 or later.
@@ -104,121 +98,131 @@
   </section>
 
   <section>
-    <title>Definitions</title>
-    <p>The following definitions are used in the SNMP User's Guide.
+    <title>Terms</title>
+    <p>The following terms are used in this User's Guide:
       </p>
     <taglist>
       <tag>MIB</tag>
       <item>The conceptual repository for management information is
-       called the Management Information Base (MIB). It  does not
+       called the Management Information Base (MIB). It does not
        hold any data, merely a definition of what
-       data can be accessed.  A definition of an MIB is a
+       data can be accessed. A definition of a MIB is a
        description of a collection of managed objects.
       </item>
       <tag>SMI</tag>
       <item>The MIB is specified in an adapted subset of the Abstract
-       Syntax Notation One (ASN.1) language.  This adapted subset is
+       Syntax Notation One (ASN.1) language. This adapted subset is
        called the Structure of Management Information (SMI).
       </item>
       <tag>ASN.1</tag>
-      <item>ASN.1 is used in two different ways in SNMP.  The SMI is
-       based on ASN.1, and the messages in the protocol are defined by
+      <item>ASN.1 is used in two different ways in SNMP. The SMI is
+       based on ASN.1 and the messages in the protocol are defined by
        using ASN.1.
       </item>
       <tag>Managed object</tag>
       <item>
         <p>A resource to be managed is represented by a managed
           object, which resides in the MIB. In an SNMP MIB, the managed
-          objects are either:</p>
+          objects are one of the following:</p>
         <list type="bulleted">
-          <item><em>scalar variables</em>, which have only one instance
-           per context. They have single values, not multiple values like
-           vectors or structures.
+          <item><em>Scalar variables</em>, which have only one instance
+           per context; they have single values, not multiple values like
+           vectors or structures
           </item>
-          <item><em>tables</em>, which can grow dynamically.
+          <item><em>Tables</em>, which can grow dynamically
           </item>
-          <item>a <em>table element</em>, which is a special type of
-           scalar variable.</item>
+          <item>A <em>table element</em>, which is a special type of
+           scalar variable</item>
         </list>
       </item>
       <tag>Operations</tag>
-      <item>SNMP relies on the three basic operations: get (object),
-       set (object, value) and get-next (object).
+      <item>SNMP relies on the three basic operations: <c>get</c> (object),
+       <c>set</c> (object, value), and <c>get-next</c> (object).
       </item>
       <tag>Instrumentation function</tag>
       <item>An instrumentation function is associated with each
-       managed object. This is the function, which actually implements
-       the operations and will be called by the agent when it receives
+       managed object. This function implements
+       the operations and is called by the agent when it receives
        a request from the management station.</item>
       <tag>Manager</tag>
-      <item>A manager generates commands and receives notifications 
-       from agents. There usually are only a few managers in a system.</item>
+      <item>A manager generates commands and receives notifications
+       from agents. Usually only a few managers exist in a system.</item>
       <tag>Agent</tag>
       <item>An agent responds to commands from the manager, and sends
-       notification to the manager. There are potentially many agents 
+       notifications to it. There are potentially many agents
        in a system.</item>
     </taglist>
   </section>
 
   <section>
     <title>About This Manual</title>
-    <p>In addition to this introductory chapter, the SNMP User's Guide
-      contains the following chapters:
+    <p>This User's Guide is organized as follows:
       </p>
     <list type="bulleted">
-      <item>Chapter 2: "Functional Description" describes the features
-       and operation of the SNMP development toolkit. It includes
-       topics on Sub-agents and MIB loading, Internal MIBs, and Traps.
+      <item><p>Section 1, "Introduction" (this section).</p>
       </item>
-      <item>Chapter 3: "The MIB Compiler" describes the features and the
-       operation of the MIB compiler.
+      <item><p>Section 2, "Agent Functional Description", describes the
+       features and operation of the SNMP development toolkit. It includes
+       topics on subagents, MIB loading, internal MIBs, and traps.</p>
       </item>
-      <item>Chapter 4: "Running the application" describes how to start and
-       configure the application. Topics on how to debug the application 
-       are also included.
+      <item><p>Section 3, "Manager Functional Description", describes the
+        manager.</p>
       </item>
-      <item>Chapter 5: "Definition of Agent Configuration Files" is a
-       reference chapter, which contains more detailed information about
-       the agent configuration files.
+      <item><p>Section 4, "The MIB Compiler", describes the features and the
+       operation of the MIB compiler.</p>
       </item>
-      <item>Chapter 6: "Definition of Manager Configuration Files" is a
-       reference chapter, which contains more detailed information about
-       the manager configuration files.
+      <item><p>Section 5, "Running the Application", describes how to start and
+       configure the application. Topics on how to debug the application
+       are also included.</p>
       </item>
-      <item>Chapter 7: "Agent Implementation Example" describes how an MIB
-       can be implemented with the SNMP Development Toolkit. 
-       Implementation examples are included.
+      <item><p>Section 6, "Definition of Agent Configuration Files", is a
+       reference section, which contains details about
+       the agent configuration files.</p>
       </item>
-      <item>Chapter 8: "Instrumentation Functions" describes how
-       instrumentation functions should be defined in Erlang for the
-       different operations.
+      <item><p>Section 7, "Definition of Manager Configuration Files", is a
+       reference section, which contains details about
+       the manager configuration files.</p>
       </item>
-      <item>Chapter 9: "Definition of Instrumentation Functions" is a
-       reference chapter which contains more detailed information
-       about the instrumentation functions.
+      <item><p>Section 8, "Agent Implementation Example", describes how a MIB
+       can be implemented with the SNMP development toolkit.
+       Implementation examples are also included.</p>
       </item>
-      <item>Chapter 10: "Definition of Agent Net if" is a reference chapter,
-       which describes the Agent Net if function in detail.
+      <item><p>Section 9, "Manager Implementation Example", describes how a
+       simple manager can be implemented with the SNMP development toolkit.</p>
       </item>
-      <item>Chapter 11: "Definition of Manager Net if" is a reference chapter,
-       which describes the Manager Net if function in detail.
+      <item><p>Section 10, "Instrumentation Functions", describes how
+       to define instrumentation functions in Erlang for the
+       different operations.</p>
       </item>
-      <item>Chapter 12: "Advanced Agent Topics" describes sub-agents, agent
+      <item><p>Section 11, "Definition of Instrumentation Functions", is a
+       reference section, which contains details
+       about the instrumentation functions.</p>
+      </item>
+      <item><p>Section 12, "Definition of Agent Net if" is a reference section,
+       which describes the Agent Net if function in detail.</p>
+      </item>
+      <item><p>Section 13, "Definition of Manager Net if" is a reference
+       section, which describes the Manager Net if function in detail.</p>
+      </item>
+      <item><p>Section 14, "Audit Trail Log", descibes the audit trail
+       logging.</p>
+      </item>
+      <item><p>Section 15, "Advanced Agent Topics", describes subagents, agent
        semantics, audit trail logging, and the consideration of
-       distributed tables.
+       distributed tables.</p>
       </item>
-      <item>Appendix A describes the conversion of SNMPv2 to SNMPv1
-       error messages.
+      <item><p>"SNMP Appendix A" describes the conversion of SNMPv2 to SNMPv1
+       error messages.</p>
       </item>
-      <item>Appendix B contains the RFC1903 text on <c>RowStatus</c>.
+      <item><p>"SNMP Appendix B" contains the RFC 1903 text on
+        <c>RowStatus</c>.</p>
       </item>
     </list>
   </section>
 
   <section>
     <title>Where to Find More Information</title>
-    <p>Refer to the following documentation for more information about
-      SNMP and about the Erlang/OTP development system:
+    <p>For more information about SNMP and the Erlang/OTP development system:
       </p>
     <list type="bulleted">
       <item>Marshall T. Rose (1991), "The Simple Book - An
@@ -227,31 +231,53 @@
       <item>Evan McGinnis and David Perkins (1997), "Understanding SNMP
        MIBs", Prentice-Hall
       </item>
-      <item>RFC1155, 1157, 1212 and 1215 (SNMPv1)
-      </item>
-      <item>RFC1901-1907 (SNMPv2c)
-      </item>
-      <item>RFC1908, 2089 (coexistence between SNMPv1 and SNMPv2)
-      </item>
-      <item>RFC2271, RFC2273 (SNMP std MIBs)
-      </item>
-      <item>the Mnesia User's Guide
-      </item>
-      <item>the Erlang 4.4 Extensions User's Guide
-      </item>
-      <item>the Reference Manual
-      </item>
-      <item>the Erlang Embedded Systems User's Guide
-      </item>
-      <item>the System Architecture Support Libraries (SASL) User's
-       Guide
-      </item>
-      <item>the Installation Guide
-      </item>
-      <item>the Asn1 User's Guide
-      </item>
       <item>Concurrent Programming in Erlang, 2nd Edition (1996),
-       Prentice-Hall, ISBN 0-13-508301-X.
+       Prentice-Hall, ISBN 0-13-508301-X
+      </item>
+      <item>For SNMPv1:
+        <url href="http://tools.ietf.org/html/rfc1155">RFC 1155</url>,
+        <url href="http://tools.ietf.org/html/rfc1157">RFC 1157</url>,
+        <url href="http://tools.ietf.org/html/rfc1212">RFC 1212</url>,
+        <url href="http://tools.ietf.org/html/rfc1213">RFC 1213</url>,
+        <url href="http://tools.ietf.org/html/rfc1215">RFC 1215</url>
+      </item>
+      <item>For SNMPv2c:
+        <url href="http://tools.ietf.org/html/rfc1901">RFC 1901</url>,
+        <url href="http://tools.ietf.org/html/rfc1902">RFC 1902</url>,
+        <url href="http://tools.ietf.org/html/rfc1903">RFC 1903</url>,
+        <url href="http://tools.ietf.org/html/rfc1904">RFC 1904</url>,
+        <url href="http://tools.ietf.org/html/rfc1905">RFC 1905</url>,
+        <url href="http://tools.ietf.org/html/rfc1906">RFC 1906</url>,
+        <url href="http://tools.ietf.org/html/rfc1907">RFC 1907</url>
+      </item>
+      <item>For coexistence between SNMPv1 and SNMPv2:
+        <url href="http://tools.ietf.org/html/rfc1908">RFC 1908</url>,
+        <url href="http://tools.ietf.org/html/rfc2089">RFC 2089</url>
+      </item>
+      <item>For SNMPv3:
+        <url href="http://tools.ietf.org/html/rfc2272">RFC 2272</url>,
+        <url href="http://tools.ietf.org/html/rfc2274">RFC 2274</url>,
+        <url href="http://tools.ietf.org/html/rfc2275">RFC 2275</url>
+      </item>
+      <item>For SNMP standard MIBs:
+        <url href="http://tools.ietf.org/html/rfc2271">RFC 2271</url>,
+        <url href="http://tools.ietf.org/html/rfc2273">RFC 2273</url>
+      </item>
+      <item>SNMP Reference Manual
+      </item>
+      <item><seealso marker="asn1">Asn1 User's Guide</seealso>
+      </item>
+      <item><seealso marker="mnesia">Mnesia User's Guide</seealso>
+      </item>
+      <item><seealso marker="sasl">SASL User's Guide</seealso>
+      </item>
+      <item><seealso marker="doc/embedded">Erlang Embedded Systems User's
+       Guide</seealso>
+      </item>
+      <item><seealso marker="doc/installation_guide">Installation
+       Guide</seealso>
+      </item>
+      <item>Erlang 4.4 Extensions User's Guide
       </item>
     </list>
   </section>

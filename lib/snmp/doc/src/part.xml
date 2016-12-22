@@ -25,15 +25,11 @@
     <title>SNMP User's Guide</title>
     <prepared></prepared>
     <docno></docno>
-    <date></date>
+    <date>2016-11-14</date>
     <rev></rev>
     <file>part.xml</file>
   </header>
-  <description>
-    <p>A multilingual Simple Network Management Protocol application,
-      featuring an Extensible Agent, a simple manager and a MIB 
-      compiler and facilities for implementing SNMP MIBs etc.</p>
-  </description>
+  <description></description>
   <xi:include href="snmp_intro.xml"/>
   <xi:include href="snmp_agent_funct_descr.xml"/>
   <xi:include href="snmp_manager_funct_descr.xml"/>

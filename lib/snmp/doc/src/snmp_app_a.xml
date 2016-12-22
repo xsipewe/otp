@@ -28,7 +28,7 @@
     <docno></docno>
     <approved></approved>
     <checked></checked>
-    <date></date>
+    <date>2016-11-17</date>
     <rev></rev>
     <file>snmp_app_a.xml</file>
   </header>
@@ -36,15 +36,15 @@
   <section>
     <title>Appendix A</title>
     <p>This appendix describes the conversion of SNMPv2 to SNMPv1
-      error messages. The instrumentation functions should return v2
+      error messages. The instrumentation functions are to return v2
       error messages.
       </p>
-    <p>Mapping of SNMPv2 error message to SNMPv1:
+    <p><em>Mapping of SNMPv2 Error Message to SNMPv1</em>
       </p>
     <table>
       <row>
-        <cell align="left" valign="middle">SNMPv2 message</cell>
-        <cell align="left" valign="middle">SNMPv1 message</cell>
+        <cell align="left" valign="middle"><em>SNMPv2 Message</em></cell>
+        <cell align="left" valign="middle"><em>SNMPv1 Message</em></cell>
       </row>
       <row>
         <cell align="left" valign="middle">noError</cell>

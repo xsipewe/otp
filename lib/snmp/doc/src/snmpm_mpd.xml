@@ -28,48 +28,51 @@
     <docno></docno>
     <approved></approved>
     <checked></checked>
-    <date></date>
+    <date>2016-11-28</date>
     <rev></rev>
     <file>snmpm_mpd.xml</file>
   </header>
   <module>snmpm_mpd</module>
-  <modulesummary>Message Processing and Dispatch module for the SNMP manager</modulesummary>
+  <modulesummary>Message processing and dispatch module for the SNMP manager.
+  </modulesummary>
   <description>
-    <p>The module <c>snmpm_mpd</c> implements the version independent
-      Message Processing and Dispatch functionality in SNMP for the manager. 
-      It is supposed to be used from a Network Interface process 
-      (<seealso marker="snmp_manager_netif">Definition of Manager Net if</seealso>).
+    <p>This module implements the version-independent
+      Message Processing and Dispatch functionality in SNMP for the manager.
+      It is supposed to be used from a Network Interface process
+      (see section <seealso marker="snmp_manager_netif">
+      Definition of Manager Net if</seealso> in the User's Guide).
       </p>
-
-    <p>Legacy API function <c>process_msg/7</c> that has got separate
+    <p>The legacy API function <c>process_msg/7</c> that has got separate
       <c>IpAddr</c> and <c>PortNumber</c> arguments still works as before
-      for backwards compatibility reasons.</p>
+      for backward compatibility reasons.</p>
   </description>
 
   <funcs>
     <func>
       <name>init_mpd(Vsns) -> mpd_state()</name>
-      <fsummary>Initialize the MPD module</fsummary>
+      <fsummary>Initialize the MPD module.</fsummary>
       <type>
         <v>Vsns = [Vsn]</v>
         <v>Vsn = v1 | v2 | v3</v>
       </type>
       <desc>
-        <p>This function can be called from the net_if process at start-up.
-          The options list defines which versions to use.
-          </p>
+        <p>This function can be called from the <c>net_if</c> process at
+          startup. The options list defines which versions to use.</p>
         <p>It also initializes some SNMP counters.
-                    <marker id="process_msg"></marker>
-</p>
+        <marker id="process_msg"></marker>
+        </p>
       </desc>
     </func>
+
     <func>
-      <name>process_msg(Msg, Domain, Addr, State, NoteStore, Logger) -> {ok, Vsn, Pdu, PduMS, MsgData} | {discarded, Reason}</name>
-      <fsummary>Process a message received from the network</fsummary>
+      <name>process_msg(Msg, Domain, Addr, State, NoteStore, Logger)
+        -> {ok, Vsn, Pdu, PduMS, MsgData} | {discarded, Reason}</name>
+      <fsummary>Process a message received from the network.</fsummary>
       <type>
         <v>Msg = binary()</v>
         <v>Domain = transportDomainUdpIpv4 | transportDomainUdpIpv6</v>
-	<v>Addr = {<seealso marker="kernel:inet#type-ip_address">inet:ip_address(), inet:port_number()</seealso>} </v>
+	<v>Addr = {<seealso marker="kernel:inet#type-ip_address">
+          inet:ip_address(), inet:port_number()</seealso>} </v>
         <v>State = mpd_state()</v>
         <v>NoteStore = pid()</v>
         <v>Logger = function()</v>
@@ -79,21 +82,23 @@
         <v>MsgData = term()</v>
       </type>
       <desc>
-        <p>Processes an incoming message. Performs authentication and 
-          decryption as necessary. The return values should be passed the
+        <p>Processes an incoming message. Performs authentication and
+          decryption as necessary. The return values are to be passed to the
           manager server.
           </p>
         <p><c>NoteStore</c> is the <c>pid()</c> of the note-store process.</p>
         <p><c>Logger</c> is the function used for audit trail logging.
           </p>
-        <p>In the case when the pdu type is <c>report</c>, <c>MsgData</c> is 
-          either <c>ok</c> or <c>{error, ReqId, Reason}</c>.
+        <p>When the PDU type is <c>report</c>, <c>MsgData</c> is
+          <c>ok</c> or <c>{error, ReqId, Reason}</c>.
           </p>
       </desc>
     </func>
+
     <func>
-      <name>generate_msg(Vsn, NoteStore, Pdu, MsgData, Logger) -> {ok, Packet} | {discarded, Reason}</name>
-      <fsummary>Generate a request message to be sent to the network</fsummary>
+      <name>generate_msg(Vsn, NoteStore, Pdu, MsgData, Logger)
+        -> {ok, Packet} | {discarded, Reason}</name>
+      <fsummary>Generate a request message to be sent to the network.</fsummary>
       <type>
         <v>Vsn = 'version-1' | 'version-2' | 'version-3'</v>
         <v>NoteStore = pid()</v>
@@ -108,17 +113,19 @@
           </p>
         <p><c>NoteStore</c> is the <c>pid()</c> of the note-store process.
           </p>
-        <p><c>MsgData</c> is the message specific data used in the SNMP 
-          message. In SNMPv1 and SNMPv2c, this message data is the community 
+        <p><c>MsgData</c> is the message-specific data used in the SNMP
+          message. In SNMPv1 and SNMPv2c, this message data is the community
           string. In SNMPv3, it is the context information.
           </p>
         <p><c>Logger</c> is the function used for audit trail logging.
           </p>
       </desc>
     </func>
+
     <func>
-      <name>generate_response_msg(Vsn, Pdu, MsgData, Logger) -> {ok, Packet} | {discarded, Reason}</name>
-      <fsummary>Generate a response packet to be sent to the network</fsummary>
+      <name>generate_response_msg(Vsn, Pdu, MsgData, Logger)
+        -> {ok, Packet} | {discarded, Reason}</name>
+      <fsummary>Generate a response packet to be sent to the network.</fsummary>
       <type>
         <v>Vsn = 'version-1' | 'version-2' | 'version-3'</v>
         <v>Pdu = #pdu</v>
@@ -131,10 +138,9 @@
         <p>Generates a possibly encrypted response packet to be sent to the
           network.
           </p>
-        <p><c>MsgData</c> is the message specific data used in the SNMP 
-          message. This value is received from the 
-          <seealso marker="snmpm_mpd#process_msg">process_msg</seealso> 
-          function.
+        <p><c>MsgData</c> is the message-specific data used in the SNMP
+          message. This value is received from
+          <seealso marker="#process_msg">process_msg/6</seealso>.
           </p>
       </desc>
     </func>

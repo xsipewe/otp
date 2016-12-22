@@ -25,34 +25,13 @@
     <title>SNMP Reference Manual</title>
     <prepared></prepared>
     <docno></docno>
-    <date></date>
+    <date>2016-11-18</date>
     <rev></rev>
     <file>ref_man.xml</file>
   </header>
-  <description>
-    <p>A multilingual Simple Network Management Protocol 
-      application featuring an Extensible Agent, simple manager,
-      a MIB compiler and facilities for implementing SNMP MIBs etc.
-      </p>
-  </description>
+  <description></description>
   <xi:include href="snmp.xml"/>
   <xi:include href="snmp_app.xml"/>
-  <xi:include href="snmpa.xml"/>
-  <xi:include href="snmpa_conf.xml"/>
-  <xi:include href="snmpa_discovery_handler.xml"/>
-  <xi:include href="snmpa_error_report.xml"/>
-  <xi:include href="snmpa_error.xml"/>
-  <xi:include href="snmpa_error_io.xml"/>
-  <xi:include href="snmpa_error_logger.xml"/>
-  <xi:include href="snmpa_local_db.xml"/>
-  <xi:include href="snmpa_mib_data.xml"/>
-  <xi:include href="snmpa_mib_storage.xml"/>
-  <xi:include href="snmpa_mpd.xml"/>
-  <xi:include href="snmpa_network_interface.xml"/>
-  <xi:include href="snmpa_network_interface_filter.xml"/>
-  <xi:include href="snmpa_notification_delivery_info_receiver.xml"/>
-  <xi:include href="snmpa_notification_filter.xml"/>
-  <xi:include href="snmpa_supervisor.xml"/>
   <xi:include href="snmp_community_mib.xml"/>
   <xi:include href="snmp_framework_mib.xml"/>
   <xi:include href="snmp_generic.xml"/>
@@ -63,13 +42,29 @@
   <xi:include href="snmp_target_mib.xml"/>
   <xi:include href="snmp_user_based_sm_mib.xml"/>
   <xi:include href="snmp_view_based_acm_mib.xml"/>
+  <xi:include href="snmpa.xml"/>
+  <xi:include href="snmpa_conf.xml"/>
+  <xi:include href="snmpa_discovery_handler.xml"/>
+  <xi:include href="snmpa_error.xml"/>
+  <xi:include href="snmpa_error_io.xml"/>
+  <xi:include href="snmpa_error_logger.xml"/>
+  <xi:include href="snmpa_error_report.xml"/>
+  <xi:include href="snmpa_local_db.xml"/>
+  <xi:include href="snmpa_mib_data.xml"/>
+  <xi:include href="snmpa_mib_storage.xml"/>
+  <xi:include href="snmpa_mpd.xml"/>
+  <xi:include href="snmpa_network_interface.xml"/>
+  <xi:include href="snmpa_network_interface_filter.xml"/>
+  <xi:include href="snmpa_notification_delivery_info_receiver.xml"/>
+  <xi:include href="snmpa_notification_filter.xml"/>
+  <xi:include href="snmpa_supervisor.xml"/>
   <xi:include href="snmpc.xml"/>
   <xi:include href="snmpc_cmd.xml"/>
   <xi:include href="snmpm.xml"/>
   <xi:include href="snmpm_conf.xml"/>
   <xi:include href="snmpm_mpd.xml"/>
   <xi:include href="snmpm_network_interface.xml"/>
-  <xi:include href="snmpm_user.xml"/>
   <xi:include href="snmpm_network_interface_filter.xml"/>
+  <xi:include href="snmpm_user.xml"/>
 </application>
 

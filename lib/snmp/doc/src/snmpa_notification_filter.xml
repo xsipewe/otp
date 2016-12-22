@@ -28,43 +28,39 @@
     <docno></docno>
     <approved></approved>
     <checked></checked>
-    <date></date>
+    <date>2016-12-15</date>
     <rev></rev>
     <file>snmpa_notification_filter.xml</file>
   </header>
   <module>snmpa_notification_filter</module>
-  <modulesummary>Behaviour module for the SNMP agent notification filters.</modulesummary>
+  <modulesummary>Behavior module for the SNMP agent notification filters.
+  </modulesummary>
   <description>
-    <p>This module defines the behaviour of the agent notification
-      filters. A <c>snmpa_notification_filter</c> compliant module 
-      must export the following functions: </p>
-    <list type="bulleted">
-      <item>
-        <p>handle_notification/2</p>
-      </item>
-    </list>
-    <p>The semantics of them and their exact signatures are explained
-      below. </p>
+    <p>This module defines the behavior of the agent notification filters.</p>
+    <p>The function in this module must be exported from an
+      <c>snmpa_notification_filter</c>-compliant module.</p>
     <p>The purpose of notification filters is to allow for modification
       and/or suppression of a notification.</p>
     <p>A misbehaving filter will be removed.</p>
   </description>
+
   <funcs>
     <func>
       <name>handle_notification(Notif, Data) -> Reply</name>
-      <fsummary>Handle a notification</fsummary>
+      <fsummary>Handle a notification.</fsummary>
       <type>
         <v>Reply = send | {send, NewNotif} | dont_send</v>
-        <v>Notif =  NewNotif = notification() | trap()</v>
-        <v>Data  = term()</v>
+        <v>Notif = NewNotif = notification() | trap()</v>
+        <v>Data = term()</v>
       </type>
       <desc>
-        <p>Handle a notification to be sent. The filter can either
-          accept the notification as is, return <c>send</c>, modify
-          the notification, return <c>{send, NewNotif}</c> or
-          suppress the notification, return <c>dont_send</c>.</p>
+        <p>Handles a notification to be sent. The filter can either
+          accept the notification "as is", return <c>send</c>, modify
+          the notification, return <c>{send, NewNotif}</c>, or
+          suppress the notification and return <c>dont_send</c>.</p>
         <p><c>Data</c> is supplied at filter registration time,
-          see <seealso marker="snmpa#register_notification_filter">register_notification_filter</seealso>.
+          see <seealso marker="snmpa#register_notification_filter">
+          <c>snmpa:register_notification_filter</c></seealso>.
           </p>
       </desc>
     </func>

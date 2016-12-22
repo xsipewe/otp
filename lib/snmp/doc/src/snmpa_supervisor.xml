@@ -28,40 +28,44 @@
     <docno></docno>
     <approved></approved>
     <checked></checked>
-    <date></date>
+    <date>2016-11-24</date>
     <rev></rev>
     <file>snmpa_supervisor.xml</file>
   </header>
   <module>snmpa_supervisor</module>
-  <modulesummary>A supervisor for the SNMP agent Processes</modulesummary>
+  <modulesummary>A supervisor for the SNMP agent processes.</modulesummary>
   <description>
-    <p>This is the top supervisor for the agent part of the SNMP 
-      application. There is always one supervisor at each node with 
-      an SNMP agent (master agent or sub-agent).
-      </p>
+    <p>This is the top supervisor for the agent part of the SNMP
+      application. There is always one supervisor at each node with
+      an SNMP agent (master agent or subagent).</p>
   </description>
+
   <funcs>
     <func>
-      <name>start_sub_sup(Opts) -> {ok, pid()} | {error, {already_started, pid()}} | {error, Reason}</name>
-      <fsummary>Start the SNMP supervisor for sub-agents only</fsummary>
+      <name>start_sub_sup(Opts) -> {ok, pid()}
+        | {error, {already_started, pid()}} | {error, Reason}</name>
+      <fsummary>Start the SNMP supervisor for subagents only.</fsummary>
       <type>
         <v>Opts = [opt()]</v>
         <v>opt() = {db_dir, string()} | ...</v>
       </type>
       <desc>
         <p>Starts a supervisor for the SNMP agent system without a
-          master agent.  The supervisor starts all involved SNMP
-          processes, but no agent processes.  Sub-agents should be
-          started by calling <c>start_sub_agent/3</c>.
-          </p>
+          master agent. The supervisor starts all involved SNMP
+          processes, but no agent processes. Subagents are to be
+          started by calling <seealso marker="#start_sub_agent/3">
+          <c>start_sub_agent/3</c></seealso>.</p>
         <p><c>db_dir</c> is mandatory.</p>
-        <p>See <seealso marker="snmp_config#configuration_params">configuration parameters</seealso> for 
-          a description of the options.</p>
+        <p>For a description of the options, see section
+          <seealso marker="snmp_config#configuration_params">
+          Running the Application</seealso> in the User's Guide.</p>
       </desc>
     </func>
+
     <func>
-      <name>start_master_sup(Opts) -> {ok, pid()} |  {error, {already_started, pid()}} | {error, Reason}</name>
-      <fsummary>Start the SNMP supervisor for all agents</fsummary>
+      <name>start_master_sup(Opts) -> {ok, pid()}
+        | {error, {already_started, pid()}} | {error, Reason}</name>
+      <fsummary>Start the SNMP supervisor for all agents.</fsummary>
       <type>
         <v>Opts = [opt()]</v>
         <v>opt() = {db_dir, string()} | {config, ConfOpts()} | ...</v>
@@ -70,20 +74,23 @@
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>Starts a supervisor for the SNMP agent system.  The
+        <p>Starts a supervisor for the SNMP agent system. The
           supervisor starts all involved SNMP processes, including the
-          master agent.  Sub-agents should be started by calling
-          <c>start_subagent/3</c>.
-          </p>
+          master agent. Subagents are to be started by calling
+          <seealso marker="#start_sub_agent/3">
+          <c>start_sub_agent/3</c></seealso></p>
         <p><c>db_dir</c> is mandatory.</p>
         <p><c>dir</c> in config is mandatory.</p>
-        <p>See <seealso marker="snmp_config">snmp config</seealso> for 
-          a description of the options.</p>
+        <p>For a description of the options, see section
+          <seealso marker="snmp_config#configuration_params">
+          Running the Application</seealso> in the User's Guide.</p>
       </desc>
     </func>
+
     <func>
-      <name>start_sub_agent(ParentAgent,Subtree,Mibs) -> {ok, pid()} | {error, Reason}</name>
-      <fsummary>Start a sub-agent</fsummary>
+      <name>start_sub_agent(ParentAgent,Subtree,Mibs)
+        -> {ok, pid()} | {error, Reason}</name>
+      <fsummary>Start a subagent.</fsummary>
       <type>
         <v>ParentAgent = pid()</v>
         <v>SubTree = oid()</v>
@@ -91,25 +98,24 @@
         <v>MibName = [string()]</v>
       </type>
       <desc>
-        <p>Starts a sub-agent on the node where the function is
-          called.  The <c>snmpa_supervisor</c> must be running.
-          </p>
-        <p>If the supervisor is not running, the function fails with the
-          reason <c>badarg</c>.</p>
+        <p>Starts a subagent on the node where the function is
+          called.</p>
+        <p>The <c>snmpa_supervisor</c> must be running, otherwise
+          the function fails with reason <c>badarg</c>.</p>
       </desc>
     </func>
+
     <func>
       <name>stop_sub_agent(SubAgent) -> ok | no_such_child</name>
-      <fsummary>Stop a sub-agent</fsummary>
+      <fsummary>Stop a subagent.</fsummary>
       <type>
         <v>SubAgent = pid()</v>
       </type>
       <desc>
-        <p>Stops the sub-agent on the node where the function is
-          called.  The <c>snmpa_supervisor</c> must be running.
-          </p>
-        <p>If the supervisor is not running, the function fails with the
-          reason <c>badarg</c>.</p>
+        <p>Stops the subagent on the node where the function is
+          called.</p>
+        <p>The <c>snmpa_supervisor</c> must be running, otherwise
+          the function fails with reason <c>badarg</c>.</p>
       </desc>
     </func>
   </funcs>

@@ -24,135 +24,80 @@
 
     <title>snmpa_mib_data</title>
     <prepared></prepared>
+    <responsible></responsible>
     <docno></docno>
-    <date></date>
+    <checked></checked>
+    <date>2016-12-15</date>
     <rev></rev>
     <file>snmpa_mib_data.xml</file>
   </header>
 
   <module>snmpa_mib_data</module>
-  <modulesummary>Behaviour module for the SNMP agent mib-server 
+  <modulesummary>Behavior module for the SNMP agent mib-server
   data module.</modulesummary>
   <description>
-    <p>This module defines the behaviour of the SNMP agent mib-server 
-    data module. A <c>snmpa_mib_data</c> compliant module 
-    must export the following functions: </p>
-    <list type="bulleted">
-      <item>
-	<seealso marker="#new">new/1</seealso>
-      </item>
-      <item>
-	<seealso marker="#close">close/1</seealso>
-      </item>
-      <item>
-	<seealso marker="#sync">sync/1</seealso>
-      </item>
-      <item>
-	<seealso marker="#load_mib">load_mib/4</seealso>
-      </item>
-      <item>
-	<seealso marker="#unload_mib">unload_mib/4</seealso>
-      </item>
-      <item>
-	<seealso marker="#lookup">lookup/2</seealso>
-      </item>
-      <item>
-	<seealso marker="#next">next/3</seealso>
-      </item>
-      <item>
-	<seealso marker="#register_subagent">register_subagent/3</seealso>
-      </item>
-      <item>
-	<seealso marker="#unregister_subagent">unregister_subagent/2</seealso>
-      </item>
-      <item>
-	<seealso marker="#which_mib">which_mib/2</seealso>
-      </item>
-      <item>
-	<seealso marker="#which_mibs">which_mibs/1</seealso>
-      </item>
-      <item>
-	<seealso marker="#whereis_mib">whereis_mib/2</seealso>
-      </item>
-      <item>
-	<seealso marker="#dump">dump/2</seealso>
-      </item>
-      <item>
-	<seealso marker="#info">info/1</seealso>
-      </item>
-      <item>
-	<seealso marker="#backup">backup/2</seealso>
-      </item>
-      <item>
-	<seealso marker="#code_change">code_change/4</seealso>
-      </item>
-    </list>
-
-    <p>The semantics of them and their exact signatures are 
-    explained below. </p>
-
-    <p>Note that the data extracted from the imported (loaded) 
-    mibs are stored partly by the mib-server and partly by the 
-    symbolic-store server. See the default mib-server data 
-    module, <c>snmpa_mib_data_tttn</c> for details. </p>
-
+    <p>This module defines the behavior of the SNMP agent <c>mib-server</c>
+    data module.</p>
+    <p>The functions in this module must be exported from an
+      <c>snmpa_mib_data</c>-compliant module.</p>
+    <p>Notice that the data extracted from the imported (loaded)
+    MIBs are stored partly by the <c>mib-server</c> and partly by the
+    <c>symbolic-store</c> server. For details, see the default
+    <c>mib-server</c> data module, <c>snmpa_mib_data_tttn</c>.</p>
   </description>
 
   <section>
-    <title>CALLBACK FUNCTIONS</title>
-    <p>The following functions must be exported from a 
+    <title>Callback Functions</title>
+    <p>The following functions must be exported from a
     <c>mib-server</c> data callback module: </p>
-
     <marker id="new"></marker>
   </section>
 
   <funcs>
     <func>
       <name>Module:new(Storage) -> State</name>
-      <fsummary>Create new (mib-server) data instance</fsummary>
+      <fsummary>Create new (mib-server) data instance.</fsummary>
       <type>
         <v>Storage = mib_storage()</v>
         <v>State = term()</v>
       </type>
       <desc>
-        <p>Create a new mib-server data instance. </p>
-
+        <p>Creates a new <c>mib-server</c> data instance.</p>
         <marker id="close"></marker>
       </desc>
     </func>
 
     <func>
       <name>Module:close(State) -> void()</name>
-      <fsummary>Close the mib-server data instance</fsummary>
+      <fsummary>Close the mib-server data instance.</fsummary>
       <type>
         <v>State = term()</v>
       </type>
       <desc>
-        <p>Close the mib-storage.</p>
-
+        <p>Closes the <c>mib-storage</c>.</p>
         <marker id="sync"></marker>
       </desc>
     </func>
 
     <func>
       <name>Module:sync(State) -> void()</name>
-      <fsummary>Synchronize to disc</fsummary>
+      <fsummary>Synchronize to disc.</fsummary>
       <type>
         <v>State = term()</v>
       </type>
       <desc>
-        <p>Synchronize (write to disc, if possible) the mib-server data. 
-	This depends on the <c>mib_storage</c> option, and will only have 
-	an effect if the mib-storage option has an actual disc component 
-	(such as dets, or ets with a file). </p>
-
+        <p>Synchronizes (writes to disc, if possible) the <c>mib-server</c>
+        data. This depends on the <c>mib_storage</c> option, and has only
+	an effect if the <c>mib-storage</c> option has a disc component
+	(such as <c>dets</c>, or <c>ets</c> with a file).</p>
         <marker id="load_mib"></marker>
       </desc>
     </func>
 
     <func>
-      <name>Module:load_mib(State, Filename, MeOverride, TeOverride) -> {ok, NewState} | {error, Reason}</name>
-      <fsummary>Load a mib into the mib-server</fsummary>
+      <name>Module:load_mib(State, Filename, MeOverride, TeOverride)
+        -> {ok, NewState} | {error, Reason}</name>
+      <fsummary>Load a MIB into the mib-server.</fsummary>
       <type>
         <v>State = NewState = term()</v>
         <v>Filename = filename()</v>
@@ -161,74 +106,73 @@
         <v>Reason = already_loaded | term()</v>
       </type>
       <desc>
-        <p>Load the mib specified by the <c>Filename</c> argument 
-	into the mib-server. 
-	The <c>MeOverride</c> and <c>TeOverride</c> arguments 
-	specifies how the mib-server shall handle duplicate mib- and trap-
-	entries. </p>
-
+        <p>Loads the MIB specified by argument <c>Filename</c>
+	into the <c>mib-server</c>.
+	Arguments <c>MeOverride</c> and <c>TeOverride</c> specify how
+	the <c>mib-server</c> is to handle duplicate mib- and trap-
+	entries.</p>
         <marker id="unload_mib"></marker>
       </desc>
     </func>
 
     <func>
-      <name>Module:unload_mib(State, Filename) -> {ok, NewState} | {error, Reason}</name>
-      <fsummary>Unload mib from the mib-server</fsummary>
+      <name>Module:unload_mib(State, Filename)
+        -> {ok, NewState} | {error, Reason}</name>
+      <fsummary>Unload MIB from the mib-server.</fsummary>
       <type>
         <v>State = NewState = term()</v>
         <v>Filename = filename()</v>
         <v>Reason = not_loaded | term()</v>
       </type>
       <desc>
-        <p>Unload the mib specified by the <c>Filename</c> argument 
-	from the mib-server. </p>
-
+        <p>Unloads the MIB specified by argument <c>Filename</c>
+	from the <c>mib-server</c>.</p>
         <marker id="lookup"></marker>
       </desc>
     </func>
 
     <func>
       <name>Module:lookup(State, Oid) -> Reply</name>
-      <fsummary>Find the mib-entry corresponding to the Oid</fsummary>
+      <fsummary>Find the mib-entry corresponding to the OID.</fsummary>
       <type>
         <v>State = term()</v>
-        <v>Reply = {variable, ME} | {table_column, ME, TEOid} | {subagent, SAPid, SAOid} | {false, Reason}</v>
+        <v>Reply = {variable, ME} | {table_column, ME, TEOid}
+          | {subagent, SAPid, SAOid} | {false, Reason}</v>
         <v>Oid = TEOid = SAOid = oid()</v>
         <v>SAPid = pid()</v>
         <v>ME = me()</v>
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>Find the mib-entry corresponding to the <c>Oid</c>. 
-	If it is a variable, the <c>Oid</c> must be 
-	&lt;Oid for var&gt;.0 
-	and if it is a table, <c>Oid</c> must be 
+        <p>Finds the <c>mib-entry</c> corresponding to the <c>Oid</c>.
+	If it is a variable, the <c>Oid</c> must be
+	&lt;Oid for var&gt;.0
+	and if it is a table, <c>Oid</c> must be
 	&lt;table&gt;.&lt;entry&gt;.&lt;col&gt;.&lt;any&gt;.</p>
-
         <marker id="next"></marker>
       </desc>
     </func>
 
     <func>
       <name>Module:next(State, Oid, MibView) -> Reply</name>
-      <fsummary>Finds the lexicographically next oid</fsummary>
+      <fsummary>Find the lexicographically next OID.</fsummary>
       <type>
         <v>State = term()</v>
-        <v>Reply = false | endOfTable | {subagent, SAPid, SAOid} | {variable, ME, VarOid} | {table, TableOid, TableRestOid, ME}</v>
+        <v>Reply = false | endOfTable | {subagent, SAPid, SAOid}
+          | {variable, ME, VarOid} | {table, TableOid, TableRestOid, ME}</v>
         <v>Oid = SAOid = VarOid = TableOid = TableRestOid = oid()</v>
         <v>SAPid = pid()</v>
         <v>ME = me()</v>
       </type>
       <desc>
-        <p>Finds the lexicographically next oid. </p>
-
+        <p>Finds the lexicographically next OID.</p>
         <marker id="register_subagent"></marker>
       </desc>
     </func>
 
     <func>
       <name>Module:register_subagent(State, Oid, Pid) -> Reply</name>
-      <fsummary>Register the subagent</fsummary>
+      <fsummary>Register the subagent.</fsummary>
       <type>
         <v>State = NewState = term()</v>
         <v>Reply = {ok, NewState} | {error, Reason}</v>
@@ -237,16 +181,15 @@
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>Register the subagent, process, 
-	handling part of the mib-tree. </p>
-
+        <p>Registers the subagent, process
+	handling part of the MIB tree.</p>
         <marker id="unregister_subagent"></marker>
       </desc>
     </func>
 
     <func>
       <name>Module:unregister_subagent(State, PidOrOid) -> Reply</name>
-      <fsummary>Unregister the subagent</fsummary>
+      <fsummary>Unregister the subagent.</fsummary>
       <type>
         <v>State = NewState = term()</v>
         <v>Reply = {ok, NewState} | {ok, NewState, Pid} | {error, Reason}</v>
@@ -255,19 +198,18 @@
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>Unregister the subagent, handling part of the mib-tree, 
-	as specified by the <c>oid()</c> or <c>pid()</c> 
-	(<c>PidOrOid</c>). </p>
-        <p>When unregister the subagent using an <c>oid()</c>, the <c>pid()</c> 
-	of the process handling the sub-tree is also returned. </p>
-
+        <p>Unregisters the subagent, handling part of the MIB tree,
+	as specified by the <c>oid()</c> or <c>pid()</c>
+	(<c>PidOrOid</c>).</p>
+        <p>When unregister the subagent using an <c>oid()</c>, the <c>pid()</c>
+	of the process handling the subtree is also returned.</p>
         <marker id="dump"></marker>
       </desc>
     </func>
 
     <func>
       <name>Module:dump(State, Destination) -> Reply</name>
-      <fsummary>Unregister the subagent</fsummary>
+      <fsummary>Unregister the subagent.</fsummary>
       <type>
         <v>State = term()</v>
         <v>Reply = ok | {error, Reason}</v>
@@ -276,16 +218,15 @@
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>Dump the mib-server data to <c>stdio</c> (Destination = <c>io</c>) or
-	the specified file. </p>
-
+        <p>Dump the <c>mib-server</c> data to <c>stdio</c>
+        (<c>Destination</c> = <c>io</c>) or the specified file.</p>
         <marker id="which_mib"></marker>
       </desc>
     </func>
 
     <func>
       <name>Module:which_mib(State, Oid) -> Reply</name>
-      <fsummary>Retrieve the mib file for an oid()</fsummary>
+      <fsummary>Retrieve the MIB file for an OID.</fsummary>
       <type>
         <v>State = term()</v>
         <v>Reply = {ok, MibFile} | {error, Reason}</v>
@@ -294,15 +235,14 @@
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>Retrieve the mib-file to which an given <c>oid()</c> belongs. </p>
-
+        <p>Retrieves the MIB file to which a specified <c>oid()</c> belongs.</p>
         <marker id="which_mibs"></marker>
       </desc>
     </func>
 
     <func>
       <name>Module:which_mibs(State) -> Reply</name>
-      <fsummary>Retrieve all loaded mib files</fsummary>
+      <fsummary>Retrieve all loaded MIB files.</fsummary>
       <type>
         <v>State = term()</v>
         <v>Reply = [{MibName, Filename}]</v>
@@ -310,15 +250,14 @@
         <v>Filename = string()</v>
       </type>
       <desc>
-        <p>Retrieve all loaded mib-files. </p>
-
+        <p>Retrieves all loaded MIB files.</p>
         <marker id="whereis_mib"></marker>
       </desc>
     </func>
 
     <func>
       <name>Module:whereis_mib(State, MibName) -> Reply</name>
-      <fsummary>Retrieve the mib file for the mib</fsummary>
+      <fsummary>Retrieve the MIB file for the MIB.</fsummary>
       <type>
         <v>State = term()</v>
         <v>MibName = atom()</v>
@@ -327,15 +266,14 @@
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>Retrieve the mib file for the mib. </p>
-
+        <p>Retrieves the MIB file for the MIB.</p>
         <marker id="info"></marker>
       </desc>
     </func>
 
     <func>
       <name>Module:info(State) -> Reply</name>
-      <fsummary>Retrieve misc info for the mib data</fsummary>
+      <fsummary>Retrieve miscellaneous information for the MIB data.</fsummary>
       <type>
         <v>State = term()</v>
         <v>Reply = {ok, Filename} | {error, Reason}</v>
@@ -343,17 +281,16 @@
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>Retrieve misc info for the mib data. </p>
-        <p>This is a utility function used to inspect, for instance, 
+        <p>Retrieves miscellaneous information for the MIB data.</p>
+        <p>This is a utility function used to inspect, for example,
 	memory usage, in a simple way. </p>
-
         <marker id="backup"></marker>
       </desc>
     </func>
 
     <func>
       <name>Module:backup(State, BackupDir) -> Reply</name>
-      <fsummary>Perform a backup of the mib-server data</fsummary>
+      <fsummary>Perform a backup of the mib-server data.</fsummary>
       <type>
         <v>State = term()</v>
         <v>Reply = ok | {error, Reason}</v>
@@ -361,17 +298,17 @@
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>Perform a backup of the mib-server data. </p>
-        <p>Note that its implementation dependant (and also 
-	dependent on mib-storage is used) if a backup is possible. </p>
-
+        <p>Performs a backup of the <c>mib-server</c> data.</p>
+        <p>Notice that it depends on the implementation (and
+	if the <c>mib-storage</c> is used) if a backup is possible.</p>
         <marker id="code_change"></marker>
       </desc>
     </func>
 
     <func>
-      <name>Module:code_change(Destination, Vsn, Extra, State) -> NewState</name>
-      <fsummary>Perform a code-change</fsummary>
+      <name>Module:code_change(Destination, Vsn, Extra, State) -> NewState
+      </name>
+      <fsummary>Perform a code change.</fsummary>
       <type>
         <v>Destination = up | down</v>
         <v>Vsn = term()</v>
@@ -379,14 +316,12 @@
         <v>State = NewState = term()</v>
       </type>
       <desc>
-        <p>Perform a code-change (upgrade or downgrade). </p>
-        <p>See 
-	<seealso marker="stdlib:gen_server">gen_server</seealso>
-	for more info regarding the <c>Vsn</c> and <c>Extra</c> arguments. </p>
-
+        <p>Performs a code change (upgrade or downgrade).</p>
+        <p>For more information about arguments <c>Vsn</c> and <c>Extra</c>,
+	see <seealso marker="stdlib:gen_server">
+        <c>stdlib:gen_server</c></seealso>.</p>
       </desc>
     </func>
-
   </funcs>
   
 </erlref>

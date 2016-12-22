@@ -28,67 +28,70 @@
     <docno></docno>
     <approved></approved>
     <checked></checked>
-    <date></date>
+    <date>2016-11-22</date>
     <rev></rev>
     <file>snmpa_error.xml</file>
   </header>
   <module>snmpa_error</module>
-  <modulesummary>Functions for Reporting SNMP Errors</modulesummary>
+  <modulesummary>Functions for reporting SNMP errors.</modulesummary>
   <description>
     <marker id="desc"></marker>
-    <p>The module <c>snmpa_error</c> contains two callback functions 
-      which are called if an error occurs at different times during agent 
-      operation. These functions in turn calls the corresponding function
-      in the configured error report module, which implements the actual 
+    <p>This module contains two callback functions
+      that are called if an error occurs at different times during agent
+      operation. These functions in turn call the corresponding function
+      in the configured error report module, which implements the
       report functionality.
       </p>
-    <p>Two simple implementation(s) is provided with the
-      toolkit; the modules 
-      <seealso marker="snmpa_error_logger">snmpa_error_logger</seealso> 
-      which is the default and 
-      <seealso marker="snmpa_error_io">snmpa_error_io</seealso>.
-      </p>
-    <p>The error report module is configured using the directive 
-      <c>error_report_mod</c>, see
-      <seealso marker="snmp_config#configuration_params">configuration parameters</seealso>.
-      </p>
-
+    <p>Two simple implementations are provided with the toolkit:</p>
+    <list type="bulleted">
+      <item><seealso marker="snmpa_error_logger">
+        <c>snmpa_error_logger</c></seealso>, which is the default module
+      </item> 
+      <item><seealso marker="snmpa_error_io"><c>snmpa_error_io</c></seealso>
+      </item>
+    </list>
+    <p>The error report module is configured using the directive
+      <c>error_report_mod</c>, see section
+      <seealso marker="snmp_config#configuration_params">
+      Configuring the Application</seealso> in the User's Guide.</p>
       <marker id="config_err"></marker>
   </description>
+
   <funcs>
     <func>
       <name>config_err(Format, Args) -> void()</name>
-      <fsummary>Called if a configuration error occurs</fsummary>
+      <fsummary>Called if a configuration error occurs.</fsummary>
       <type>
         <v>Format = string()</v>
         <v>Args = list()</v>
       </type>
       <desc>
         <p>The function is called if an error occurs during the
-          configuration phase, for example if a syntax error is found in
+          configuration phase, for example, if a syntax error is found in
           a configuration file.
           </p>
         <p><c>Format</c> and <c>Args</c> are as in
-          <c>io:format(Format, Args)</c>.</p>
-
+          <seealso marker="stdlib:io#format/1">
+          <c>io:format(Format, Args)</c></seealso> in STDLIB.</p>
 	  <marker id="user_err"></marker>
       </desc>
     </func>
 
     <func>
       <name>user_err(Format, Args) -> void()</name>
-      <fsummary>Called if a user related error occurs</fsummary>
+      <fsummary>Called if a user-related error occurs.</fsummary>
       <type>
         <v>Format = string()</v>
         <v>Args = list()</v>
       </type>
       <desc>
-        <p>The function is called if a user related error occurs at
-          run-time, for example if a user defined instrumentation
+        <p>The function is called if a user-related error occurs at
+          runtime, for example, if a user-defined instrumentation
           function returns erroneous.
           </p>
         <p><c>Format</c> and <c>Args</c> are as in
-          <c>io:format(Format, Args)</c>.</p>
+          <seealso marker="stdlib:io#format/1">
+          <c>io:format(Format, Args)</c></seealso> in STDLIB.</p>
       </desc>
     </func>
   </funcs>

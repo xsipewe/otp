@@ -28,30 +28,30 @@
     <docno></docno>
     <approved></approved>
     <checked></checked>
-    <date></date>
+    <date>2016-11-18</date>
     <rev></rev>
     <file>snmp_framework_mib.xml</file>
   </header>
   <module>snmp_framework_mib</module>
-  <modulesummary>Instrumentation Functions for SNMP-FRAMEWORK-MIB</modulesummary>
+  <modulesummary>Instrumentation functions for SNMP-FRAMEWORK-MIB.
+  </modulesummary>
   <description>
-    <p>The module <c>snmp_framework_mib</c> implements instrumentation
-      functions for the
-      SNMP-FRAMEWORK-MIB, and functions for initializing and configuring the
+    <p>This module implements instrumentation functions for the
+      SNMP-FRAMEWORK-MIB and functions for initializing and configuring the
       database.
       </p>
-    <p>The configuration files are described in the SNMP User's Manual.</p>
+    <p>The configuration files are described in the User's Manual.</p>
   </description>
+
   <funcs>
     <func>
       <name>configure(ConfDir) -> void()</name>
-      <fsummary>Configure the SNMP-FRAMEWORK-MIB</fsummary>
+      <fsummary>Configure the SNMP-FRAMEWORK-MIB.</fsummary>
       <type>
         <v>ConfDir = string()</v>
       </type>
       <desc>
-        <p>This function is called from the supervisor at system
-          start-up.
+        <p>This function is called from the supervisor at system startup.
           </p>
         <p>Inserts all data in the configuration files into the
           database and destroys all old data.
@@ -63,33 +63,34 @@
         <p>All <c>snmp</c> counters are set to zero.
           </p>
         <p>If an error is found in the configuration file, it is
-          reported using the function <c>config_err/2</c> of the error 
-          report module, and the function fails with reason 
+          reported using the function <c>config_err/2</c> of the error
+          report module, and the function fails with reason
           <c>configuration_error</c>.
           </p>
-        <p><c>ConfDir</c> is a string which points to the directory
+        <p><c>ConfDir</c> is a string that points to the directory
           where the configuration files are found.
           </p>
-        <p>The configuration file read is: <c>context.conf</c>.
+        <p>The configuration file read is <c>context.conf</c>.
           </p>
       </desc>
     </func>
+
     <func>
       <name>init() -> void()</name>
-      <fsummary>Initialize the SNMP-FRAMEWORK-MIB</fsummary>
+      <fsummary>Initialize the SNMP-FRAMEWORK-MIB.</fsummary>
       <desc>
-        <p>This function is called from the supervisor at system
-          start-up.
+        <p>This function is called from the supervisor at system startup.
           </p>
         <p>Creates the necessary objects in the database if they do not
           exist. It does not destroy any old values.
-                    <marker id="add_context"></marker>
-</p>
+        <marker id="add_context"></marker>
+        </p>
       </desc>
     </func>
+
     <func>
       <name>add_context(Ctx) -> Ret</name>
-      <fsummary>Added one context</fsummary>
+      <fsummary>Add a context.</fsummary>
       <type>
         <v>Ctx = string()</v>
         <v>Ret = {ok, Key} | {error, Reason}</v>
@@ -97,21 +98,22 @@
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>Adds a context to the agent config. 
+        <p>Adds a context to the agent config.
           Equivalent to one line in the <c>context.conf</c> file.</p>
         <marker id="delete_context"></marker>
       </desc>
     </func>
+
     <func>
       <name>delete_context(Key) -> Ret</name>
-      <fsummary>Delete one context</fsummary>
+      <fsummary>Delete a context.</fsummary>
       <type>
         <v>Key = term()</v>
         <v>Ret = ok | {error, Reason}</v>
         <v>Reason = term()</v>
       </type>
       <desc>
-        <p>Delete a context from the agent config.</p>
+        <p>Deletes a context from the agent config.</p>
       </desc>
     </func>
   </funcs>
